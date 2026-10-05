@@ -63,6 +63,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // App-like: no pinch or double-tap zoom (iOS Safari ignores this, see Providers and globals.css).
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: "cover",
   interactiveWidget: "resizes-content",
   themeColor: [

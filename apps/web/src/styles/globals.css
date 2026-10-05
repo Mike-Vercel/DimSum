@@ -225,6 +225,8 @@
     text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     scroll-padding-top: 7.5rem;
+    /* Scrolling only: no pinch or double-tap zoom anywhere (maps handle their own gestures). */
+    touch-action: pan-x pan-y;
   }
 
   body {

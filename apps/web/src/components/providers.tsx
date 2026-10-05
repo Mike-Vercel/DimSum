@@ -37,6 +37,15 @@ function makeQueryClient() {
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(makeQueryClient);
   useEffect(() => rehydrateStores(), []);
+  // iOS Safari ignores user-scalable=no and touch-action for page zoom: cancel its pinch gestures.
+  useEffect(() => {
+    const block = (e: Event) => e.preventDefault();
+    const events = ["gesturestart", "gesturechange", "gestureend"];
+    for (const t of events) document.addEventListener(t, block, { passive: false });
+    return () => {
+      for (const t of events) document.removeEventListener(t, block);
+    };
+  }, []);
   useCrossTabSync();
   useServiceWorker();
   return (
