@@ -122,7 +122,7 @@ quelle `NEXT_PUBLIC_*`. In produzione servono:
 | Database | `DATABASE_URL` (pooled), `DIRECT_DATABASE_URL` o `DATABASE_URL_UNPOOLED` (diretta: migrazioni e `LISTEN` del tempo reale) |
 | Accesso | `BETTER_AUTH_SECRET`; opzionali `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`, `APPLE_*` |
 | Pagamenti | `PAYMENT_PROVIDER=stripe`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` |
-| E-mail | `EMAIL_PROVIDER=resend` con `RESEND_API_KEY`, oppure `smtp` con `SMTP_URL`; `EMAIL_FROM` |
+| E-mail | `EMAIL_PROVIDER=brevo` con `BREVO_API_KEY` (oppure `resend` con `RESEND_API_KEY`, `smtp` con `SMTP_URL`); `EMAIL_FROM` |
 | Foto | `STORAGE_PROVIDER=vercel-blob`, `BLOB_READ_WRITE_TOKEN` |
 | Notifiche push | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (`npx web-push generate-vapid-keys`) |
 | Sicurezza | `CRON_SECRET`, `HASH_SALT` |
@@ -162,8 +162,11 @@ quelle `NEXT_PUBLIC_*`. In produzione servono:
    Apple Pay e Google Pay registra il dominio in Settings → Payment method domains.
 7. **Google.** Su Google Cloud Console crea un client OAuth di tipo "Applicazione web" con origine
    `https://<dominio>` e URI di reindirizzamento `https://<dominio>/api/auth/callback/google`.
-8. **E-mail.** Verifica su Resend (o sul tuo SMTP) il dominio di `EMAIL_FROM`, con record SPF e
-   DKIM.
+8. **E-mail (Brevo).** In Brevo, Senders, Domains & Dedicated IPs → Domains, autentica il dominio
+   del mittente aggiungendo nel DNS i record che Brevo indica (codice Brevo, DKIM, DMARC). Poi
+   SMTP & API → API Keys → genera una chiave e imposta su Vercel `EMAIL_PROVIDER=brevo`,
+   `BREVO_API_KEY` e `EMAIL_FROM` con un indirizzo di quel dominio (es. `DIMSUM <ordini@tuodominio.it>`).
+   Le e-mail inviate e gli errori sono nel log Brevo e, per ogni ordine, nel dettaglio dell'admin.
 
 ## Test
 

@@ -23,8 +23,46 @@ interface EmailProvider {
     html: string;
     text: string;
     replyTo?: string;
+    /** Template name, for the provider's statistics. */
+    tag: string;
   }): Promise<{ id: string | null }>;
 }
+
+/** "DIMSUM <ordini@dimsum.it>" → { name: "DIMSUM", email: "ordini@dimsum.it" }. */
+function mailbox(value: string): { name?: string; email: string } {
+  const m = value.match(/^\s*"?([^"<]*?)"?\s*<([^>]+)>\s*$/);
+  if (!m) return { email: value.trim() };
+  const name = m[1]?.trim();
+  return name ? { name, email: m[2]!.trim() } : { email: m[2]!.trim() };
+}
+
+/** Brevo (ex Sendinblue) transactional API: HTTPS, fast from serverless functions. */
+const brevoProvider = (apiKey: string): EmailProvider => ({
+  name: "brevo",
+  async send(m) {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": apiKey, "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({
+        sender: mailbox(m.from),
+        to: [{ email: m.to }],
+        subject: m.subject,
+        htmlContent: m.html,
+        textContent: m.text,
+        tags: [m.tag],
+        ...(m.replyTo ? { replyTo: mailbox(m.replyTo) } : {}),
+      }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    const body = (await res.json().catch(() => ({}))) as {
+      messageId?: string;
+      message?: string;
+      code?: string;
+    };
+    if (!res.ok) throw new Error(`Brevo ${res.status}: ${body.message ?? body.code ?? "errore sconosciuto"}`);
+    return { id: body.messageId ?? null };
+  },
+});
 
 const resendProvider = (apiKey: string): EmailProvider => ({
   name: "resend",
@@ -72,6 +110,7 @@ const outboxProvider: EmailProvider = {
 
 function provider(): EmailProvider {
   const e = env();
+  if (e.EMAIL_PROVIDER === "brevo" && e.BREVO_API_KEY) return brevoProvider(e.BREVO_API_KEY);
   if (e.EMAIL_PROVIDER === "resend" && e.RESEND_API_KEY) return resendProvider(e.RESEND_API_KEY);
   if (e.EMAIL_PROVIDER === "smtp" && e.SMTP_URL) return smtpProvider(e.SMTP_URL);
   if (e.NODE_ENV === "production" && e.EMAIL_PROVIDER !== "outbox") {
@@ -106,6 +145,7 @@ export async function sendEmail(input: SendEmailInput): Promise<void> {
       subject: input.email.subject,
       html: input.email.html,
       text: input.email.text,
+      tag: input.email.template,
       ...((input.replyTo ?? e.EMAIL_REPLY_TO) ? { replyTo: (input.replyTo ?? e.EMAIL_REPLY_TO)! } : {}),
     });
     await db.emailLog.update({

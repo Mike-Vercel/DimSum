@@ -147,7 +147,9 @@ export default async function PrivacyPage() {
           {f.paymentProvider === "stripe" ? (
             <li>Stripe Payments Europe Ltd. per i pagamenti online;</li>
           ) : null}
-          {e.EMAIL_PROVIDER === "resend" ? (
+          {e.EMAIL_PROVIDER === "brevo" ? (
+            <li>Sendinblue SAS (Brevo), Francia, per l&apos;invio delle e-mail;</li>
+          ) : e.EMAIL_PROVIDER === "resend" ? (
             <li>Resend, per l&apos;invio delle e-mail;</li>
           ) : (
             <li>il fornitore del servizio di posta elettronica;</li>
