@@ -1,0 +1,4425 @@
+{
+  "dbResults": [
+    {
+      "_id": "6a313c8fbca5ac6859477037",
+      "price": null,
+      "name": "Ravioli al vapore",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 1,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477038",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "Maiale, sedano, cipolla, zenzero, salsa dolce di soia - 猪肉，芹菜，洋葱，生姜，甜面酱",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_CELERY"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore con maiale e sedano fresco",
+          "name2": "RAVIOLI AL VAPORE CON MAIALE E SEDANO 猪肉芹菜饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477038",
+              "version": "df896cd3-9594-4c89-a480-6a25202bd219",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040918"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477039",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "Maiale, porro cinese, cipolla, zenzero, salsa dolce di soia 猪肉，大葱，洋葱，生姜，甜面酱",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore con maiale e cipolla",
+          "name2": "RAVIOLI AL VAPORE CON MAIALE E CIPOLLA 猪肉葱饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477039",
+              "version": "88911a3a-5c5f-40b0-b7cb-807c4e2e7c9f",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040919"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac685947703a",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "Maiale, cavolo cinese, cipolla, zenzero, salsa di soia dolce 猪肉，大白菜，生姜，甜面酱",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore con maiale e cavolo cinese",
+          "name2": "RAVIOLI AL VAPORE CON MAIALE E CAVOLO CINESE 猪肉白菜饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947703a",
+              "version": "bbb81da0-410f-437e-a758-5495c24ddf03",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040919"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac685947703b",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "manzo, cipolla, zenzero, cipolla, salsa di fagioli fermentati 牛肉，洋葱，生姜，豆酱",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore di manzo e cipolla",
+          "name2": "RAVIOLI AL VAPORE DI MANZO E CIPOLLA 牛肉洋葱饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947703b",
+              "version": "7bf02e6e-60d0-4023-8d18-2ccab66ff7bc",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040919"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac685947703c",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "manzo, pomodoro, patate, zenzero, cipolla - 牛肉，番茄，土豆，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore di manzo con pomodoro e patate",
+          "name2": "RAVIOLI AL VAPORE DI MANZO CON POMODORO E PATATE 牛肉番茄土豆饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947703c",
+              "version": "83edd1c4-5ba3-45d6-b87a-f832b1ad6a74",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040919"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac685947703d",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "manzo, sedano, cipolla, sedano 牛肉，芹菜，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore di manzo e sedano",
+          "name2": "RAVIOLI AL VAPORE DI MANZO E SEDANO 牛肉芹菜饺子",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947703d",
+              "version": "e9601317-065c-40a6-b426-ee79368bff0e",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040920"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac685947703e",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "agnello, cipollotto, zenzero 羊肉，小葱，生姜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore con agnello",
+          "name2": "RAVIOLI AL VAPORE CON AGNELLO 羊肉饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947703e",
+              "version": "151c9e4b-b3f1-4f95-8ba7-0d6bf447813b",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040920"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        },
+        {
+          "_id": "6a313c8fbca5ac685947703f",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shitake, vermicelli di soia, cavolo cinese, salsa arachidi - 豆芽，油条，豆干，木耳，香菇，粉丝，白菜",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_PEANUTS"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore vegetariani",
+          "name2": "RAVIOLI AL VAPORE VEGETARIANI 蔬菜饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947703f",
+              "version": "ecc29b0a-cd2a-4e59-9090-d42afd84ac08",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040921"
+            }
+          ],
+          "type": "DISH",
+          "position": 8
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477040",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "gamberi,maiale, zenzero, cipollotto 虾仁，生姜，小葱",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_CRUSTACEANS",
+            "ALLERGEN_FISH",
+            "ALLERGEN_MOLLUSCE"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli al vapore di gamberi",
+          "name2": "RAVIOLI AL VAPORE DI GAMBERI 虾仁饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477040",
+              "version": "01148e3f-dab2-4a70-9794-2113d1d72ced",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040921"
+            }
+          ],
+          "type": "DISH",
+          "position": 9
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477041",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "1 maiale con cavolo cinese, 2 manzo e sedano, 3 con agnello, 4 con gamberi, 5 vegetariani 1.猪肉白菜饺2.牛肉芹菜饺3.羊肉饺4.虾仁饺5.蔬菜饺",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_CRUSTACEANS",
+            "ALLERGEN_FISH",
+            "ALLERGEN_PEANUTS",
+            "ALLERGEN_SOYA",
+            "ALLERGEN_CELERY",
+            "ALLERGEN_MOLLUSCE"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Piatto misto di ravioli al vapore",
+          "name2": "PIATTO MISTO DI RAVIOLI AL VAPORE 蒸饺拼盘",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477037",
+              "name": "Ravioli al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477041",
+              "version": "d21adaf8-a377-489c-94ae-371f8e771774",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040921"
+            }
+          ],
+          "type": "DISH",
+          "position": 10
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac6859477042",
+      "price": null,
+      "name": "Ravioli alla piastra",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 2,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477043",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "Maiale, sedano, cipolla, zenzero, salsa dolce di soia - 猪肉，芹菜，洋葱，生姜，甜面酱",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra con maiale e sedano fresco",
+          "name2": "RAVIOLI ALLA PIASTRA CON MAIALE E SEDANO 猪肉芹菜煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477043",
+              "version": "2925b104-e568-44e1-a350-1801affdae1f",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477044",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "Maiale, porro cinese, cipolla, zenzero, salsa dolce di soia 猪肉，大葱，洋葱，生姜，甜面酱",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra con maiale e cipolla",
+          "name2": "RAVIOLI ALLA PIASTRA CON MAIALE E CIPOLLA 猪肉葱煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477044",
+              "version": "621c7891-d7a5-49c1-ba5c-d771789e3a9b",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477045",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "Maiale, cavolo cinese, cipolla, zenzero, salsa di soia dolce 猪肉，大白菜，生姜，甜面酱",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra con maiale e cavolo cinese",
+          "name2": "RAVIOLI ALLA PIASTRA CON MAIALE E CAVOLO CINESE 猪肉白菜煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477045",
+              "version": "19de6772-5120-46b8-ac98-bb8f8173a416",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477046",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "manzo, cipolla, zenzero, cipolla, salsa di fagioli fermentati 牛肉，洋葱，生姜，豆酱",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra di manzo e cipolla",
+          "name2": "RAVIOLI ALLA PIASTRA DI MANZO E CIPOLLA 牛肉洋葱煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477046",
+              "version": "b2412faf-2b9f-4eb9-bf16-30c92d265c94",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477047",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "manzo, pomodoro, patate, zenzero, cipolla - 牛肉，番茄，土豆，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra di manzo con pomodoro e patate",
+          "name2": "RAVIOLI ALLA PIASTRA DI MANZO CON POMODORO E PATATE 牛肉番茄土豆煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477047",
+              "version": "42b08471-04dc-4a11-975a-6a363714d2f9",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477048",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "manzo, sedano, cipolla, sedano 牛肉，芹菜，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_CELERY"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra di manzo e sedano",
+          "name2": "RAVIOLI ALLA PIASTRA DI MANZO E SEDANO 牛肉芹菜煎饺子",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477048",
+              "version": "87a0fb26-0612-4118-876e-543b749d9a28",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477049",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "agnello, cipollotto, zenzero 羊肉，小葱，生姜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra con agnello",
+          "name2": "RAVIOLI ALLA PIASTRA CON AGNELLO 羊肉煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477049",
+              "version": "a5db0212-0090-4b2f-9ad5-6fb889d40c2a",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        },
+        {
+          "_id": "6a313c8fbca5ac685947704a",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shitake, vermicelli di soia, cavolo cinese, salsa di arachidi - 豆芽，油条，豆干，木耳，香菇，粉丝，白菜",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_PEANUTS"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra vegetariani",
+          "name2": "RAVIOLI ALLA PIASTRA VEGETARIANI 蔬菜煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947704a",
+              "version": "367bdb41-20b2-4928-b4ba-875c689c6959",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 8
+        },
+        {
+          "_id": "6a313c8fbca5ac685947704b",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "gamberi, maiale, zenzero, cipollotto 虾仁，生姜，小葱",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_CRUSTACEANS",
+            "ALLERGEN_MOLLUSCE"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ravioli alla piastra di gamberi",
+          "name2": "RAVIOLI ALLA PIASTRA DI GAMBERI 虾仁煎饺",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477042",
+              "name": "Ravioli alla piastra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947704b",
+              "version": "12a91b77-b9f8-487f-b017-50ded895068e",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 9
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac685947704c",
+      "price": null,
+      "name": "Bao al vapore",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 3,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac685947704d",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "Bao con pancetta di maiale, maio spicy, lattuga, salsa teriyaki e sesamo",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao farcito con carne maiale",
+          "name2": "BAO DI MAIALE",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947704c",
+              "name": "Bao al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947704d",
+              "version": "ffd61606-fde8-4636-b436-037bd3801be5",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040921"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac685947704e",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "Bao con pollo fritto, salsa thai, lattuga, maio spicy, cipolla croccante",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao farcito con pollo croccante",
+          "name2": "BAO DI POLLO",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947704c",
+              "name": "Bao al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947704e",
+              "version": "1b53c70a-11de-4a22-a7b4-cc97d7976eac",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040922"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac685947704f",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "maiale, salsa dolce di soia, cipolla, zenzero 猪肉，甜面酱，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao al vapore con maiale",
+          "name2": "BAO AL VAPORE CON MAIALE 猪肉蒸包",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947704c",
+              "name": "Bao al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947704f",
+              "version": "e719d813-ae81-4a13-bd00-0e23db104499",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040922"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477050",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "manzo, salsa di soia fermentata, cipolla, zenzero 牛肉，大豆酱，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao al vapore con manzo",
+          "name2": "BAO AL VAPORE CON MANZO 牛肉蒸包",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947704c",
+              "name": "Bao al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477050",
+              "version": "34651d05-cf68-413b-b61b-1002d2c3afb5",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040922"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477051",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shitake, vermicelli di soia, cavolo cinese, salsa di arachidi - 豆芽，油条，豆干，木耳，香菇，粉丝，白菜",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_PEANUTS"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao al vapore vegetariani",
+          "name2": "BAO AL VAPORE VEGETARIANI 蔬菜蒸包",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947704c",
+              "name": "Bao al vapore"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477051",
+              "version": "e1d8f872-8153-43cb-8bf8-369c246dd114",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040922"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac6859477052",
+      "price": null,
+      "name": "Bao grigliati",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 4,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477053",
+          "price": 4.5,
+          "dineIn_price": 4.5,
+          "description": "maiale, salsa dolce di soia, cipolla, zenzero 猪肉，甜面酱，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao grigliati al maiale",
+          "name2": "BAO GRIGLIATI AL MAIALE 猪肉生煎包",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477052",
+              "name": "Bao grigliati"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477053",
+              "version": "705ad546-b9ee-49c7-b443-2c701d1d5bf8",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040905"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477054",
+          "price": 4.5,
+          "dineIn_price": 4.5,
+          "description": "manzo, salsa di soia fermentata, cipolla, zenzero 牛肉，大豆酱，洋葱，生姜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao grigliati al manzo",
+          "name2": "BAO GRIGLIATI AL MANZO 牛肉生煎包",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477052",
+              "name": "Bao grigliati"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477054",
+              "version": "30895405-eda3-430b-a9ab-0775465da202",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040906"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477055",
+          "price": 4.5,
+          "dineIn_price": 4.5,
+          "description": "germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shitake, vermicelli di soia, cavolo cinese, salsa di arachidi - 豆芽，油条，豆干，木耳，香菇，粉丝，白菜",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_PEANUTS"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Bao grigliati vegetariani",
+          "name2": "BAO GRIGLIATI VEGETARIANI 蔬菜生煎包",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477052",
+              "name": "Bao grigliati"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477055",
+              "version": "2a77afe8-8c41-4007-a489-4d6e28f99151",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040906"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac6859477056",
+      "price": null,
+      "name": "Noodles in brodo",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 5,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477057",
+          "price": 8.9,
+          "dineIn_price": 8.9,
+          "description": "maiale, noodles freschi, pak choi, cipollotto, brodo di ossa di maiale 猪肉，鲜面，青江菜，葱花，猪骨汤",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles freschi con costine di maiale",
+          "name2": "NOODLES FRESCHI CON COSTINE DI MAIALE 排骨鲜面",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477056",
+              "name": "Noodles in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477057",
+              "version": "ebae9286-4c9f-452d-8805-ada42d04013c",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477058",
+          "price": 8.9,
+          "dineIn_price": 8.9,
+          "description": "manzo, noodles freschi, pak choi, cipollotto, brodo di manzo 牛肉，鲜面，青江菜，葱花，牛骨汤",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SOYA"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles freschi con manzo in brodo",
+          "name2": "NOODLES FRESCHI CON MANZO IN BRODO 牛肉鲜面",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477056",
+              "name": "Noodles in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477058",
+              "version": "f67d9250-9790-4e7e-a40a-b2117ca393f4",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477059",
+          "price": 8.9,
+          "dineIn_price": 8.9,
+          "description": "cotoletta di pollo, noodles freschi, pak choi, cipollotto, brodo di ossa di maiale 鸡排，鲜面，青江菜，葱花，猪骨汤底",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles freschi con pollo croccante",
+          "name2": "NOODLES FRESCHI CON POLLO CROCCANTE 炸鸡排鲜面",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477056",
+              "name": "Noodles in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477059",
+              "version": "4a71f751-0f57-464e-b569-491d9839ea5b",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac685947705a",
+          "price": 9.9,
+          "dineIn_price": 9.9,
+          "description": "gamberi, cozze, calamari, noodles freschi, pak choi, cipollotto, brodo di pesce 虾，青口，鱿鱼，鲜面，青江菜，葱花，海鲜汤底",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_FISH",
+            "ALLERGEN_MOLLUSCE"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles freschi con frutti di mare",
+          "name2": "NOODLES FRESCHI CON FRUTTI DI MARE 海鲜鲜面",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477056",
+              "name": "Noodles in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947705a",
+              "version": "b116d7a3-6b91-46d2-abf3-d946e37986bd",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040910"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac685947705b",
+      "price": null,
+      "name": "Noodles di riso in brodo",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 6,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac685947705c",
+          "price": 8.9,
+          "dineIn_price": 8.9,
+          "description": "maiale, noodles di riso, pak choi, cipollotto, brodo di ossa di maiale 猪肉，粉干，青江菜，葱花，猪骨汤",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles di riso con costine di maiale",
+          "name2": "NOODLES DI RISO CON COSTINE DI MAIALE 排骨粉干",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947705b",
+              "name": "Noodles di riso in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947705c",
+              "version": "c19cd08a-68cd-4481-a707-f761d95eb968",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040907"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac685947705d",
+          "price": 8.9,
+          "dineIn_price": 8.9,
+          "description": "manzo, noodles di riso, pak choi, cipollotto, brodo di manzo 牛肉，粉干，青江菜，葱花，牛骨汤",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles di riso con manzo in brodo",
+          "name2": "NOODLES DI RISO CON MANZO IN BRODO 牛肉粉干",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947705b",
+              "name": "Noodles di riso in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947705d",
+              "version": "2e2be5aa-6b60-4c73-87ea-588f7dbc4670",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040907"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac685947705e",
+          "price": 8.9,
+          "dineIn_price": 8.9,
+          "description": "cotoletta di pollo, noodles di riso, pak choi, cipollotto, brodo di ossa di maiale 鸡排，粉干，青江菜，葱花，猪骨汤底",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles di riso con pollo croccante",
+          "name2": "NOODLES DI RISO CON POLLO CROCCANTE 炸鸡排粉干",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947705b",
+              "name": "Noodles di riso in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947705e",
+              "version": "d6890b4d-30d5-4a82-8655-0518c9071939",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040908"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac685947705f",
+          "price": 9.9,
+          "dineIn_price": 9.9,
+          "description": "gamberi, cozze, calamari, noodles di riso, pak choi, cipollotto, brodo di pesce 虾，青口，鱿鱼，粉干，青江菜，葱花，海鲜汤底",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles di riso con frutti di mare",
+          "name2": "NOODLES DI RISO CON FRUTTI DI MARE 海鲜粉干",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac685947705b",
+              "name": "Noodles di riso in brodo"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947705f",
+              "version": "f12886cd-485a-4794-bab3-debb9194e486",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac6859477060",
+      "price": null,
+      "name": "Aggiunzioni",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 7,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477061",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Extra costine di maiale",
+          "name2": "EXTRA COSTINE MAIALE",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477060",
+              "name": "Aggiunzioni"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477062",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Extra manzo",
+          "name2": "EXTRA MANZO",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477060",
+              "name": "Aggiunzioni"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477063",
+          "price": 1,
+          "dineIn_price": 1,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Extra Pak choi",
+          "name2": "EXTRA PAK CHOI",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477060",
+              "name": "Aggiunzioni"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "type": "DISH",
+          "position": 3
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac6859477064",
+      "price": null,
+      "name": "Noodles saltati",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 8,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477065",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "manzo, noodles, uovo, verdure miste 牛肉，方便面，混和蔬菜，鸡蛋",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles saltati con manzo",
+          "name2": "NOODLES SALTATI CON MANZO 牛肉炒方便面",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477064",
+              "name": "Noodles saltati"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477065",
+              "version": "46665681-a3d7-4b0c-88f9-8d4f82a44ed3",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477066",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "gamberi, noodles, uovo e verdure miste虾仁，方便面，鸡蛋，混和蔬菜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles saltati con gamberi",
+          "name2": "NOODLES SALTATI CON GAMBERI 虾仁炒方便面",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477064",
+              "name": "Noodles saltati"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477066",
+              "version": "2f85d146-d74d-4930-8e45-bdba4f3dec17",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477067",
+          "price": 7,
+          "dineIn_price": 7,
+          "description": "noodles, uovo e verdura miste 方便面，鸡蛋，混和蔬菜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Noodles saltato con verdura",
+          "name2": "NOODLES SALTATO CON VERDURA 素炒方便面",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477064",
+              "name": "Noodles saltati"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477067",
+              "version": "88b312c2-ead3-4693-a731-e681ad3faaf9",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6a313c8fbca5ac6859477068",
+      "price": null,
+      "name": "Spaghetti di riso e soia",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 9,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477069",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "Spaghetti di riso saltati con verdura, uova e gamberi",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Spaghetti riso saltati con gamberi e uova",
+          "name2": "SPAGHETTI SALTATI CON GAMBERI E UOVA（虾仁炒粉干）",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477068",
+              "name": "Spaghetti di riso e soia"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477069",
+              "version": "28befeb9-f577-4da8-85ef-729838ef03d6",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac685947706a",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "Spaghetti di riso saltati con manzo, uova e verdura",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Spaghetti riso saltati con manzo e uova",
+          "name2": "SPAGHETTI SALTATI CON MANZO E UOVA（牛肉炒粉干）",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477068",
+              "name": "Spaghetti di riso e soia"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947706a",
+              "version": "2f92a30d-1cc1-4308-9d3b-7a6a26e181ea",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac685947706b",
+          "price": 7,
+          "dineIn_price": 7,
+          "description": "spaghetti di riso, verdura mista e uovo 细粉干，混合蔬菜，鸡蛋",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Spaghetti di riso saltati con verdura",
+          "name2": "SPAGHETTI DI RISO SALTATI CON VERDURA 蔬菜炒细粉干",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477068",
+              "name": "Spaghetti di riso e soia"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947706b",
+              "version": "754e9670-fed3-43a4-bdfb-216f56adcec3",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac685947706c",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "vermicelli di soia, manzo macinato e verdure miste粉丝，牛肉碎，混和蔬菜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Spaghetti di soia saltati con carne macinata di manzo",
+          "name2": "SPAGHETTI DI SOIA SALTATI CON CARNE MACINATA DI MANZO 牛肉碎炒粉丝",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477068",
+              "name": "Spaghetti di riso e soia"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947706c",
+              "version": "4a4c7f96-5193-4ba5-9c2d-3821e4cb052f",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac685947706d",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "spaghetti di soia, verdura mista e gamberi 粉丝，混和蔬菜，虾仁",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Spaghetti di soia saltati con gamberi",
+          "name2": "SPAGHETTI DI SOIA SALTATI CON GAMBERI 虾仁炒粉丝",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477068",
+              "name": "Spaghetti di riso e soia"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947706d",
+              "version": "17e133fb-4a98-45c2-8249-01ba4a884f42",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac685947706e",
+          "price": 7,
+          "dineIn_price": 7,
+          "description": "spaghetti di soia, verdure miste 粉丝，混和蔬菜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Spaghetti di soia saltati con verdura",
+          "name2": "SPAGHETTI DI SOIA SALTATI CON VERDURA 蔬菜炒粉丝",
+          "asssigned_menus": [
+            {
+              "_id": "6a313c8fbca5ac6859477068",
+              "name": "Spaghetti di riso e soia"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947706e",
+              "version": "8331f4fb-7ea0-4144-96c4-0861c4502c5a",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3130",
+      "price": null,
+      "name": "Riso saltato",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 10,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac685947706f",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "uovo, piselli, cubetti di prosciutto 鸡蛋，青豆，火腿肠丁，米饭",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Riso cantonese",
+          "name2": "RISO CANTONESE 广东炒饭",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3130",
+              "name": "Riso saltato"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947706f",
+              "version": "a679291e-a4f4-4c51-aa12-980b0a0251dd",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477070",
+          "price": 8,
+          "dineIn_price": 8,
+          "description": "carne di manzo, uovo e verdura mista 牛肉，米饭，混和蔬菜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Riso saltato con manzo",
+          "name2": "RISO SALTATO CON MANZO 牛肉炒饭",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3130",
+              "name": "Riso saltato"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477070",
+              "version": "dde8564e-e4de-4b54-a440-a52320ff3e6e",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477071",
+          "price": 7,
+          "dineIn_price": 7,
+          "description": "verdure miste 米饭 混和蔬菜",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Riso saltato con verdura",
+          "name2": "RISO SALTATO CON VERDURA 蔬菜炒饭",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3130",
+              "name": "Riso saltato"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477071",
+              "version": "56ca78d1-b06c-4885-8844-4b273747f3bc",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3131",
+      "price": null,
+      "name": "Piatti caldi",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 11,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477072",
+          "price": 7.9,
+          "dineIn_price": 7.9,
+          "description": "pancetta di maiale, salsa di soia, zucchero di roccia, zenzero, cipollotto",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SOYA"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Pancetta di maiale brasata in salsa di soia",
+          "name2": "PANCETTA DI MAIALE BRASATA IN SALSA DI SOIA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3131",
+              "name": "Piatti caldi"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477072",
+              "version": "0c1e4d28-fa82-4cc6-95e4-7a346e58b966",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477073",
+          "price": 7.9,
+          "dineIn_price": 7.9,
+          "description": "manzo, peperoncino, cipolla, aglio, cipollotto, semi di sesamo",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_MEDIUM_SPICY"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Manzo alla Sichuan",
+          "name2": "MANZO ALLA SICHUAN 川味牛肉",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3131",
+              "name": "Piatti caldi"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477073",
+              "version": "551e37af-9d34-4ecb-84ed-1dbba25376fc",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477074",
+          "price": 9,
+          "dineIn_price": 9,
+          "description": "manzo, peperoncino, cipolla, aglio, cipollotto, semi di sesamo",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_MEDIUM_SPICY"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Manzo saltato in wok piccante",
+          "name2": "MANZO SALTATO IN WOK PICCANTE 干锅牛肉",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3131",
+              "name": "Piatti caldi"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477074",
+              "version": "86803043-2970-400f-8295-c2086dec2841",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477075",
+          "price": 9,
+          "dineIn_price": 9,
+          "description": "gamberoni, peperoncino, cipolla, aglio, cipollotto, semi di sesamo",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_CRUSTACEANS",
+            "ALLERGEN_FISH",
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_MEDIUM_SPICY"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Gamberoni saltati in wok piccante",
+          "name2": "GAMBERONI SALTATI IN WOK PICCANTE 干锅大虾",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3131",
+              "name": "Piatti caldi"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477075",
+              "version": "639ed2c9-e17f-49a4-abd0-bb56e9c79dd3",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477076",
+          "price": 9,
+          "dineIn_price": 9,
+          "description": "calamari, peperoncino, cipolla, aglio, cipollotto, semi di sesamo",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_CRUSTACEANS",
+            "ALLERGEN_FISH",
+            "ALLERGEN_SESAME",
+            "ALLERGEN_MOLLUSCE"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Calamari saltati in wok piccanti",
+          "name2": "CALAMARI SALTATI IN WOK PICCANTI 干锅鱿鱼",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3131",
+              "name": "Piatti caldi"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477076",
+              "version": "ace38233-eb0d-4009-ac56-ffe37001eae4",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477077",
+          "price": 9,
+          "dineIn_price": 9,
+          "description": "pollo, peperoncino, cipolla, aglio, cipollotto semi di sesamo",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_MEDIUM_SPICY"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Pollo saltato in wok piccante",
+          "name2": "POLLO SALTATO IN WOK PICCANTE 干锅鸡",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3131",
+              "name": "Piatti caldi"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477077",
+              "version": "956872c5-aa10-4820-99c5-fb7624e0fa8c",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040909"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3132",
+      "price": null,
+      "name": "Antipasti",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 12,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477078",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "4 pezzi crocchette fritte giapponesi con polpo, salsa maionese, salsa teriyaki tonkatsu, (tonnetto secco ed affumicato in trucioli)",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_EGGS",
+            "ALLERGEN_FISH",
+            "ALLERGEN_MOLLUSCE"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Takoyaki",
+          "name2": "TAKOYAKI",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477078",
+              "version": "de9a48e3-2b7f-4051-8217-363292fccfe8",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040910"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477079",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "Insalata di alghe con sesamo e spezie.",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_COLOURANTS"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Goma wakame",
+          "name2": "GOMA WAKAME",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477079",
+              "version": "7c0b2b75-f37e-4df8-89bb-beb6fec95442",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040912"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac685947707a",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "Baccelli di soia bolliti con sale marino.",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_SOYA"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Edamame",
+          "name2": "EDAMAME",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947707a",
+              "version": "49548aff-d303-4a48-8fbf-e95272b0192e",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040913"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac685947707b",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Ebi tempura",
+          "name2": "EBI TEMPURA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947707b",
+              "version": "0bbd7ba5-eb78-4c38-ad1c-7ed933cf02fb",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040915"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac685947707c",
+          "price": 6,
+          "dineIn_price": 6,
+          "description": "salsa di soia, cipolla e zenzero",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SOYA",
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Focaccia cinese ripiena di manzo",
+          "name2": "FOCACCIA CINESE RIPIENA DI MANZO 牛肉馅饼",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947707c",
+              "version": "2bc6b1c0-5a0f-4903-95cb-8dabf03e8939",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040916"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac685947707d",
+          "price": 6.9,
+          "dineIn_price": 6.9,
+          "description": "coriandolo, coscia di pollo , peperoncino, semi di sesamo",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_MEDIUM_SPICY"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Pollo piccante del Sichuan (piatto freddo)",
+          "name2": "POLLO PICCANTE DEL SICHUAN 口水鸡",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947707d",
+              "version": "566f619f-4543-438b-add8-fb6902c7123d",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040916"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac685947707e",
+          "price": 6.9,
+          "dineIn_price": 6.9,
+          "description": "zenzero, cipollotto, coscia di pollo",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Pollo con zenzero e cipollotto (piatto freddo)",
+          "name2": "POLLO CON ZENZERO E CIPOLLOTTO 姜葱鸡",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947707e",
+              "version": "6531de9a-2b59-484b-8dbf-185d0120d4ad",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040916"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        },
+        {
+          "_id": "6a313c8fbca5ac685947707f",
+          "price": 7.9,
+          "dineIn_price": 7.9,
+          "description": "manzo, semi di sesamo, peperoncino, carota, cetriolo",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_MILD_SPICY"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Manzo freddo condito",
+          "name2": "MANZO FREDDO CONDITO 凉拌牛肉",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947707f",
+              "version": "9e174c97-c953-4fe6-8539-b934661cde3b",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040916"
+            }
+          ],
+          "type": "DISH",
+          "position": 8
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477080",
+          "price": 6.9,
+          "dineIn_price": 6.9,
+          "description": "cipollotto, trippa di manzo, semi di sesamo",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [
+            "INGREDIENTS_MEDIUM_SPICY"
+          ],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Trippa di manzo fredda condito",
+          "name2": "TRIPPA DI MANZO FREDDA CONDITO 凉拌牛百叶",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477080",
+              "version": "7e0d7e1a-8654-47f3-8ae3-52cfdb84a087",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040917"
+            }
+          ],
+          "type": "DISH",
+          "position": 9
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477081",
+          "price": 5.9,
+          "dineIn_price": 5.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_SESAME"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Maiale fritto croccante",
+          "name2": "MAIALE FRITTO CROCCANTE 炸小酥肉",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477081",
+              "version": "37f1a27f-a610-43f3-bdd9-cd1539e03045",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040917"
+            }
+          ],
+          "type": "DISH",
+          "position": 10
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477082",
+          "price": 5.9,
+          "dineIn_price": 5.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Costine di maiale fritto",
+          "name2": "COSTINE DI MAIALE FRITTO 炸小酥排骨",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477082",
+              "version": "59a2ac9c-fe50-4ffb-94d4-cb7f8fb04267",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040917"
+            }
+          ],
+          "type": "DISH",
+          "position": 11
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477083",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Alette di pollo fritto",
+          "name2": "ALETTE DI POLLO FRITTO 香炸鸡翅",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477083",
+              "version": "c30cbc51-5ec5-4c83-a8dd-65bf057f261f",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040917"
+            }
+          ],
+          "type": "DISH",
+          "position": 12
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477084",
+          "price": 5.9,
+          "dineIn_price": 5.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Dadini di pollo fritto",
+          "name2": "DADINI DI POLLO FRITTO 炸鸡丁",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477084",
+              "version": "08374908-cba2-4922-ba14-8f0ec23f0c07",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040918"
+            }
+          ],
+          "type": "DISH",
+          "position": 13
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477085",
+          "price": 2,
+          "dineIn_price": 2,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Riso bianco",
+          "name2": "RISO BIANCO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3132",
+              "name": "Antipasti"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477085",
+              "version": "30b3596a-2eb4-40da-b295-f615188a2540",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040918"
+            }
+          ],
+          "type": "DISH",
+          "position": 14
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3133",
+      "price": null,
+      "name": "Mochi e Daifuku",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 13,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477086",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D03 - Mochi gelato fragola",
+          "name2": "MOCHI GELATO FRAGOLA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477086",
+              "version": "956f5c2e-976f-4cf4-91d2-19e2c3e7ff81",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477087",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D04 - Mochi gelato mango",
+          "name2": "MOCHI GELATO MANGO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477087",
+              "version": "c653bad6-0a3b-4bb3-ba4f-7fe5fbc04c5c",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477088",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D05 - Mochi gelato cocco",
+          "name2": "MOCHI GELATO COCCO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477088",
+              "version": "74e66adc-e36a-4b5d-84ef-43085cc54784",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477089",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D08 - Mochi gelato cioccolato",
+          "name2": "MOCHI CIOCCOLATO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477089",
+              "version": "9cd62234-9e30-4bfb-b665-d06875a19b29",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac685947708a",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D09 - Mochi gelato pistacchio",
+          "name2": "MOCHI PISTACCHIO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947708a",
+              "version": "fed90e2b-39a1-474e-a04a-3a066784d421",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac685947708b",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D11 - Mochi gelato passion fruit e mango",
+          "name2": "MOCHI PASSION FRUIT E MANGO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947708b",
+              "version": "012cfd7b-981c-40f3-8a3c-980ef7578b27",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac685947708c",
+          "price": 4.9,
+          "dineIn_price": 4.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D12 - Mochi gelato vaniglia",
+          "name2": "MOCHI VANIGLIA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947708c",
+              "version": "88afc681-84c4-440e-87c5-6719d8d20658",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        },
+        {
+          "_id": "6a313c8fbca5ac685947708d",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D16 - Daifuku alla fragola",
+          "name2": "DAIFUKU FRAGOLA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947708d",
+              "version": "93d18163-022a-4622-ae96-eefbe51faa08",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 8
+        },
+        {
+          "_id": "6a313c8fbca5ac685947708e",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D17 - Daifuku al mango",
+          "name2": "DAIFUKU MANGO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947708e",
+              "version": "14aec3ca-2662-4361-875a-2ba4ce284a63",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040903"
+            }
+          ],
+          "type": "DISH",
+          "position": 9
+        },
+        {
+          "_id": "6a313c8fbca5ac685947708f",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D18 - Daifuku ai fagioli rossi",
+          "name2": "DAIFUKU FAGIOLI ROSSI",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947708f",
+              "version": "4efa927b-f70c-4fda-bd14-91945088256c",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 10
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477090",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D19 - Daifuku al the verde",
+          "name2": "DAIFUKU THE VERDE",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3133",
+              "name": "Mochi e Daifuku"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477090",
+              "version": "8c4ff34c-e76c-4645-99c6-415811ecaf53",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040904"
+            }
+          ],
+          "type": "DISH",
+          "position": 11
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3134",
+      "price": null,
+      "name": "Dolci",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 14,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477091",
+          "price": 5,
+          "dineIn_price": 5,
+          "description": "Souffle al cioccolato con cuore di cioccolato fuso.",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_EGGS",
+            "ALLERGEN_MILK"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D19 - Souffle cioccolato",
+          "name2": "D13 - SOUFFLE CIOCCOLATO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3134",
+              "name": "Dolci"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477091",
+              "version": "57de0f8a-6fde-4c74-970e-0f4ef9de7b82",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040859"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477092",
+          "price": 5,
+          "dineIn_price": 5,
+          "description": "Souffle al cioccolato bianco ripieno.",
+          "quantity_description": "",
+          "allergen": [
+            "ALLERGEN_GLUTEN",
+            "ALLERGEN_EGGS",
+            "ALLERGEN_MILK"
+          ],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D20 - Souffle cioccolato bianco",
+          "name2": "SOUFFLE CIOCC. BIANCO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3134",
+              "name": "Dolci"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477092",
+              "version": "626af65c-a9d9-430e-b402-c4282157dd8a",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040859"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477093",
+          "price": 5,
+          "dineIn_price": 5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D21 - Souffle pistacchio",
+          "name2": "SOUFFLE PISTACCHIO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3134",
+              "name": "Dolci"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477093",
+              "version": "a1b16a37-bd3d-4a6d-8aa3-83d823bef7d3",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040900"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477094",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "Pan di spagna al cacao con crema al cioccolato e con un cuore di cioccolato fondente con cacao, decorato con scaglie di cioccolato",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D23 - Cremoso cioccolato",
+          "name2": "CREMOSO CIOCCOLATO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3134",
+              "name": "Dolci"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477094",
+              "version": "421382ed-6dba-446c-a2f0-2f67b4778f59",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040900"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477095",
+          "price": 6,
+          "dineIn_price": 6,
+          "description": "Crema catalana con zucchero caramellato in coccio.",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D24 - Coppa Crema Catalana",
+          "name2": "COPPA CREMA CATALANA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3134",
+              "name": "Dolci"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477095",
+              "version": "23484283-499c-4dc8-8363-54ab8aefa4da",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040900"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477096",
+          "price": 2.9,
+          "dineIn_price": 2.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D30 - Pane coniglio",
+          "name2": "D30 - PANE CONIGLIO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3134",
+              "name": "Dolci"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477096",
+              "version": "31b8e5bf-793c-42ec-9e55-16c158963a25",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040900"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477097",
+          "price": 5,
+          "dineIn_price": 5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "D31 - Limone ripieno",
+          "name2": "LIMONE RIPIENO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3134",
+              "name": "Dolci"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477097",
+              "version": "784119a3-4af2-4b85-81ea-8606bc0aca4f",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040902"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3135",
+      "price": null,
+      "name": "Bevande",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 15,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac6859477098",
+          "price": 1.5,
+          "dineIn_price": 1.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B01 - Acqua naturale 50CL",
+          "name2": "B01. ACQ. NAT. 50CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477098",
+              "version": "bce3303a-85ba-46e1-99ff-b810fa8183fa",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040923"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac6859477099",
+          "price": 1.5,
+          "dineIn_price": 1.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B02 - Acqua frizzante 50cl",
+          "name2": "B02. ACQ. FRIZZ. 50CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac6859477099",
+              "version": "8aa1767d-bdd1-4048-b8ec-3c34203265c8",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040923"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac685947709a",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B03 - Coca cola 33cl",
+          "name2": "B03. COCA 33CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947709a",
+              "version": "cf11bf75-17ba-46e1-a4dd-ef1c9d673ec9",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040924"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac685947709b",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B04 - Coca zero 33cl",
+          "name2": "B04. COCA ZERO 33CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947709b",
+              "version": "6cd0bd44-705c-428b-bef7-59c50110d22f",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040924"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac685947709d",
+          "price": 2.5,
+          "dineIn_price": 2.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B08 - Walovi",
+          "name2": "B08 - WALOVI（王老吉）",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947709d",
+              "version": "99cd0379-ba3e-446f-919f-22913952c4bf",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040924"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac685947709e",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B05 - Fanta 33CL",
+          "name2": "B05 - FANTA 33CL 芬达",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947709e",
+              "version": "cc002f70-389a-48bb-855a-5ef571ad0944",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040924"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac685947709f",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B06 - SPRITE 33CL",
+          "name2": "B06 - SPRITE 33CL 雪碧",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac685947709f",
+              "version": "8b53f4c8-7d4e-48c1-8e22-78b983807d9e",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040925"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a0",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B09 - Want want milk",
+          "name2": "B09 - WANT WANT MILK（旺仔牛奶）",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a0",
+              "version": "fe1d6241-198d-4cf2-a772-1b002420cc84",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040925"
+            }
+          ],
+          "type": "DISH",
+          "position": 8
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a1",
+          "price": 2.5,
+          "dineIn_price": 2.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B10 - Jianlibao",
+          "name2": "B10 - JIANLIBAO 健力宝",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a1",
+              "version": "5a40ef12-a452-4600-b623-eec232b92e2a",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040925"
+            }
+          ],
+          "type": "DISH",
+          "position": 9
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a2",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B11 - Coconut juice",
+          "name2": "B11 - COCONUT JUICE 椰汁",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a2",
+              "version": "cc815ada-80ef-489f-8122-106ea30777d1",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040925"
+            }
+          ],
+          "type": "DISH",
+          "position": 10
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a3",
+          "price": 4,
+          "dineIn_price": 4,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "The verde caldo",
+          "name2": "THE VERDE CALDO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3135",
+              "name": "Bevande"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a3",
+              "version": "2e6f4cf9-4ec2-4baa-938f-2e96f63ca522",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040925"
+            }
+          ],
+          "type": "DISH",
+          "position": 11
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3136",
+      "price": null,
+      "name": "Birra",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 16,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac68594770a4",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B09 - Birra asahi 33cl",
+          "name2": "B09. BIRRA ASAHI 33CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3136",
+              "name": "Birra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a4",
+              "version": "1586d48b-2891-4930-9b30-41c17d622dd1",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040926"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a5",
+          "price": 6,
+          "dineIn_price": 6,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B11 - Birra sapporo 50cl",
+          "name2": "B11. BIRRA SAPPORO 50CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3136",
+              "name": "Birra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a5",
+              "version": "a4850f73-29e3-4dd1-b4b0-a6a13f382266",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040927"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a6",
+          "price": 3.9,
+          "dineIn_price": 3.9,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B12 - Birra kirin 33cl",
+          "name2": "B12. BIRRA KIRIN 33CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3136",
+              "name": "Birra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a6",
+              "version": "e2eda6aa-9088-4baa-8502-90ff9e77d7dc",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040927"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a7",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B18 - Birra Heineken 33cl",
+          "name2": "B18 - BIRRA HEINEKEN",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3136",
+              "name": "Birra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a7",
+              "version": "53bb4494-dc34-4d0b-b202-fc882f14fc08",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040927"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a8",
+          "price": 3,
+          "dineIn_price": 3,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B17 - Birra Moretti 33cl",
+          "name2": "B17 - BIRRA MORETTI 33CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3136",
+              "name": "Birra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a8",
+              "version": "146794b3-63c3-48ec-a9e7-45c7d7d1bd62",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040927"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770a9",
+          "price": 3.5,
+          "dineIn_price": 3.5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B16 - Birra messina 33cl",
+          "name2": "B16 - BIRRA MESSINA 33CL",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3136",
+              "name": "Birra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770a9",
+              "version": "4480bb4d-2308-4b71-bb7d-3645a733c9b0",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040928"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770aa",
+          "price": 5,
+          "dineIn_price": 5,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "B15 -TSINGTAO",
+          "name2": "B15 -TSINGTAO 青岛啤酒",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3136",
+              "name": "Birra"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770aa",
+              "version": "8fe4ff78-e2a9-453f-bc13-a21469d84590",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040928"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    },
+    {
+      "_id": "6175746f2d6d656e752d3137",
+      "price": null,
+      "name": "Vini",
+      "pics": null,
+      "status": true,
+      "is_hidden": false,
+      "create_time": "2026-06-16T14:07:43.342Z",
+      "description": null,
+      "position": 17,
+      "dishs": [
+        {
+          "_id": "6a313c8fbca5ac68594770ab",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "L’Aria Chardonnay esprime il carattere della Sicilia: sentori floreali e agrumati che si bilanciano con la freschezza e la piacevolezza al palato, rendendolo un bianco versatile.",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Vino Aria Chardonnay",
+          "name2": "VINO ARIA CHARDONNAY",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770ab",
+              "version": "4c873d4e-0bbc-42fa-b5c9-cd4122e140f0",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040856"
+            }
+          ],
+          "type": "DISH",
+          "position": 1
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770ac",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Vino Viognier",
+          "name2": "VINO VIOGNIER",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770ac",
+              "version": "ce11136d-cf40-46d1-b070-87080199b0fe",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 2
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770ad",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Vino Cataratto",
+          "name2": "VINO CATARRATTO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770ad",
+              "version": "ea73239c-3b05-455b-9190-4ee68aafb62c",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 3
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770ae",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Vino rosato frizz. SBRIU",
+          "name2": "SBRIU ROSATO",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770ae",
+              "version": "0fe0810a-b1a8-4d2b-84e3-8a2e4f6d1adf",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 4
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770af",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "V8 - VINO FRIZZANTE MURRIALI",
+          "name2": "V8 - VINO FRIZZANTE MURRIALI",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770af",
+              "version": "e235bdf4-3ada-4cb8-bcb6-3c990480f0c4",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 5
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b0",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "V10 VINO NERO D AVOLA",
+          "name2": "VINO NERO D AVOLA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b0",
+              "version": "13b3e366-93dc-4155-90ce-f2b5ad9b8259",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 6
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b1",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "V11 - VINO ROSSO MERLOT",
+          "name2": "VINO ROSSO MERLOT",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b1",
+              "version": "52cd4368-e398-446a-95ab-6686ab190b13",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 7
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b2",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "V12 - VINO ROSSO SYRAH",
+          "name2": "VINO ROSSO SYRAH",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b2",
+              "version": "adc5dd3b-32bc-4a25-89f5-af905228c0d3",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 8
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b3",
+          "price": 18,
+          "dineIn_price": 18,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Vino bianco Tasca D.Almerita Leone",
+          "name2": "VINO BIANCO TASCA D.ALMERITA LEONE",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b3",
+              "version": "918344e8-2763-423a-af39-fc3f243b9f8d",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040857"
+            }
+          ],
+          "type": "DISH",
+          "position": 9
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b4",
+          "price": 20,
+          "dineIn_price": 20,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "V08 - Babbio Bianco frizzante",
+          "name2": "BABBIO BIANCO FRIZZANTE",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b4",
+              "version": "c67166fe-534b-494d-bf51-ce9af31a9a2b",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040858"
+            }
+          ],
+          "type": "DISH",
+          "position": 10
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b5",
+          "price": 20,
+          "dineIn_price": 20,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "V09 - Babbio Rosato frizzante",
+          "name2": "V09 - BABBIO ROSATO FRIZZANTE",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b5",
+              "version": "b56b1309-c461-4ed3-974a-9b060df5a534",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040858"
+            }
+          ],
+          "type": "DISH",
+          "position": 11
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b6",
+          "price": 35,
+          "dineIn_price": 35,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Vino rosso Maria Costanza",
+          "name2": "VINO ROSSO MILAZZO MARIA COSTANZA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b6",
+              "version": "14433b67-8c66-4587-bf26-aa2e5b2d1664",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040858"
+            }
+          ],
+          "type": "DISH",
+          "position": 12
+        },
+        {
+          "_id": "6a313c8fbca5ac68594770b7",
+          "price": 28,
+          "dineIn_price": 28,
+          "description": "",
+          "quantity_description": "",
+          "allergen": [],
+          "delivery_type": "6",
+          "is_no_discount": false,
+          "status": "0",
+          "ingredients": [],
+          "setting_tax_group_id": "6a313c7ebca5ac685947702f",
+          "name": "Vino bianco Maria Costanza",
+          "name2": "VINO BIANCO MARIA COSTANZA",
+          "asssigned_menus": [
+            {
+              "_id": "6175746f2d6d656e752d3137",
+              "name": "Vini"
+            }
+          ],
+          "dish_type": "0",
+          "create_time": "2026-06-16T14:07:43.342Z",
+          "pics": [
+            {
+              "_id": "6a313c8fbca5ac68594770b7",
+              "version": "8abbd91c-6747-426c-9504-6b6a206715a2",
+              "name": "0",
+              "type": "1",
+              "update_date": "20260616040858"
+            }
+          ],
+          "type": "DISH",
+          "position": 13
+        }
+      ],
+      "is_mop": null,
+      "canceled_schedule_time_ranges": null,
+      "is_enable_business_time": null
+    }
+  ]
+}

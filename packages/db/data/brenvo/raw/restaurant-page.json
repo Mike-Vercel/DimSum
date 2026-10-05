@@ -1,0 +1,417 @@
+{
+  "success": true,
+  "code": 200,
+  "message": "success",
+  "data": {
+    "restaurant": {
+      "_id": "6a3138bbbca5ac6859476e8f",
+      "string_id": "8L3E9",
+      "name": "DimSum",
+      "internal_name": "DimSum",
+      "time_zone": "Europe/Rome"
+    },
+    "config": {
+      "branding": {
+        "internal_name": "DimSum",
+        "restaurant_name": "DimSum",
+        "subtitle": "",
+        "description": "",
+        "logo": {
+          "url": "https://yennefer-restaurant-logo.oss-eu-central-1.aliyuncs.com/6a3138bbbca5ac6859476e8f-20260616040451.jpg"
+        },
+        "cover_images_enabled": false,
+        "cover_images": [],
+        "default_image": {
+          "url": "https://yennefer-dish-album.oss-eu-central-1.aliyuncs.com/res-8L3E9-dish-default-20260616040446.jpg"
+        },
+        "popup_enabled": true,
+        "popup_images_enabled": true,
+        "popup_images": [
+          {
+            "index": 0,
+            "url": "https://yennefer-restaurant-album.oss-eu-central-1.aliyuncs.com/popup-6a3138bbbca5ac6859476e8f-0-20260702113731.jpg"
+          }
+        ],
+        "brand_tags": [],
+        "price_range": {
+          "enabled": false,
+          "currency_symbol": "€",
+          "level": "€€",
+          "min": 25,
+          "max": 40,
+          "unit": "person"
+        }
+      },
+      "services": {
+        "delivery": {
+          "enabled": true,
+          "label": "Delivery",
+          "sort": 1
+        },
+        "booking": {
+          "enabled": false,
+          "label": "Booking",
+          "sort": 2
+        },
+        "takeout": {
+          "enabled": true,
+          "label": "Takeout",
+          "sort": 3
+        },
+        "digital_menu": {
+          "enabled": false,
+          "label": "Digital Menu",
+          "sort": 4
+        },
+        "membership": {
+          "enabled": false,
+          "label": "Membership",
+          "sort": 5
+        }
+      },
+      "contact": {
+        "phone": "3762790995",
+        "phone_prefix": "+39",
+        "full_phone": "+39 3762790995",
+        "email": "",
+        "website": "",
+        "website_title": "",
+        "custom_websites": [],
+        "whatsapp": "",
+        "whatsapp_phone_prefix": "+39",
+        "facebook": "",
+        "facebook_enabled": false,
+        "instagram": "",
+        "instagram_enabled": false,
+        "google": "https://app.brenvo.ai/api/s/MtnT",
+        "google_enabled": true,
+        "website_enabled": false
+      },
+      "address": {
+        "country": "Italia",
+        "state": "Sicilia",
+        "province": "Sicilia",
+        "city": "Palermo",
+        "postcode": "90139",
+        "street": "DimSum V. Emerico Amari, 47, 90139 Palermo PA, Italia",
+        "home_number": "47",
+        "formatted_address": "DimSum V. Emerico Amari, 47, 90139 Palermo PA, Italia",
+        "place_id": "ChIJJejOTerlGRMRyMt0WMYutT0",
+        "lat": "38.1265619",
+        "lng": "13.3608561"
+      },
+      "opening_hours": {
+        "mode": "weekly",
+        "text": "Mon-Sun 11:30-15:00",
+        "weekly_hours": [
+          {
+            "key": "monday",
+            "label": "Monday",
+            "weekday": 1,
+            "slots": [
+              {
+                "from": "11:30",
+                "to": "15:00"
+              },
+              {
+                "from": "18:30",
+                "to": "23:00"
+              }
+            ]
+          },
+          {
+            "key": "tuesday",
+            "label": "Tuesday",
+            "weekday": 2,
+            "slots": [
+              {
+                "from": "11:30",
+                "to": "15:00"
+              },
+              {
+                "from": "18:30",
+                "to": "23:00"
+              }
+            ]
+          },
+          {
+            "key": "wednesday",
+            "label": "Wednesday",
+            "weekday": 3,
+            "slots": [
+              {
+                "from": "11:30",
+                "to": "15:00"
+              },
+              {
+                "from": "18:30",
+                "to": "23:00"
+              }
+            ]
+          },
+          {
+            "key": "thursday",
+            "label": "Thursday",
+            "weekday": 4,
+            "slots": [
+              {
+                "from": "11:30",
+                "to": "15:00"
+              },
+              {
+                "from": "18:30",
+                "to": "23:00"
+              }
+            ]
+          },
+          {
+            "key": "friday",
+            "label": "Friday",
+            "weekday": 5,
+            "slots": [
+              {
+                "from": "11:30",
+                "to": "15:00"
+              },
+              {
+                "from": "18:30",
+                "to": "23:00"
+              }
+            ]
+          },
+          {
+            "key": "saturday",
+            "label": "Saturday",
+            "weekday": 6,
+            "slots": [
+              {
+                "from": "11:30",
+                "to": "15:00"
+              },
+              {
+                "from": "18:30",
+                "to": "23:00"
+              }
+            ]
+          },
+          {
+            "key": "sunday",
+            "label": "Sunday",
+            "weekday": 7,
+            "slots": [
+              {
+                "from": "11:30",
+                "to": "15:00"
+              },
+              {
+                "from": "18:30",
+                "to": "23:00"
+              }
+            ]
+          }
+        ],
+        "timezone": "Europe/Rome"
+      },
+      "modules": {
+        "show_app_prompt": false,
+        "show_coupon": true,
+        "show_exclusive_coupon": true,
+        "show_gift_card": false,
+        "show_membership": true,
+        "show_points": true,
+        "show_balance": false,
+        "show_survey": false,
+        "show_lottery": false,
+        "show_special_events": false,
+        "show_contact_info": true,
+        "show_about": false
+      },
+      "content": {
+        "about_title": "About",
+        "about_content": "",
+        "contact_title": "Contacts",
+        "services_title": "Services",
+        "special_events_title": "Special Events",
+        "popup_title": "",
+        "promo_text_enabled": false,
+        "promo_text": ""
+      },
+      "service_popups": {
+        "pickup": {
+          "enabled": false,
+          "title": "",
+          "images_enabled": false,
+          "images": [],
+          "text_enabled": false,
+          "text": ""
+        },
+        "delivery": {
+          "enabled": false,
+          "title": "",
+          "images_enabled": false,
+          "images": [],
+          "text_enabled": false,
+          "text": ""
+        },
+        "booking": {
+          "enabled": false,
+          "title": "",
+          "images_enabled": false,
+          "images": [],
+          "text_enabled": false,
+          "text": ""
+        }
+      },
+      "desktop_display": {
+        "background": {
+          "type": "preset",
+          "preset_key": "modern_simple",
+          "url": "https://yennefer-restaurant-album.oss-eu-central-1.aliyuncs.com/desktop-backgrounds/modern_simple.jpg",
+          "custom_images": []
+        },
+        "top_quick_entry": {
+          "custom_enabled": false,
+          "max_visible": 5,
+          "items": [
+            {
+              "id": "menu",
+              "label": "菜单",
+              "target_type": "page",
+              "target_value": "menu",
+              "visible": true,
+              "sort": 1
+            },
+            {
+              "id": "coupon",
+              "label": "优惠券",
+              "target_type": "page",
+              "target_value": "coupon",
+              "visible": true,
+              "sort": 2
+            },
+            {
+              "id": "lottery",
+              "label": "抽奖游戏",
+              "target_type": "page",
+              "target_value": "lottery",
+              "visible": true,
+              "sort": 3
+            },
+            {
+              "id": "contact",
+              "label": "联系方式",
+              "target_type": "page",
+              "target_value": "contact",
+              "visible": true,
+              "sort": 4
+            },
+            {
+              "id": "other",
+              "label": "其他",
+              "target_type": "group",
+              "target_value": "other",
+              "visible": true,
+              "sort": 5
+            }
+          ],
+          "groups": [
+            {
+              "id": "other",
+              "label": "其他",
+              "items": [
+                {
+                  "id": "balance",
+                  "label": "储值",
+                  "target_type": "page",
+                  "target_value": "balance",
+                  "visible": true,
+                  "sort": 1
+                },
+                {
+                  "id": "gift_card",
+                  "label": "礼品卡",
+                  "target_type": "page",
+                  "target_value": "gift_card",
+                  "visible": true,
+                  "sort": 2
+                },
+                {
+                  "id": "events",
+                  "label": "限定活动",
+                  "target_type": "page",
+                  "target_value": "events",
+                  "visible": true,
+                  "sort": 3
+                },
+                {
+                  "id": "survey",
+                  "label": "问卷",
+                  "target_type": "page",
+                  "target_value": "survey",
+                  "visible": true,
+                  "sort": 4
+                },
+                {
+                  "id": "stores",
+                  "label": "所有门店",
+                  "target_type": "page",
+                  "target_value": "stores",
+                  "visible": true,
+                  "sort": 5
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "i18n": {
+        "default_language": "zh_CN",
+        "supported_languages": [
+          "zh_CN",
+          "en"
+        ]
+      }
+    },
+    "runtime": {
+      "available_services": [
+        "delivery",
+        "takeout"
+      ],
+      "available_modules": [
+        "show_coupon",
+        "show_exclusive_coupon",
+        "show_membership",
+        "show_points",
+        "show_contact_info"
+      ],
+      "order_pause": {
+        "enabled": false,
+        "start_at": null,
+        "end_at": null,
+        "is_active": false,
+        "order_types": [
+          "0",
+          "1"
+        ],
+        "resume_mode": "MANUAL",
+        "notify_enabled": false,
+        "cycle_id": null
+      },
+      "order_pause_waiting": {
+        "available": true,
+        "total": 0,
+        "page": 1,
+        "page_size": 50,
+        "has_more": false,
+        "people_visible": false,
+        "people": []
+      }
+    },
+    "meta": {
+      "has_saved_config": true,
+      "status": "published",
+      "version": 1,
+      "updated_at": "2026-07-08T16:25:49.671Z"
+    }
+  }
+}

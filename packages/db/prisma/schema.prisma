@@ -1,0 +1,1343 @@
+// DIMSUM — database schema (PostgreSQL).
+//
+// Conventions
+//  - Primary keys are UUID v7 (time-ordered) unless a natural key exists.
+//  - Money is ALWAYS an integer amount of euro cents (`*Cents`). VAT rates are basis points (1000 = 10%).
+//  - Rows imported from the previous platform keep `sourceProvider` + `sourceId` for re-imports.
+//  - Orders snapshot every customer-facing value (names, prices, address) at checkout time.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/* ============================================================== enums */
+
+enum Role {
+  CUSTOMER
+  RIDER
+  STAFF
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum FulfillmentType {
+  DELIVERY
+  PICKUP
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  RECEIVED
+  CONFIRMED
+  PREPARING
+  READY_FOR_PICKUP
+  RIDER_ASSIGNED
+  RIDER_TO_RESTAURANT
+  PICKED_UP
+  ON_THE_WAY
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  ONLINE
+  CASH_ON_DELIVERY
+}
+
+enum PaymentProvider {
+  STRIPE
+  DEV
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  REQUIRES_ACTION
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  CANCELED
+  PARTIALLY_REFUNDED
+  REFUNDED
+}
+
+enum RefundStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+enum DeliveryStatus {
+  UNASSIGNED
+  ASSIGNED
+  TO_RESTAURANT
+  AT_RESTAURANT
+  PICKED_UP
+  ON_THE_WAY
+  DELIVERED
+  CANCELLED
+}
+
+enum RiderAvailability {
+  OFFLINE
+  AVAILABLE
+  BUSY
+}
+
+enum DeliveryZoneType {
+  POLYGON
+  CIRCLE
+  DISTANCE_BAND
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_DELIVERY
+}
+
+enum CouponRedemptionStatus {
+  PENDING
+  CONFIRMED
+  RELEASED
+}
+
+enum LoyaltyTransactionType {
+  EARN
+  REDEEM
+  BONUS
+  ADJUST
+  EXPIRE
+  REVERSAL
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  WEB_PUSH
+  NATIVE_PUSH
+}
+
+enum NotificationCategory {
+  TRANSACTIONAL
+  MARKETING
+  OPERATIONAL
+}
+
+enum NotificationAudience {
+  CUSTOMER
+  STAFF
+  RIDER
+}
+
+enum NotificationType {
+  ORDER_RECEIVED
+  PAYMENT_CONFIRMED
+  PAYMENT_FAILED
+  ORDER_CONFIRMED
+  ORDER_PREPARING
+  ORDER_READY
+  RIDER_ASSIGNED
+  ORDER_PICKED_UP
+  RIDER_NEARBY
+  ORDER_DELIVERED
+  ORDER_CANCELLED
+  REFUND_ISSUED
+  ETA_UPDATED
+  NEW_ORDER
+  ORDER_ESCALATION
+  DELIVERY_ASSIGNED
+  PROMOTION
+  LOYALTY
+  SUPPORT_REPLY
+  SUPPORT_REQUEST
+}
+
+enum ConsentType {
+  TERMS
+  PRIVACY
+  MARKETING_EMAIL
+  MARKETING_PUSH
+  PERSONALIZATION
+  ANALYTICS
+}
+
+enum OpeningHourKind {
+  VENUE
+  DELIVERY
+  PICKUP
+}
+
+enum Allergen {
+  GLUTEN
+  CRUSTACEANS
+  EGGS
+  FISH
+  PEANUTS
+  SOYBEANS
+  MILK
+  NUTS
+  CELERY
+  MUSTARD
+  SESAME
+  SULPHITES
+  LUPIN
+  MOLLUSCS
+}
+
+enum ProductTag {
+  VEGETARIAN
+  VEGAN
+  SPICY
+  NEW
+  BESTSELLER
+  CONTAINS_COLOURANTS
+  ALCOHOLIC
+}
+
+enum ImageBackdrop {
+  DARK
+  LIGHT
+}
+
+enum SupportCategory {
+  ORDER_ISSUE
+  PAYMENT
+  DELIVERY
+  MISSING_ITEM
+  OTHER
+}
+
+enum SupportStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum CustomerSegment {
+  NEW
+  OCCASIONAL
+  REGULAR
+  INACTIVE
+}
+
+enum DevicePlatform {
+  WEB
+  IOS
+  ANDROID
+}
+
+enum EmailStatus {
+  QUEUED
+  SENT
+  FAILED
+  SKIPPED
+}
+
+/* ============================================================== identity (Better Auth) */
+
+model User {
+  id            String    @id @default(uuid(7)) @db.Uuid
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          Role      @default(CUSTOMER)
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  /// Set when the account was deleted on request: personal data is anonymized, orders are kept for accounting.
+  deletedAt     DateTime?
+  /// Staff/rider accounts disabled by an administrator cannot sign in.
+  disabledAt    DateTime?
+
+  sessions          Session[]
+  accounts          Account[]
+  customerProfile   CustomerProfile?
+  addresses         Address[]
+  cart              Cart?
+  orders            Order[]
+  favorites         Favorite[]
+  rider             Rider?
+  loyaltyAccount    LoyaltyAccount?
+  notifications     Notification[]
+  pushSubscriptions PushSubscription[]
+  deviceTokens      DeviceToken[]
+  consents          ConsentRecord[]
+  couponRedemptions CouponRedemption[]
+  personalCoupons   Coupon[]           @relation("PersonalCoupons")
+  supportTickets    SupportTicket[]
+  supportMessages   SupportMessage[]
+  auditLogs         AuditLog[]
+  refundsCreated    Refund[]           @relation("RefundCreatedBy")
+
+  @@index([role])
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(uuid(7)) @db.Uuid
+  accountId             String
+  providerId            String
+  userId                String    @db.Uuid
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  /// Password hash (scrypt) for email/password accounts.
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([providerId, accountId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verifications")
+}
+
+/* ============================================================== customers */
+
+model CustomerProfile {
+  id                   String           @id @default(uuid(7)) @db.Uuid
+  userId               String           @unique @db.Uuid
+  user                 User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  birthDate            DateTime?        @db.Date
+  preferredFulfillment FulfillmentType?
+  segment              CustomerSegment  @default(NEW)
+  ordersCount          Int              @default(0)
+  totalSpentCents      Int              @default(0)
+  lastOrderAt          DateTime?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  @@map("customer_profiles")
+}
+
+model Address {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  userId       String    @db.Uuid
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label        String?
+  street       String
+  streetNumber String
+  postalCode   String
+  city         String
+  province     String
+  country      String    @default("IT")
+  formatted    String
+  lat          Float
+  lng          Float
+  placeId      String?
+  precision    String    @default("rooftop")
+  staircase    String?
+  floor        String?
+  apartment    String?
+  intercom     String?
+  riderNotes   String?
+  isDefault    Boolean   @default(false)
+  lastUsedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+model Favorite {
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String   @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, productId])
+  @@map("favorites")
+}
+
+/* ============================================================== catalog */
+
+model Category {
+  id             String        @id @default(uuid(7)) @db.Uuid
+  slug           String        @unique
+  name           String
+  description    String?
+  position       Int           @default(0)
+  isVisible      Boolean       @default(true)
+  /// Optional explicit cover; defaults to the first product photo.
+  coverImageId   String?       @db.Uuid
+  coverImage     ProductImage? @relation("CategoryCover", fields: [coverImageId], references: [id], onDelete: SetNull)
+  sourceProvider String?
+  sourceId       String?
+  products       Product[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@unique([sourceProvider, sourceId])
+  @@index([position])
+  @@map("categories")
+}
+
+model Product {
+  id                    String                 @id @default(uuid(7)) @db.Uuid
+  slug                  String                 @unique
+  categoryId            String                 @db.Uuid
+  category              Category               @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  name                  String
+  nameZh                String?
+  description           String?
+  descriptionZh         String?
+  ingredients           String[]
+  /// Code printed on the restaurant menu/POS (e.g. "D03"). Not unique at the source.
+  posCode               String?
+  priceCents            Int
+  vatRateBps            Int                    @default(1000)
+  /// "Esaurito" toggle. Effective availability also considers `unavailableUntil`.
+  isAvailable           Boolean                @default(true)
+  /// "Disponibile nuovamente domani": the product becomes orderable again at this instant.
+  unavailableUntil      DateTime?
+  isVisible             Boolean                @default(true)
+  isFeatured            Boolean                @default(false)
+  tags                  ProductTag[]
+  spicyLevel            Int                    @default(0)
+  excludedFromDiscounts Boolean                @default(false)
+  /// False when the allergen list was never declared: the UI then asks customers to contact the restaurant.
+  allergensDeclared     Boolean                @default(false)
+  maxQuantityPerLine    Int                    @default(30)
+  position              Int                    @default(0)
+  sourceProvider        String?
+  sourceId              String?
+  /// Untouched source values (names, description) kept for audits and re-imports.
+  sourceData            Json?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  deletedAt             DateTime?
+
+  images         ProductImage[]
+  variants       ProductVariant[]
+  allergens      ProductAllergen[]
+  modifierGroups ProductModifierGroup[]
+  orderItems     OrderItem[]
+  favorites      Favorite[]
+
+  @@unique([sourceProvider, sourceId])
+  @@index([categoryId, position])
+  @@map("products")
+}
+
+model ProductImage {
+  id            String        @id @default(uuid(7)) @db.Uuid
+  productId     String        @db.Uuid
+  product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url           String
+  /// Object-storage key when uploaded from the admin (null for bundled seed images).
+  storageKey    String?
+  width         Int
+  height        Int
+  alt           String
+  blurDataUrl   String?
+  dominantColor String?
+  backdrop      ImageBackdrop @default(DARK)
+  position      Int           @default(0)
+  sourceUrl     String?
+  createdAt     DateTime      @default(now())
+
+  coverOf Category[] @relation("CategoryCover")
+
+  @@index([productId, position])
+  @@map("product_images")
+}
+
+model ProductVariant {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  productId   String   @db.Uuid
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name        String
+  priceCents  Int
+  isAvailable Boolean  @default(true)
+  isDefault   Boolean  @default(false)
+  position    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems OrderItem[]
+
+  @@index([productId, position])
+  @@map("product_variants")
+}
+
+model AllergenInfo {
+  code        Allergen          @id
+  name        String
+  description String
+  products    ProductAllergen[]
+
+  @@map("allergens")
+}
+
+model ProductAllergen {
+  productId String       @db.Uuid
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  allergen  Allergen
+  info      AllergenInfo @relation(fields: [allergen], references: [code])
+  /// "Può contenere tracce di…" when true.
+  mayContain Boolean     @default(false)
+
+  @@id([productId, allergen])
+  @@map("product_allergens")
+}
+
+model ModifierGroup {
+  id               String                 @id @default(uuid(7)) @db.Uuid
+  name             String
+  description      String?
+  minSelect        Int                    @default(0)
+  maxSelect        Int                    @default(1)
+  maxTotalQuantity Int                    @default(1)
+  isActive         Boolean                @default(true)
+  sourceProvider   String?
+  sourceId         String?
+  modifiers        Modifier[]
+  products         ProductModifierGroup[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  @@unique([sourceProvider, sourceId])
+  @@map("modifier_groups")
+}
+
+model Modifier {
+  id              String        @id @default(uuid(7)) @db.Uuid
+  groupId         String        @db.Uuid
+  group           ModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  name            String
+  priceDeltaCents Int           @default(0)
+  isAvailable     Boolean       @default(true)
+  maxQuantity     Int           @default(1)
+  position        Int           @default(0)
+  allergens       Allergen[]
+  sourceProvider  String?
+  sourceId        String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  orderItemModifiers OrderItemModifier[]
+
+  @@unique([sourceProvider, sourceId])
+  @@index([groupId, position])
+  @@map("modifiers")
+}
+
+model ProductModifierGroup {
+  productId String        @db.Uuid
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  groupId   String        @db.Uuid
+  group     ModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  position  Int           @default(0)
+
+  @@id([productId, groupId])
+  @@map("product_modifier_groups")
+}
+
+/* ============================================================== cart */
+
+/// Account cart, synchronised across devices (web, PWA, native). Guests keep the cart on the device.
+model Cart {
+  id         String     @id @default(uuid(7)) @db.Uuid
+  userId     String     @unique @db.Uuid
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  couponCode String?
+  items      CartItem[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  /// The client-generated line id, stable across the customer's devices.
+  lineId    String   @db.Uuid
+  cartId    String   @db.Uuid
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String   @db.Uuid
+  variantId String?  @db.Uuid
+  quantity  Int
+  /// [{ modifierId, quantity }]
+  modifiers Json     @default("[]")
+  notes     String?
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, lineId])
+  @@map("cart_items")
+}
+
+/* ============================================================== orders */
+
+model Order {
+  id              String          @id @default(uuid(7)) @db.Uuid
+  /// Unguessable capability used in tracking links (/order/[publicId]).
+  publicId        String          @unique
+  number          Int             @unique @default(autoincrement())
+  displayNumber   String          @unique
+  userId          String?         @db.Uuid
+  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  status          OrderStatus     @default(PENDING_PAYMENT)
+  fulfillmentType FulfillmentType
+  paymentMethod   PaymentMethod
+  source          String          @default("web")
+
+  customerName  String
+  customerEmail String
+  customerPhone String?
+
+  addressStreet       String?
+  addressStreetNumber String?
+  addressPostalCode   String?
+  addressCity         String?
+  addressProvince     String?
+  addressFormatted    String?
+  addressLat          Float?
+  addressLng          Float?
+  staircase           String?
+  floor               String?
+  apartment           String?
+  intercom            String?
+  riderNotes          String?
+  deliveryZoneId      String?       @db.Uuid
+  deliveryZone        DeliveryZone? @relation(fields: [deliveryZoneId], references: [id], onDelete: SetNull)
+  routeDistanceMeters Int?
+  routeDurationSeconds Int?
+
+  isScheduled  Boolean   @default(false)
+  scheduledFor DateTime?
+  prepMinutes  Int?
+  kitchenNotes String?
+  ageVerified  Boolean   @default(false)
+
+  subtotalCents    Int
+  discountCents    Int     @default(0)
+  deliveryFeeCents Int     @default(0)
+  serviceFeeCents  Int     @default(0)
+  tipCents         Int     @default(0)
+  taxCents         Int     @default(0)
+  totalCents       Int
+  vatBreakdown     Json    @default("[]")
+  currency         String  @default("EUR")
+  couponId         String? @db.Uuid
+  coupon           Coupon? @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  couponCode       String?
+
+  placedAt            DateTime  @default(now())
+  paidAt              DateTime?
+  receivedAt          DateTime?
+  confirmedAt         DateTime?
+  preparingAt         DateTime?
+  readyAt             DateTime?
+  riderAssignedAt     DateTime?
+  riderToRestaurantAt DateTime?
+  pickedUpAt          DateTime?
+  onTheWayAt          DateTime?
+  deliveredAt         DateTime?
+  cancelledAt         DateTime?
+  refundedAt          DateTime?
+  cancellationReason  String?
+  cancelledBy         String?
+  /// Set when nobody accepted the order within the configured threshold.
+  escalatedAt         DateTime?
+
+  etaFrom      DateTime?
+  etaTo        DateTime?
+  etaUpdatedAt DateTime?
+
+  /// One order per checkout attempt: protects against double taps, refreshes and retries.
+  idempotencyKey      String  @unique
+  loyaltyPointsEarned Int     @default(0)
+  claimedAt           DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  items               OrderItem[]
+  payments            Payment[]
+  refunds             Refund[]
+  delivery            Delivery?
+  statusHistory       OrderStatusHistory[]
+  couponRedemption    CouponRedemption?
+  loyaltyTransactions LoyaltyTransaction[]
+  notifications       Notification[]
+  supportTickets      SupportTicket[]
+  pushSubscriptions   PushSubscription[]
+  emails              EmailLog[]
+
+  @@index([status, placedAt])
+  @@index([userId, placedAt])
+  @@index([customerEmail])
+  @@index([placedAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id                    String              @id @default(uuid(7)) @db.Uuid
+  orderId               String              @db.Uuid
+  order                 Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId             String?             @db.Uuid
+  product               Product?            @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variantId             String?             @db.Uuid
+  variant               ProductVariant?     @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  name                  String
+  nameZh                String?
+  posCode               String?
+  variantName           String?
+  quantity              Int
+  unitPriceCents        Int
+  lineTotalCents        Int
+  vatRateBps            Int
+  discountCents         Int                 @default(0)
+  excludedFromDiscounts Boolean             @default(false)
+  notes                 String?
+  allergens             Allergen[]
+  position              Int                 @default(0)
+  modifiers             OrderItemModifier[]
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model OrderItemModifier {
+  id             String    @id @default(uuid(7)) @db.Uuid
+  orderItemId    String    @db.Uuid
+  orderItem      OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  modifierId     String?   @db.Uuid
+  modifier       Modifier? @relation(fields: [modifierId], references: [id], onDelete: SetNull)
+  groupName      String
+  name           String
+  quantity       Int
+  unitPriceCents Int
+
+  @@index([orderItemId])
+  @@map("order_item_modifiers")
+}
+
+model OrderStatusHistory {
+  id          String      @id @default(uuid(7)) @db.Uuid
+  orderId     String      @db.Uuid
+  order       Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  /// Status recorded by the command (rider events can be recorded while the kitchen status is unchanged).
+  status      OrderStatus
+  command     String
+  actorType   String
+  actorUserId String?     @db.Uuid
+  note        String?
+  metadata    Json?
+  createdAt   DateTime    @default(now())
+
+  @@index([orderId, createdAt])
+  @@map("order_status_history")
+}
+
+/* ============================================================== payments */
+
+model Payment {
+  id                String          @id @default(uuid(7)) @db.Uuid
+  orderId           String          @db.Uuid
+  order             Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider          PaymentProvider
+  method            PaymentMethod
+  status            PaymentStatus   @default(PENDING)
+  amountCents       Int
+  currency          String          @default("EUR")
+  /// Stripe PaymentIntent id (pi_…) or simulator id.
+  providerPaymentId String?         @unique
+  idempotencyKey    String          @unique
+  cardBrand         String?
+  cardLast4         String?
+  wallet            String?
+  failureCode       String?
+  failureMessage    String?
+  refundedCents     Int             @default(0)
+  succeededAt       DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  refunds           Refund[]
+
+  @@index([orderId])
+  @@map("payments")
+}
+
+model Refund {
+  id               String       @id @default(uuid(7)) @db.Uuid
+  orderId          String       @db.Uuid
+  order            Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  paymentId        String       @db.Uuid
+  payment          Payment      @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  amountCents      Int
+  reason           String?
+  status           RefundStatus @default(PENDING)
+  providerRefundId String?      @unique
+  idempotencyKey   String       @unique
+  createdById      String?      @db.Uuid
+  createdBy        User?        @relation("RefundCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([orderId])
+  @@map("refunds")
+}
+
+/// Processed webhook events (Stripe sends duplicates and retries).
+model WebhookEvent {
+  id          String    @id
+  provider    String
+  type        String
+  receivedAt  DateTime  @default(now())
+  processedAt DateTime?
+  error       String?
+
+  @@map("webhook_events")
+}
+
+/// Generic idempotency for mutating API calls (refunds, admin actions issued from flaky networks).
+model IdempotencyRecord {
+  key            String   @id
+  scope          String
+  requestHash    String
+  responseStatus Int?
+  responseBody   Json?
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+
+/* ============================================================== delivery */
+
+model DeliveryZone {
+  id                         String           @id @default(uuid(7)) @db.Uuid
+  name                       String
+  type                       DeliveryZoneType
+  isActive                   Boolean          @default(true)
+  priority                   Int              @default(10)
+  deliveryFeeCents           Int
+  minimumOrderCents          Int              @default(0)
+  freeDeliveryThresholdCents Int?
+  etaAdjustmentMinutes       Int              @default(0)
+  /// [{ lat, lng }] for POLYGON zones.
+  polygon                    Json?
+  centerLat                  Float?
+  centerLng                  Float?
+  radiusMeters               Int?
+  minDistanceMeters          Int?
+  maxDistanceMeters          Int?
+  color                      String?
+  sourceProvider             String?
+  sourceId                   String?
+  createdAt                  DateTime         @default(now())
+  updatedAt                  DateTime         @updatedAt
+  orders                     Order[]
+
+  @@unique([sourceProvider, sourceId])
+  @@map("delivery_zones")
+}
+
+model Delivery {
+  id                    String         @id @default(uuid(7)) @db.Uuid
+  orderId               String         @unique @db.Uuid
+  order                 Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  riderId               String?        @db.Uuid
+  rider                 Rider?         @relation(fields: [riderId], references: [id], onDelete: SetNull)
+  status                DeliveryStatus @default(UNASSIGNED)
+  assignedAt            DateTime?
+  toRestaurantAt        DateTime?
+  arrivedAtRestaurantAt DateTime?
+  pickedUpAt            DateTime?
+  onTheWayAt            DateTime?
+  deliveredAt           DateTime?
+  cancelledAt           DateTime?
+  nearbyNotifiedAt      DateTime?
+  cashCollectedCents    Int?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  locations             RiderLocation[]
+
+  @@index([riderId, status])
+  @@map("deliveries")
+}
+
+model Rider {
+  id             String            @id @default(uuid(7)) @db.Uuid
+  userId         String            @unique @db.Uuid
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// First name shown to customers ("Luca sta arrivando").
+  displayName    String
+  phone          String?
+  vehicle        String?
+  avatarUrl      String?
+  isActive       Boolean           @default(true)
+  availability   RiderAvailability @default(OFFLINE)
+  lastSeenAt     DateTime?
+  lastLat        Float?
+  lastLng        Float?
+  lastHeading    Float?
+  lastLocationAt DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  deliveries     Delivery[]
+  locations      RiderLocation[]
+
+  @@map("riders")
+}
+
+/// Positions sent by riders during active deliveries only. Purged by the retention job.
+model RiderLocation {
+  id         BigInt    @id @default(autoincrement())
+  riderId    String    @db.Uuid
+  rider      Rider     @relation(fields: [riderId], references: [id], onDelete: Cascade)
+  deliveryId String?   @db.Uuid
+  delivery   Delivery? @relation(fields: [deliveryId], references: [id], onDelete: SetNull)
+  lat        Float
+  lng        Float
+  accuracy   Float?
+  heading    Float?
+  speed      Float?
+  recordedAt DateTime
+  createdAt  DateTime  @default(now())
+
+  @@index([riderId, recordedAt])
+  @@index([deliveryId, recordedAt])
+  @@map("rider_locations")
+}
+
+/* ============================================================== promotions & loyalty */
+
+model Coupon {
+  id                  String            @id @default(uuid(7)) @db.Uuid
+  /// Null for automatic promotions applied without a code.
+  code                String?           @unique
+  name                String
+  description         String?
+  type                CouponType
+  percentBps          Int?
+  amountCents         Int?
+  maxDiscountCents    Int?
+  minSubtotalCents    Int?
+  startsAt            DateTime?
+  endsAt              DateTime?
+  isActive            Boolean           @default(true)
+  autoApply           Boolean           @default(false)
+  /// Listed in "Offerte" pages.
+  isPublic            Boolean           @default(false)
+  maxRedemptions      Int?
+  redemptionsCount    Int               @default(0)
+  perCustomerLimit    Int?
+  /// Empty = delivery and pickup.
+  fulfillmentTypes    FulfillmentType[]
+  newCustomersOnly    Boolean           @default(false)
+  includedProductIds  String[]          @db.Uuid
+  includedCategoryIds String[]          @db.Uuid
+  /// Personal coupon (loyalty reward, apology…).
+  userId              String?           @db.Uuid
+  user                User?             @relation("PersonalCoupons", fields: [userId], references: [id], onDelete: Cascade)
+  loyaltyRewardId     String?           @db.Uuid
+  loyaltyReward       LoyaltyReward?    @relation(fields: [loyaltyRewardId], references: [id], onDelete: SetNull)
+  sourceProvider      String?
+  sourceId            String?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  redemptions CouponRedemption[]
+  orders      Order[]
+
+  @@unique([sourceProvider, sourceId])
+  @@index([autoApply, isActive])
+  @@map("coupons")
+}
+
+model CouponRedemption {
+  id            String                 @id @default(uuid(7)) @db.Uuid
+  couponId      String                 @db.Uuid
+  coupon        Coupon                 @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  orderId       String                 @unique @db.Uuid
+  order         Order                  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  userId        String?                @db.Uuid
+  user          User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  customerEmail String
+  discountCents Int
+  status        CouponRedemptionStatus @default(PENDING)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@index([couponId, userId])
+  @@index([couponId, customerEmail])
+  @@map("coupon_redemptions")
+}
+
+model LoyaltyAccount {
+  id             String               @id @default(uuid(7)) @db.Uuid
+  userId         String               @unique @db.Uuid
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  points         Int                  @default(0)
+  lifetimePoints Int                  @default(0)
+  tierKey        String?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  transactions   LoyaltyTransaction[]
+
+  @@map("loyalty_accounts")
+}
+
+model LoyaltyTransaction {
+  id          String                 @id @default(uuid(7)) @db.Uuid
+  accountId   String                 @db.Uuid
+  account     LoyaltyAccount         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  type        LoyaltyTransactionType
+  /// Signed amount.
+  points      Int
+  description String
+  orderId     String?                @db.Uuid
+  order       Order?                 @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  rewardId    String?                @db.Uuid
+  expiresAt   DateTime?
+  createdAt   DateTime               @default(now())
+
+  @@index([accountId, createdAt])
+  @@map("loyalty_transactions")
+}
+
+model LoyaltyReward {
+  id          String     @id @default(uuid(7)) @db.Uuid
+  name        String
+  description String?
+  pointsCost  Int
+  couponType  CouponType
+  percentBps  Int?
+  amountCents Int?
+  validDays   Int        @default(30)
+  isActive    Boolean    @default(true)
+  position    Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  coupons     Coupon[]
+
+  @@map("loyalty_rewards")
+}
+
+/* ============================================================== notifications & consent */
+
+model Notification {
+  id        String               @id @default(uuid(7)) @db.Uuid
+  audience  NotificationAudience @default(CUSTOMER)
+  userId    String?              @db.Uuid
+  user      User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId   String?              @db.Uuid
+  order     Order?               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  category  NotificationCategory @default(TRANSACTIONAL)
+  title     String
+  body      String
+  url       String?
+  data      Json?
+  readAt    DateTime?
+  createdAt DateTime             @default(now())
+
+  @@index([userId, createdAt])
+  @@index([audience, createdAt])
+  @@map("notifications")
+}
+
+model PushSubscription {
+  id         String    @id @default(uuid(7)) @db.Uuid
+  endpoint   String    @unique
+  p256dh     String
+  auth       String
+  userId     String?   @db.Uuid
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Guests subscribe to updates of a single order from the tracking page.
+  orderId    String?   @db.Uuid
+  order      Order?    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  /// "customer", "staff" (new-order alerts) or "rider".
+  topic      String    @default("customer")
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+  failedAt   DateTime?
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([topic])
+  @@map("push_subscriptions")
+}
+
+/// Native push tokens (APNs / FCM via Expo) — ready for the iOS and Android apps.
+model DeviceToken {
+  id         String         @id @default(uuid(7)) @db.Uuid
+  userId     String         @db.Uuid
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform   DevicePlatform
+  token      String         @unique
+  appVersion String?
+  createdAt  DateTime       @default(now())
+  lastSeenAt DateTime       @default(now())
+
+  @@index([userId])
+  @@map("device_tokens")
+}
+
+model EmailLog {
+  id                String      @id @default(uuid(7)) @db.Uuid
+  to                String
+  template          String
+  subject           String
+  status            EmailStatus @default(QUEUED)
+  provider          String
+  providerMessageId String?
+  error             String?
+  orderId           String?     @db.Uuid
+  order             Order?      @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  /// Stored only by the development outbox, never in production.
+  html              String?
+  text              String?
+  createdAt         DateTime    @default(now())
+
+  @@index([orderId])
+  @@index([createdAt])
+  @@map("email_logs")
+}
+
+/// Append-only consent history (GDPR art. 7: proof of consent). Current state = latest row per type.
+model ConsentRecord {
+  id            String      @id @default(uuid(7)) @db.Uuid
+  userId        String?     @db.Uuid
+  user          User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Random id stored in a first-party cookie for anonymous visitors (cookie banner).
+  anonymousId   String?
+  email         String?
+  type          ConsentType
+  granted       Boolean
+  source        String
+  policyVersion String
+  ipHash        String?
+  userAgent     String?
+  createdAt     DateTime    @default(now())
+
+  @@index([userId, type, createdAt])
+  @@index([anonymousId, type, createdAt])
+  @@index([email, type, createdAt])
+  @@map("consent_records")
+}
+
+/* ============================================================== restaurant configuration */
+
+/// Singleton row ("default") holding every setting editable from the admin.
+model RestaurantSettings {
+  id               String  @id @default("default")
+  name             String
+  tagline          String?
+  legalName        String?
+  vatNumber        String?
+  phone            String?
+  email            String?
+  supportEmail     String?
+  street           String
+  streetNumber     String
+  postalCode       String
+  city             String
+  province         String
+  country          String  @default("IT")
+  formattedAddress String
+  lat              Float
+  lng              Float
+  googlePlaceId    String?
+  googleReviewUrl  String?
+  instagramUrl     String?
+  facebookUrl      String?
+  priceRange       String?
+  timezone         String  @default("Europe/Rome")
+
+  orderNumberPrefix           String    @default("DS")
+  deliveryEnabled             Boolean   @default(true)
+  pickupEnabled               Boolean   @default(true)
+  ordersPaused                Boolean   @default(false)
+  pausedUntil                 DateTime?
+  pauseReason                 String?
+  autoAcceptOrders            Boolean   @default(false)
+  acceptanceEscalationMinutes Int       @default(3)
+  defaultPrepMinutes          Int       @default(15)
+  prepTimeOptions             Int[]     @default([10, 15, 20, 25, 30, 45])
+  schedulingEnabled           Boolean   @default(true)
+  slotIntervalMinutes         Int       @default(15)
+  deliveryLeadMinutes         Int       @default(20)
+  pickupLeadMinutes           Int       @default(15)
+  maxScheduleDays             Int       @default(1)
+  lastOrderBufferMinutes      Int       @default(0)
+  maxRouteDistanceMeters      Int?
+  maxTravelSeconds            Int?
+  customerCancelWindowMinutes Int       @default(30)
+
+  onlinePaymentsEnabled  Boolean @default(true)
+  cashOnDeliveryEnabled  Boolean @default(false)
+  cashOnPickupEnabled    Boolean @default(false)
+  tipsEnabled            Boolean @default(true)
+  tipOptionsCents        Int[]   @default([100, 200, 300])
+  serviceFeeCents        Int     @default(0)
+  serviceFeeVatRateBps   Int     @default(2200)
+  deliveryFeeVatRateBps  Int     @default(1000)
+  phoneRequiredForDelivery Boolean @default(true)
+  phoneRequiredForPickup   Boolean @default(false)
+
+  newOrderSoundEnabled Boolean @default(true)
+  newOrderSound        String  @default("chime")
+  /// Partial EtaSettings overrides (kitchen capacity, dispatch times…).
+  etaSettings          Json    @default("{}")
+  /// LoyaltyConfig — the Dimsum Club stays disabled until launch.
+  loyalty              Json    @default("{}")
+  updatedAt            DateTime @updatedAt
+
+  @@map("restaurant_settings")
+}
+
+model OpeningHour {
+  id       String          @id @default(uuid(7)) @db.Uuid
+  kind     OpeningHourKind
+  /// ISO weekday 1 = Monday … 7 = Sunday.
+  weekday  Int
+  opensAt  String
+  closesAt String
+  position Int             @default(0)
+
+  @@index([kind, weekday])
+  @@map("opening_hours")
+}
+
+/// Holidays and extraordinary closures. Empty `appliesTo` = every service.
+model Closure {
+  id          String            @id @default(uuid(7)) @db.Uuid
+  startsAt    DateTime
+  endsAt      DateTime
+  reason      String?
+  appliesTo   FulfillmentType[]
+  isHoliday   Boolean           @default(false)
+  createdById String?           @db.Uuid
+  createdAt   DateTime          @default(now())
+
+  @@index([startsAt, endsAt])
+  @@map("closures")
+}
+
+/* ============================================================== support & audit */
+
+model SupportTicket {
+  id        String           @id @default(uuid(7)) @db.Uuid
+  reference String           @unique
+  userId    String?          @db.Uuid
+  user      User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orderId   String?          @db.Uuid
+  order     Order?           @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  email     String
+  name      String
+  phone     String?
+  category  SupportCategory
+  status    SupportStatus    @default(OPEN)
+  subject   String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  messages  SupportMessage[]
+
+  @@index([status, createdAt])
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id           String        @id @default(uuid(7)) @db.Uuid
+  ticketId     String        @db.Uuid
+  ticket       SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorUserId String?       @db.Uuid
+  author       User?         @relation(fields: [authorUserId], references: [id], onDelete: SetNull)
+  fromStaff    Boolean       @default(false)
+  body         String
+  createdAt    DateTime      @default(now())
+
+  @@index([ticketId, createdAt])
+  @@map("support_messages")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  actorUserId String?  @db.Uuid
+  actor       User?    @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+  actorRole   Role?
+  action      String
+  entityType  String
+  entityId    String?
+  before      Json?
+  after       Json?
+  ipHash      String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@index([actorUserId, createdAt])
+  @@map("audit_logs")
+}
+
+/// Cache of geocoding and routing answers (cost control and provider fair-use policies).
+model GeoCache {
+  key       String   @id
+  value     Json
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@map("geo_cache")
+}
+
+/// Fixed-window rate limiting shared by every server instance: Better Auth endpoints use it
+/// directly, the API v1 limiter stores keys prefixed with "api:".
+model RateLimit {
+  id          String @id @default(uuid(7)) @db.Uuid
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+
+  @@map("rate_limits")
+}

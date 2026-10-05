@@ -1,0 +1,53 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# builds
+.next/
+.next-e2e/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# generated
+packages/db/src/generated/
+
+# local database (embedded PostgreSQL for development)
+.data/
+
+# env files (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# testing
+coverage/
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/blob-report/
+apps/web/playwright/.cache/
+
+# local dev uploads (production uses object storage)
+apps/web/public/uploads/
+
+# logs
+npm-debug.log*
+*.log
+
+# os / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# vercel
+.vercel
+
+# original photos captured from the previous platform (re-downloadable, see packages/db/README.md)
+packages/db/data/brenvo/originals/
+apps/web/public/maplibre/

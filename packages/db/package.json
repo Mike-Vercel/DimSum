@@ -1,0 +1,38 @@
+{
+  "name": "@dimsum/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Schema PostgreSQL (Prisma), migrazioni, client e import del catalogo reale DIMSUM.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./catalog": "./src/catalog-source/types.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "db:start": "node scripts/dev-postgres.mjs",
+    "generate": "prisma generate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "reset": "prisma migrate reset --force",
+    "seed": "tsx src/seed/index.ts",
+    "catalog:import": "tsx src/seed/import-catalog.ts",
+    "catalog:photos": "tsx src/catalog-source/download-originals.ts",
+    "catalog:normalize": "tsx src/catalog-source/normalize-brenvo.ts"
+  },
+  "dependencies": {
+    "@dimsum/domain": "*",
+    "@dimsum/types": "*",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.5",
+    "embedded-postgres": "17.10.0-beta.17",
+    "prisma": "7.10.0",
+    "sharp": "^0.35.5",
+    "tsx": "^4.23.15",
+    "better-auth": "1.7.7"
+  }
+}

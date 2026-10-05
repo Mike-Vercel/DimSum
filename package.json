@@ -1,0 +1,40 @@
+{
+  "name": "dimsum-platform",
+  "private": true,
+  "description": "DIMSUM — piattaforma proprietaria di ordering, delivery e loyalty (web, PWA, admin, rider, API v1).",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "npm run dev -w @dimsum/web",
+    "build": "npm run db:generate && npm run build -w @dimsum/web",
+    "start": "npm run start -w @dimsum/web",
+    "lint": "npm run lint -w @dimsum/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npm run test:e2e -w @dimsum/web",
+    "db:start": "npm run db:start -w @dimsum/db",
+    "db:generate": "npm run generate -w @dimsum/db",
+    "db:migrate": "npm run migrate:dev -w @dimsum/db",
+    "db:deploy": "npm run migrate:deploy -w @dimsum/db",
+    "db:seed": "npm run seed -w @dimsum/db",
+    "db:reset": "npm run reset -w @dimsum/db",
+    "catalog:import": "npm run catalog:import -w @dimsum/db",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "vercel-build": "npm run db:generate && npm run db:deploy && npm run build -w @dimsum/web"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.7.1",
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.3"
+  }
+}

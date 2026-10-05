@@ -1,0 +1,2404 @@
+{
+  "dbResults": [
+    {
+      "_id": "6a3138bbbca5ac6859476e8f",
+      "nickname": "DimSum",
+      "restaurant_types": "1",
+      "country": "Italia",
+      "city": "Palermo",
+      "local": "V. Emerico Amari, 47, 90139 Palermo PA, Italia",
+      "state": "Sicilia",
+      "province": "Sicilia",
+      "street": "Via Emerico Amari",
+      "home_number": "47",
+      "postcode": "90139",
+      "google_map_place_id": "ChIJJejOTerlGRMRyMt0WMYutT0",
+      "google_map_formatted_address": "DimSum V. Emerico Amari, 47, 90139 Palermo PA, Italia",
+      "google_map_lat": "38.1265619",
+      "google_map_lng": "13.3608561",
+      "time_zone": "Europe/Rome",
+      "tel_prefix": "39",
+      "tel": "3762790995",
+      "string_id": "8L3E9",
+      "status": true,
+      "version": "1.5.4",
+      "setting_booking_exceed_max_person_rule": 0,
+      "setting_max_booking_day": 30,
+      "setting_whats_app_overtime_time": 30,
+      "setting_booking_order_automatic_confirmation_enable": false,
+      "res_max_booking_people": 20,
+      "res_min_booking_people": 1,
+      "setting_booking_service_status": false,
+      "setting_booking_requires_login": true,
+      "setting_self_pickup_requires_login": true,
+      "setting_delivery_requires_login": true,
+      "customer_modify_booking_time_limit": 30,
+      "customer_cancel_booking_time_limit": 30,
+      "setting_booking_interval_time": 3,
+      "booking_rules": {
+        "name": "默认预订规则",
+        "validity_type": "permanent",
+        "specific_dates": [],
+        "meal_period_time_slots": [],
+        "min_people_per_order": 1,
+        "max_people_per_order": 100,
+        "require_all_conditions": false,
+        "is_enabled": false,
+        "applicable_labels": [],
+        "applicable_labels_conditions": false,
+        "applicable_vip_levels": []
+      },
+      "setting_booking_service_schedule": [
+        {
+          "week": 1,
+          "_id": "6966ff3f623463945caf102e",
+          "day_max_person_limit": 9999,
+          "booking_time_interval": [
+            {
+              "_id": "6966ff3f623463945caf102f",
+              "name": "中午",
+              "max_person_limit": 9999,
+              "meal_start_time": "12:00",
+              "meal_end_time": "15:00",
+              "time_interval_detail": [
+                {
+                  "start_time": "12:00",
+                  "end_time": "12:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:15",
+                  "end_time": "12:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:30",
+                  "end_time": "12:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:45",
+                  "end_time": "12:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:00",
+                  "end_time": "13:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:15",
+                  "end_time": "13:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:30",
+                  "end_time": "13:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:45",
+                  "end_time": "13:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:00",
+                  "end_time": "14:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:15",
+                  "end_time": "14:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:30",
+                  "end_time": "14:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:45",
+                  "end_time": "14:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "15:00",
+                  "end_time": "15:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            },
+            {
+              "_id": "6966ff3f623463945caf1030",
+              "name": "晚上",
+              "max_person_limit": 9999,
+              "meal_start_time": "17:00",
+              "meal_end_time": "23:59",
+              "time_interval_detail": [
+                {
+                  "start_time": "19:00",
+                  "end_time": "19:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:15",
+                  "end_time": "19:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:30",
+                  "end_time": "19:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:45",
+                  "end_time": "19:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:00",
+                  "end_time": "20:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:15",
+                  "end_time": "20:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:30",
+                  "end_time": "20:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:45",
+                  "end_time": "20:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:00",
+                  "end_time": "21:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:15",
+                  "end_time": "21:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:30",
+                  "end_time": "21:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:45",
+                  "end_time": "21:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:00",
+                  "end_time": "22:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:15",
+                  "end_time": "22:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:30",
+                  "end_time": "22:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:45",
+                  "end_time": "22:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "23:00",
+                  "end_time": "23:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 2,
+          "_id": "6966ff3f623463945caf1031",
+          "day_max_person_limit": 9999,
+          "booking_time_interval": [
+            {
+              "_id": "6966ff3f623463945caf102f",
+              "name": "中午",
+              "max_person_limit": 9999,
+              "meal_start_time": "12:00",
+              "meal_end_time": "15:00",
+              "time_interval_detail": [
+                {
+                  "start_time": "12:00",
+                  "end_time": "12:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:15",
+                  "end_time": "12:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:30",
+                  "end_time": "12:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:45",
+                  "end_time": "12:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:00",
+                  "end_time": "13:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:15",
+                  "end_time": "13:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:30",
+                  "end_time": "13:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:45",
+                  "end_time": "13:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:00",
+                  "end_time": "14:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:15",
+                  "end_time": "14:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:30",
+                  "end_time": "14:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:45",
+                  "end_time": "14:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "15:00",
+                  "end_time": "15:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            },
+            {
+              "_id": "6966ff3f623463945caf1030",
+              "name": "晚上",
+              "max_person_limit": 9999,
+              "meal_start_time": "17:00",
+              "meal_end_time": "23:59",
+              "time_interval_detail": [
+                {
+                  "start_time": "19:00",
+                  "end_time": "19:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:15",
+                  "end_time": "19:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:30",
+                  "end_time": "19:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:45",
+                  "end_time": "19:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:00",
+                  "end_time": "20:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:15",
+                  "end_time": "20:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:30",
+                  "end_time": "20:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:45",
+                  "end_time": "20:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:00",
+                  "end_time": "21:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:15",
+                  "end_time": "21:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:30",
+                  "end_time": "21:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:45",
+                  "end_time": "21:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:00",
+                  "end_time": "22:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:15",
+                  "end_time": "22:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:30",
+                  "end_time": "22:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:45",
+                  "end_time": "22:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "23:00",
+                  "end_time": "23:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 3,
+          "_id": "6966ff3f623463945caf1032",
+          "day_max_person_limit": 9999,
+          "booking_time_interval": [
+            {
+              "_id": "6966ff3f623463945caf102f",
+              "name": "中午",
+              "max_person_limit": 9999,
+              "meal_start_time": "12:00",
+              "meal_end_time": "15:00",
+              "time_interval_detail": [
+                {
+                  "start_time": "12:00",
+                  "end_time": "12:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:15",
+                  "end_time": "12:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:30",
+                  "end_time": "12:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:45",
+                  "end_time": "12:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:00",
+                  "end_time": "13:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:15",
+                  "end_time": "13:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:30",
+                  "end_time": "13:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:45",
+                  "end_time": "13:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:00",
+                  "end_time": "14:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:15",
+                  "end_time": "14:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:30",
+                  "end_time": "14:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:45",
+                  "end_time": "14:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "15:00",
+                  "end_time": "15:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            },
+            {
+              "_id": "6966ff3f623463945caf1030",
+              "name": "晚上",
+              "max_person_limit": 9999,
+              "meal_start_time": "17:00",
+              "meal_end_time": "23:59",
+              "time_interval_detail": [
+                {
+                  "start_time": "19:00",
+                  "end_time": "19:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:15",
+                  "end_time": "19:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:30",
+                  "end_time": "19:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:45",
+                  "end_time": "19:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:00",
+                  "end_time": "20:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:15",
+                  "end_time": "20:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:30",
+                  "end_time": "20:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:45",
+                  "end_time": "20:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:00",
+                  "end_time": "21:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:15",
+                  "end_time": "21:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:30",
+                  "end_time": "21:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:45",
+                  "end_time": "21:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:00",
+                  "end_time": "22:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:15",
+                  "end_time": "22:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:30",
+                  "end_time": "22:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:45",
+                  "end_time": "22:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "23:00",
+                  "end_time": "23:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 4,
+          "_id": "6966ff3f623463945caf1033",
+          "day_max_person_limit": 9999,
+          "booking_time_interval": [
+            {
+              "_id": "6966ff3f623463945caf102f",
+              "name": "中午",
+              "max_person_limit": 9999,
+              "meal_start_time": "12:00",
+              "meal_end_time": "15:00",
+              "time_interval_detail": [
+                {
+                  "start_time": "12:00",
+                  "end_time": "12:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:15",
+                  "end_time": "12:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:30",
+                  "end_time": "12:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:45",
+                  "end_time": "12:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:00",
+                  "end_time": "13:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:15",
+                  "end_time": "13:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:30",
+                  "end_time": "13:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:45",
+                  "end_time": "13:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:00",
+                  "end_time": "14:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:15",
+                  "end_time": "14:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:30",
+                  "end_time": "14:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:45",
+                  "end_time": "14:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "15:00",
+                  "end_time": "15:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            },
+            {
+              "_id": "6966ff3f623463945caf1030",
+              "name": "晚上",
+              "max_person_limit": 9999,
+              "meal_start_time": "17:00",
+              "meal_end_time": "23:59",
+              "time_interval_detail": [
+                {
+                  "start_time": "19:00",
+                  "end_time": "19:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:15",
+                  "end_time": "19:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:30",
+                  "end_time": "19:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:45",
+                  "end_time": "19:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:00",
+                  "end_time": "20:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:15",
+                  "end_time": "20:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:30",
+                  "end_time": "20:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:45",
+                  "end_time": "20:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:00",
+                  "end_time": "21:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:15",
+                  "end_time": "21:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:30",
+                  "end_time": "21:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:45",
+                  "end_time": "21:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:00",
+                  "end_time": "22:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:15",
+                  "end_time": "22:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:30",
+                  "end_time": "22:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:45",
+                  "end_time": "22:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "23:00",
+                  "end_time": "23:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 5,
+          "_id": "6966ff3f623463945caf1034",
+          "day_max_person_limit": 9999,
+          "booking_time_interval": [
+            {
+              "_id": "6966ff3f623463945caf102f",
+              "name": "中午",
+              "max_person_limit": 9999,
+              "meal_start_time": "12:00",
+              "meal_end_time": "15:00",
+              "time_interval_detail": [
+                {
+                  "start_time": "12:00",
+                  "end_time": "12:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:15",
+                  "end_time": "12:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:30",
+                  "end_time": "12:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:45",
+                  "end_time": "12:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:00",
+                  "end_time": "13:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:15",
+                  "end_time": "13:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:30",
+                  "end_time": "13:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:45",
+                  "end_time": "13:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:00",
+                  "end_time": "14:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:15",
+                  "end_time": "14:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:30",
+                  "end_time": "14:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:45",
+                  "end_time": "14:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "15:00",
+                  "end_time": "15:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            },
+            {
+              "_id": "6966ff3f623463945caf1030",
+              "name": "晚上",
+              "max_person_limit": 9999,
+              "meal_start_time": "17:00",
+              "meal_end_time": "23:59",
+              "time_interval_detail": [
+                {
+                  "start_time": "19:00",
+                  "end_time": "19:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:15",
+                  "end_time": "19:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:30",
+                  "end_time": "19:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:45",
+                  "end_time": "19:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:00",
+                  "end_time": "20:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:15",
+                  "end_time": "20:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:30",
+                  "end_time": "20:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:45",
+                  "end_time": "20:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:00",
+                  "end_time": "21:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:15",
+                  "end_time": "21:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:30",
+                  "end_time": "21:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:45",
+                  "end_time": "21:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:00",
+                  "end_time": "22:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:15",
+                  "end_time": "22:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:30",
+                  "end_time": "22:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:45",
+                  "end_time": "22:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "23:00",
+                  "end_time": "23:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 6,
+          "_id": "6966ff3f623463945caf1035",
+          "day_max_person_limit": 9999,
+          "booking_time_interval": [
+            {
+              "_id": "6966ff3f623463945caf102f",
+              "name": "中午",
+              "max_person_limit": 9999,
+              "meal_start_time": "12:00",
+              "meal_end_time": "15:00",
+              "time_interval_detail": [
+                {
+                  "start_time": "12:00",
+                  "end_time": "12:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:15",
+                  "end_time": "12:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:30",
+                  "end_time": "12:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:45",
+                  "end_time": "12:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:00",
+                  "end_time": "13:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:15",
+                  "end_time": "13:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:30",
+                  "end_time": "13:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:45",
+                  "end_time": "13:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:00",
+                  "end_time": "14:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:15",
+                  "end_time": "14:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:30",
+                  "end_time": "14:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:45",
+                  "end_time": "14:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "15:00",
+                  "end_time": "15:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            },
+            {
+              "_id": "6966ff3f623463945caf1030",
+              "name": "晚上",
+              "max_person_limit": 9999,
+              "meal_start_time": "17:00",
+              "meal_end_time": "23:59",
+              "time_interval_detail": [
+                {
+                  "start_time": "19:00",
+                  "end_time": "19:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:15",
+                  "end_time": "19:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:30",
+                  "end_time": "19:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:45",
+                  "end_time": "19:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:00",
+                  "end_time": "20:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:15",
+                  "end_time": "20:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:30",
+                  "end_time": "20:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:45",
+                  "end_time": "20:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:00",
+                  "end_time": "21:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:15",
+                  "end_time": "21:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:30",
+                  "end_time": "21:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:45",
+                  "end_time": "21:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:00",
+                  "end_time": "22:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:15",
+                  "end_time": "22:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:30",
+                  "end_time": "22:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:45",
+                  "end_time": "22:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "23:00",
+                  "end_time": "23:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 7,
+          "_id": "6966ff3f623463945caf1036",
+          "day_max_person_limit": 9999,
+          "booking_time_interval": [
+            {
+              "_id": "6966ff3f623463945caf102f",
+              "name": "中午",
+              "max_person_limit": 9999,
+              "meal_start_time": "12:00",
+              "meal_end_time": "15:00",
+              "time_interval_detail": [
+                {
+                  "start_time": "12:00",
+                  "end_time": "12:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:15",
+                  "end_time": "12:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:30",
+                  "end_time": "12:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "12:45",
+                  "end_time": "12:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:00",
+                  "end_time": "13:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:15",
+                  "end_time": "13:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:30",
+                  "end_time": "13:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "13:45",
+                  "end_time": "13:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:00",
+                  "end_time": "14:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:15",
+                  "end_time": "14:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:30",
+                  "end_time": "14:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "14:45",
+                  "end_time": "14:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "15:00",
+                  "end_time": "15:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            },
+            {
+              "_id": "6966ff3f623463945caf1030",
+              "name": "晚上",
+              "max_person_limit": 9999,
+              "meal_start_time": "17:00",
+              "meal_end_time": "23:59",
+              "time_interval_detail": [
+                {
+                  "start_time": "19:00",
+                  "end_time": "19:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:15",
+                  "end_time": "19:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:30",
+                  "end_time": "19:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "19:45",
+                  "end_time": "19:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:00",
+                  "end_time": "20:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:15",
+                  "end_time": "20:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:30",
+                  "end_time": "20:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "20:45",
+                  "end_time": "20:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:00",
+                  "end_time": "21:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:15",
+                  "end_time": "21:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:30",
+                  "end_time": "21:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "21:45",
+                  "end_time": "21:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:00",
+                  "end_time": "22:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:15",
+                  "end_time": "22:25",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:30",
+                  "end_time": "22:40",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "22:45",
+                  "end_time": "22:55",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                },
+                {
+                  "start_time": "23:00",
+                  "end_time": "23:10",
+                  "person_limit": 9999,
+                  "time_illegal": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "booking_discount_settings": [
+        {
+          "week": 1,
+          "is_permanent": true,
+          "day_discount": {
+            "discount_rules": [
+              {
+                "min_people": 1,
+                "min_condition": "greater_equal",
+                "max_people": null,
+                "max_condition": null,
+                "discount_type": "percentage",
+                "discount_value": 10
+              }
+            ]
+          },
+          "booking_time_interval": [
+            {
+              "_id": "694aa30b0ef82d9db09de6b8",
+              "name": "中午",
+              "meal_discount": {
+                "discount_rules": [
+                  {
+                    "min_people": 10,
+                    "min_condition": "greater_equal",
+                    "max_people": null,
+                    "max_condition": null,
+                    "discount_type": "percentage",
+                    "discount_value": 10
+                  }
+                ]
+              },
+              "time_interval_detail": [
+                {
+                  "start_time": "01:00",
+                  "discount": {
+                    "discount_rules": [
+                      {
+                        "min_people": 1,
+                        "min_condition": "greater_equal",
+                        "max_people": 10,
+                        "max_condition": null,
+                        "discount_type": "percentage",
+                        "discount_value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 2,
+          "is_permanent": true,
+          "day_discount": {
+            "discount_rules": [
+              {
+                "min_people": 1,
+                "min_condition": "greater_equal",
+                "max_people": null,
+                "max_condition": null,
+                "discount_type": "percentage",
+                "discount_value": 10
+              }
+            ]
+          },
+          "booking_time_interval": [
+            {
+              "_id": "694aa30b0ef82d9db09de6b8",
+              "name": "中午",
+              "meal_discount": {
+                "discount_rules": [
+                  {
+                    "min_people": 10,
+                    "min_condition": "greater_equal",
+                    "max_people": null,
+                    "max_condition": null,
+                    "discount_type": "percentage",
+                    "discount_value": 10
+                  }
+                ]
+              },
+              "time_interval_detail": [
+                {
+                  "start_time": "01:00",
+                  "discount": {
+                    "discount_rules": [
+                      {
+                        "min_people": 1,
+                        "min_condition": "greater_equal",
+                        "max_people": 10,
+                        "max_condition": null,
+                        "discount_type": "percentage",
+                        "discount_value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 3,
+          "is_permanent": true,
+          "day_discount": {
+            "discount_rules": [
+              {
+                "min_people": 1,
+                "min_condition": "greater_equal",
+                "max_people": null,
+                "max_condition": null,
+                "discount_type": "percentage",
+                "discount_value": 10
+              }
+            ]
+          },
+          "booking_time_interval": [
+            {
+              "_id": "694aa30b0ef82d9db09de6b8",
+              "name": "中午",
+              "meal_discount": {
+                "discount_rules": [
+                  {
+                    "min_people": 10,
+                    "min_condition": "greater_equal",
+                    "max_people": null,
+                    "max_condition": null,
+                    "discount_type": "percentage",
+                    "discount_value": 10
+                  }
+                ]
+              },
+              "time_interval_detail": [
+                {
+                  "start_time": "01:00",
+                  "discount": {
+                    "discount_rules": [
+                      {
+                        "min_people": 1,
+                        "min_condition": "greater_equal",
+                        "max_people": 10,
+                        "max_condition": null,
+                        "discount_type": "percentage",
+                        "discount_value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 4,
+          "is_permanent": true,
+          "day_discount": {
+            "discount_rules": [
+              {
+                "min_people": 1,
+                "min_condition": "greater_equal",
+                "max_people": null,
+                "max_condition": null,
+                "discount_type": "percentage",
+                "discount_value": 10
+              }
+            ]
+          },
+          "booking_time_interval": [
+            {
+              "_id": "694aa30b0ef82d9db09de6b8",
+              "name": "中午",
+              "meal_discount": {
+                "discount_rules": [
+                  {
+                    "min_people": 10,
+                    "min_condition": "greater_equal",
+                    "max_people": null,
+                    "max_condition": null,
+                    "discount_type": "percentage",
+                    "discount_value": 10
+                  }
+                ]
+              },
+              "time_interval_detail": [
+                {
+                  "start_time": "01:00",
+                  "discount": {
+                    "discount_rules": [
+                      {
+                        "min_people": 1,
+                        "min_condition": "greater_equal",
+                        "max_people": 10,
+                        "max_condition": null,
+                        "discount_type": "percentage",
+                        "discount_value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 5,
+          "is_permanent": true,
+          "day_discount": {
+            "discount_rules": [
+              {
+                "min_people": 1,
+                "min_condition": "greater_equal",
+                "max_people": null,
+                "max_condition": null,
+                "discount_type": "percentage",
+                "discount_value": 10
+              }
+            ]
+          },
+          "booking_time_interval": [
+            {
+              "_id": "694aa30b0ef82d9db09de6b8",
+              "name": "中午",
+              "meal_discount": {
+                "discount_rules": [
+                  {
+                    "min_people": 10,
+                    "min_condition": "greater_equal",
+                    "max_people": null,
+                    "max_condition": null,
+                    "discount_type": "percentage",
+                    "discount_value": 10
+                  }
+                ]
+              },
+              "time_interval_detail": [
+                {
+                  "start_time": "01:00",
+                  "discount": {
+                    "discount_rules": [
+                      {
+                        "min_people": 1,
+                        "min_condition": "greater_equal",
+                        "max_people": 10,
+                        "max_condition": null,
+                        "discount_type": "percentage",
+                        "discount_value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 6,
+          "is_permanent": true,
+          "day_discount": {
+            "discount_rules": [
+              {
+                "min_people": 1,
+                "min_condition": "greater_equal",
+                "max_people": null,
+                "max_condition": null,
+                "discount_type": "percentage",
+                "discount_value": 10
+              }
+            ]
+          },
+          "booking_time_interval": [
+            {
+              "_id": "694aa30b0ef82d9db09de6b8",
+              "name": "中午",
+              "meal_discount": {
+                "discount_rules": [
+                  {
+                    "min_people": 10,
+                    "min_condition": "greater_equal",
+                    "max_people": null,
+                    "max_condition": null,
+                    "discount_type": "percentage",
+                    "discount_value": 10
+                  }
+                ]
+              },
+              "time_interval_detail": [
+                {
+                  "start_time": "01:00",
+                  "discount": {
+                    "discount_rules": [
+                      {
+                        "min_people": 1,
+                        "min_condition": "greater_equal",
+                        "max_people": 10,
+                        "max_condition": null,
+                        "discount_type": "percentage",
+                        "discount_value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "week": 7,
+          "is_permanent": true,
+          "day_discount": {
+            "discount_rules": [
+              {
+                "min_people": 1,
+                "min_condition": "greater_equal",
+                "max_people": null,
+                "max_condition": null,
+                "discount_type": "percentage",
+                "discount_value": 10
+              }
+            ]
+          },
+          "booking_time_interval": [
+            {
+              "_id": "694aa30b0ef82d9db09de6b8",
+              "name": "中午",
+              "meal_discount": {
+                "discount_rules": [
+                  {
+                    "min_people": 10,
+                    "min_condition": "greater_equal",
+                    "max_people": null,
+                    "max_condition": null,
+                    "discount_type": "percentage",
+                    "discount_value": 10
+                  }
+                ]
+              },
+              "time_interval_detail": [
+                {
+                  "start_time": "01:00",
+                  "discount": {
+                    "discount_rules": [
+                      {
+                        "min_people": 1,
+                        "min_condition": "greater_equal",
+                        "max_people": 10,
+                        "max_condition": null,
+                        "discount_type": "percentage",
+                        "discount_value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "is_open_booking_discount_setting": false,
+      "setting_booking_order_reminders": {
+        "enabled": false,
+        "min_advance_hours": 72,
+        "reminders": [
+          {
+            "id": "rule_1",
+            "hours_before_booking": 6,
+            "type": "reminder",
+            "people_range": {
+              "min": 1,
+              "max": 20
+            },
+            "include_label_ids": [],
+            "include_vip_level_ids": [],
+            "exclude_label_ids": [],
+            "exclude_vip_level_ids": []
+          }
+        ]
+      },
+      "select_selftake_interval": 5,
+      "select_delivery_interval": 5,
+      "selftake_order_interval": 15,
+      "delivery_order_interval": 20,
+      "setting_max_takeout_day": 1,
+      "setting_selftake_busy_mode_value": 5,
+      "setting_delivery_busy_mode_value": 5,
+      "customer_modify_order_time_limit": 30,
+      "customer_cancel_order_time_limit": 30,
+      "setting_delivery_order_automatic_confirmation_max_amount": 100,
+      "setting_customer_tableware_options": false,
+      "setting_receipt_qrcode": {
+        "enabled": true,
+        "link_type": "PUBLIC_ORDER_URL",
+        "link_source": "MAIN",
+        "text": "",
+        "text_anchor": "top_center"
+      },
+      "setting_order_remark_size": "normal",
+      "belonged_group": "30ROLEVN",
+      "referral_rule_id": "69f9a29824bb0729c4cc59cf",
+      "setting_app_takeaway_service_status": true,
+      "google_reserve_status": false,
+      "description": "",
+      "email": "",
+      "facebook_website": "",
+      "google_website": "https://app.brenvo.ai/api/s/MtnT",
+      "label": [],
+      "popup_promotion_txt": "",
+      "promotion_status": true,
+      "promotion_type": "2",
+      "setting_whats_app_enable": false,
+      "setting_whats_app_order": false,
+      "setting_whats_app_phone": "",
+      "setting_whats_app_phone_prefix": "",
+      "website": "",
+      "internal_name": "DimSum",
+      "setting_temporarily_closed_enable": false,
+      "urls": [
+        {
+          "type": "GOOGLE_REVIEW_URL",
+          "source": "MAIN",
+          "url": "https://search.google.com/local/writereview?placeid=ChIJJejOTerlGRMRyMt0WMYutT0",
+          "id": "6a4e79fab7aab25e3f34ea13"
+        },
+        {
+          "type": "PUBLIC_ORDER_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/restaurant-page?string_id=8L3E9",
+          "id": "6a4e79fab7aab25e3f34ea14"
+        },
+        {
+          "type": "EMBEDDED_ORDER_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/restaurant-page?string_id=8L3E9&merchant_website=true",
+          "id": "6a4e79fab7aab25e3f34ea15"
+        },
+        {
+          "type": "PUBLIC_RESERVE_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/reservations?string_id=8L3E9&merchant_website=true",
+          "id": "6a4e79fab7aab25e3f34ea16"
+        },
+        {
+          "type": "EMBEDDED_RESERVE_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/reservations?string_id=8L3E9&merchant_website=true",
+          "id": "6a4e79fab7aab25e3f34ea17"
+        },
+        {
+          "type": "TAKEAWAY_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/orderpage?string_id=8L3E9&orderway=1",
+          "id": "6a4e79fab7aab25e3f34ea18"
+        },
+        {
+          "type": "DELIVERY_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/orderpage?string_id=8L3E9&orderway=2",
+          "id": "6a4e79fab7aab25e3f34ea19"
+        },
+        {
+          "type": "JOIN_MEMBER_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/join-member?string_id=8L3E9&merchant_website=true&join_entry=promotional&skip_login=1",
+          "id": "6a4e79fab7aab25e3f34ea1a"
+        },
+        {
+          "type": "GROUP_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/groupPage?string_id=30ROLEVN",
+          "id": "6a4e79fab7aab25e3f34ea1b"
+        },
+        {
+          "type": "GROUP_EMBEDDED_URL",
+          "source": "MAIN",
+          "url": "https://app.brenvo.ai/#/groupPage?string_id=30ROLEVN",
+          "id": "6a4e79fab7aab25e3f34ea1c"
+        }
+      ],
+      "default_pic": {
+        "_id": "6a3138bbbca5ac6859476e8f",
+        "version": "457c44c7-a81a-4950-ae40-f54943241d20",
+        "name": "6a3138bbbca5ac6859476e8f",
+        "update_date": "20260616040446"
+      },
+      "logo": {
+        "_id": "6a3138bbbca5ac6859476e8f",
+        "version": "f0395a77-378f-4748-be61-c6f41bca60c1",
+        "name": "6a3138bbbca5ac6859476e8f",
+        "update_date": "20260616040451"
+      },
+      "is_enable_quick_order": false,
+      "is_enable_quick_order_delivery": false,
+      "setting_app_stop_selftake_status": false,
+      "setting_app_stop_takeaway_status": false,
+      "setting_app_takeaway_service_schedule": [
+        {
+          "week": 1,
+          "time_24_hours": false,
+          "time_ranges": [
+            {
+              "start_time": "11:30",
+              "end_time": "14:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ff2"
+            },
+            {
+              "start_time": "18:30",
+              "end_time": "22:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ff3"
+            }
+          ],
+          "takeaway_status": true,
+          "selftake_status": true,
+          "_id": "6a313c1abca5ac6859476ff1"
+        },
+        {
+          "week": 2,
+          "time_24_hours": false,
+          "time_ranges": [
+            {
+              "start_time": "11:30",
+              "end_time": "14:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ff5"
+            },
+            {
+              "start_time": "18:30",
+              "end_time": "22:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ff6"
+            }
+          ],
+          "takeaway_status": true,
+          "selftake_status": true,
+          "_id": "6a313c1abca5ac6859476ff4"
+        },
+        {
+          "week": 3,
+          "time_24_hours": false,
+          "time_ranges": [
+            {
+              "start_time": "11:30",
+              "end_time": "14:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ff8"
+            },
+            {
+              "start_time": "18:30",
+              "end_time": "22:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ff9"
+            }
+          ],
+          "takeaway_status": true,
+          "selftake_status": true,
+          "_id": "6a313c1abca5ac6859476ff7"
+        },
+        {
+          "week": 4,
+          "time_24_hours": false,
+          "time_ranges": [
+            {
+              "start_time": "11:30",
+              "end_time": "14:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ffb"
+            },
+            {
+              "start_time": "18:30",
+              "end_time": "22:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ffc"
+            }
+          ],
+          "takeaway_status": true,
+          "selftake_status": true,
+          "_id": "6a313c1abca5ac6859476ffa"
+        },
+        {
+          "week": 5,
+          "time_24_hours": false,
+          "time_ranges": [
+            {
+              "start_time": "11:30",
+              "end_time": "14:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476ffe"
+            },
+            {
+              "start_time": "18:30",
+              "end_time": "22:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859476fff"
+            }
+          ],
+          "takeaway_status": true,
+          "selftake_status": true,
+          "_id": "6a313c1abca5ac6859476ffd"
+        },
+        {
+          "week": 6,
+          "time_24_hours": false,
+          "time_ranges": [
+            {
+              "start_time": "11:30",
+              "end_time": "14:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859477001"
+            },
+            {
+              "start_time": "18:30",
+              "end_time": "22:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859477002"
+            }
+          ],
+          "takeaway_status": true,
+          "selftake_status": true,
+          "_id": "6a313c1abca5ac6859477000"
+        },
+        {
+          "week": 7,
+          "time_24_hours": false,
+          "time_ranges": [
+            {
+              "start_time": "11:30",
+              "end_time": "14:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859477004"
+            },
+            {
+              "start_time": "18:30",
+              "end_time": "22:30",
+              "takeaway_status": true,
+              "orders_limit": 9999,
+              "selftake_status": true,
+              "selftake_orders_limit": 9999,
+              "_id": "6a313c1abca5ac6859477005"
+            }
+          ],
+          "takeaway_status": true,
+          "selftake_status": true,
+          "_id": "6a313c1abca5ac6859477003"
+        }
+      ],
+      "setting_level_delivery": [
+        {
+          "id": 1781694510477,
+          "type": "CIRCLE",
+          "lat": "38.1273751941465",
+          "lng": "13.360771363420811",
+          "radius": 0.6274692254390245,
+          "start_radius": 0,
+          "end_radius": 0.6274692254390245,
+          "delivery_amount_discount": [],
+          "canceled_schedule_time_ranges": [],
+          "status": true,
+          "delivery_fee": 2,
+          "delivery_minimum_fee": 10,
+          "polygon_points": []
+        },
+        {
+          "id": 1781694369588,
+          "type": "POLYGON",
+          "polygon_points": [
+            {
+              "lat": "38.15536966398583",
+              "lng": "13.340009221150146"
+            },
+            {
+              "lat": "38.15715817907205",
+              "lng": "13.338764676167235"
+            },
+            {
+              "lat": "38.149025143515026",
+              "lng": "13.327091702534423"
+            },
+            {
+              "lat": "38.142882581992694",
+              "lng": "13.332069882466064"
+            },
+            {
+              "lat": "38.127625192038856",
+              "lng": "13.33018160731958"
+            },
+            {
+              "lat": "38.1246205955899",
+              "lng": "13.331597813679442"
+            },
+            {
+              "lat": "38.12475563628647",
+              "lng": "13.333743580891356"
+            },
+            {
+              "lat": "38.122358626789854",
+              "lng": "13.334945210530028"
+            },
+            {
+              "lat": "38.122898804812976",
+              "lng": "13.33837843806909"
+            },
+            {
+              "lat": "38.11915123746828",
+              "lng": "13.340610035969481"
+            },
+            {
+              "lat": "38.116968951338144",
+              "lng": "13.343703248165344"
+            },
+            {
+              "lat": "38.11460077050621",
+              "lng": "13.346635441541167"
+            },
+            {
+              "lat": "38.11370599681163",
+              "lng": "13.347386460065337"
+            },
+            {
+              "lat": "38.113233281755015",
+              "lng": "13.348137478589507"
+            },
+            {
+              "lat": "38.11178135209426",
+              "lng": "13.35006866908023"
+            },
+            {
+              "lat": "38.11086966057917",
+              "lng": "13.351527790784331"
+            },
+            {
+              "lat": "38.106123386113644",
+              "lng": "13.357052281295227"
+            },
+            {
+              "lat": "38.105802582216576",
+              "lng": "13.363081887160705"
+            },
+            {
+              "lat": "38.103101019835",
+              "lng": "13.365098908339904"
+            },
+            {
+              "lat": "38.105583084001616",
+              "lng": "13.376600220595764"
+            },
+            {
+              "lat": "38.10826651213232",
+              "lng": "13.384124519599862"
+            },
+            {
+              "lat": "38.15777046910536",
+              "lng": "13.374201530598414"
+            },
+            {
+              "lat": "38.15760622008471",
+              "lng": "13.370677238366886"
+            },
+            {
+              "lat": "38.15105940660769",
+              "lng": "13.366256957910343"
+            },
+            {
+              "lat": "38.147887027886526",
+              "lng": "13.355742698571964"
+            },
+            {
+              "lat": "38.15703255373746",
+              "lng": "13.344885116479679"
+            }
+          ],
+          "delivery_amount_discount": [],
+          "canceled_schedule_time_ranges": [],
+          "status": true,
+          "delivery_fee": 5,
+          "delivery_minimum_fee": 20
+        },
+        {
+          "id": 1781694616516,
+          "type": "POLYGON",
+          "polygon_points": [
+            {
+              "lat": "38.14007377750074",
+              "lng": "13.358810668630925"
+            },
+            {
+              "lat": "38.13791354979568",
+              "lng": "13.350570922537175"
+            },
+            {
+              "lat": "38.13325534119102",
+              "lng": "13.345592742605534"
+            },
+            {
+              "lat": "38.12677386070151",
+              "lng": "13.344734435720769"
+            },
+            {
+              "lat": "38.120089231177744",
+              "lng": "13.347137694998112"
+            },
+            {
+              "lat": "38.11570000018006",
+              "lng": "13.353489165945378"
+            },
+            {
+              "lat": "38.11387670359788",
+              "lng": "13.363788848562566"
+            },
+            {
+              "lat": "38.116105171016656",
+              "lng": "13.371856933279362"
+            },
+            {
+              "lat": "38.12049437766185",
+              "lng": "13.376320129080144"
+            },
+            {
+              "lat": "38.12690889741519",
+              "lng": "13.376491790457097"
+            },
+            {
+              "lat": "38.13217513441018",
+              "lng": "13.37365937773737"
+            },
+            {
+              "lat": "38.13575325813883",
+              "lng": "13.369024520559636"
+            },
+            {
+              "lat": "38.138521120301654",
+              "lng": "13.364132171316472"
+            }
+          ],
+          "delivery_amount_discount": [],
+          "canceled_schedule_time_ranges": [],
+          "status": true,
+          "delivery_fee": 3,
+          "delivery_minimum_fee": 20
+        }
+      ],
+      "restaurant_cod_maximum_amount": 9999,
+      "setting_app_takeaway_service_payment_cash_status": true,
+      "setting_cod_cash_enable": true,
+      "setting_cod_pos_enable": true,
+      "setting_order_invoice_minimum_fee": 0,
+      "setting_payment_currency": "EUR",
+      "setting_tax_group": [
+        {
+          "name": "italia_iva",
+          "_id": "6a313c7ebca5ac685947702f",
+          "values": [
+            {
+              "name": "italia_iva",
+              "display_name": "italia_iva",
+              "value": 10,
+              "tax_group_id": "6a313c7ebca5ac685947702f",
+              "_id": "6a313c85bca5ac6859477031"
+            }
+          ]
+        }
+      ],
+      "setting_order_delivery_fee_tax_group_id": "6a313c7ebca5ac685947702f",
+      "setting_level_delivery_status": true,
+      "popup_album": [
+        {
+          "_id": "6a3138bbbca5ac6859476e8f",
+          "version": "b8119951-7cbd-4a42-9ce7-65ec76a46adc",
+          "name": "0",
+          "type": "1",
+          "update_date": "20260702113731"
+        }
+      ]
+    }
+  ],
+  "totalCount": 1
+}

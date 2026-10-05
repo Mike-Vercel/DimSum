@@ -1,0 +1,12 @@
+node_modules
+.next
+.next-e2e
+test-results
+playwright-report
+blob-report
+.data
+packages/db/src/generated
+packages/db/prisma/migrations
+packages/db/data
+apps/web/public
+*.md
