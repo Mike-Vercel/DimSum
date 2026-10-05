@@ -473,7 +473,9 @@ export function MenuManager({
       title="Menu"
       description={
         soldOutCount
-          ? `${soldOutCount} prodotti non disponibili in questo momento`
+          ? soldOutCount === 1
+            ? "1 prodotto non disponibile in questo momento"
+            : `${soldOutCount} prodotti non disponibili in questo momento`
           : "Tutti i prodotti sono disponibili"
       }
       actions={
@@ -495,7 +497,7 @@ export function MenuManager({
         ) : null
       }
     >
-      <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
         <nav aria-label="Categorie" className="space-y-1 lg:sticky lg:top-6 lg:self-start">
           <div className="relative mb-3">
             <Search
@@ -535,7 +537,7 @@ export function MenuManager({
                     {c.name}
                   </span>
                   <span className={cn("text-caption tabular-nums", out ? "text-danger" : "opacity-60")}>
-                    {out ? `${out} esauriti` : c.productIds.length}
+                    {out ? (out === 1 ? "1 esaurito" : `${out} esauriti`) : c.productIds.length}
                   </span>
                 </button>
               );

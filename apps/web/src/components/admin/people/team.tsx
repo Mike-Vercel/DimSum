@@ -132,46 +132,54 @@ export function TeamManager({
     >
       <ul className="divide-y divide-line overflow-hidden rounded-2xl bg-surface ring-1 ring-line">
         {data.staff.map((m) => (
-          <li key={m.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
-            <UserCog className="size-5 text-fg-muted" />
-            <div className="min-w-0 flex-1">
-              <p className="flex flex-wrap items-center gap-2 font-semibold">
-                {m.name} {m.id === viewerId ? <Badge tone="neutral">Tu</Badge> : null}{" "}
+          // Phones: who above, role and status below at full width. Desktop: one line.
+          <li
+            key={m.id}
+            className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-3 gap-y-3 px-4 py-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:gap-x-4 sm:px-5"
+          >
+            <span className="grid size-10 place-items-center rounded-full bg-surface-2 text-fg-muted">
+              <UserCog className="size-5" aria-hidden />
+            </span>
+            <div className="min-w-0">
+              <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
+                {m.name} {m.id === viewerId ? <Badge tone="neutral">Tu</Badge> : null}
                 {m.disabled ? <Badge tone="warning">Disattivato</Badge> : null}
               </p>
-              <p className="text-body-sm text-fg-muted">
-                {m.email} ·{" "}
+              <p className="truncate text-body-sm text-fg-muted">{m.email}</p>
+              <p className="text-caption text-fg-subtle">
                 {m.lastSessionAt
-                  ? `ultimo accesso ${formatOrderDate(m.lastSessionAt, timeZone)}`
-                  : "mai entrato"}
+                  ? `Ultimo accesso ${formatOrderDate(m.lastSessionAt, timeZone)}`
+                  : "Non è mai entrato"}
               </p>
             </div>
-            <select
-              aria-label={`Ruolo di ${m.name}`}
-              value={m.role}
-              disabled={m.id === viewerId || update.isPending}
-              onChange={(e) =>
-                update.mutate({
-                  id: m.id,
-                  input: { role: e.target.value as "STAFF" | "ADMIN" | "SUPER_ADMIN" },
-                })
-              }
-              className="h-10 rounded-full bg-surface-2 px-3 text-body-sm font-semibold ring-1 ring-line"
-            >
-              {(["STAFF", "ADMIN", "SUPER_ADMIN"] as const).map((r) => (
-                <option key={r} value={r}>
-                  {ROLE_LABEL[r]}
-                </option>
-              ))}
-            </select>
-            <label className="flex items-center gap-2 text-body-sm">
-              Attivo
-              <Switch
-                checked={!m.disabled}
+            <div className="col-span-2 flex items-center gap-4 border-t border-line/70 pt-3 sm:col-span-1 sm:border-0 sm:pt-0">
+              <select
+                aria-label={`Ruolo di ${m.name}`}
+                value={m.role}
                 disabled={m.id === viewerId || update.isPending}
-                onCheckedChange={(v) => update.mutate({ id: m.id, input: { disabled: !v } })}
-              />
-            </label>
+                onChange={(e) =>
+                  update.mutate({
+                    id: m.id,
+                    input: { role: e.target.value as "STAFF" | "ADMIN" | "SUPER_ADMIN" },
+                  })
+                }
+                className="h-10 min-w-0 flex-1 rounded-full bg-surface-2 px-3 text-body-sm font-semibold ring-1 ring-line sm:w-40 sm:flex-none"
+              >
+                {(["STAFF", "ADMIN", "SUPER_ADMIN"] as const).map((r) => (
+                  <option key={r} value={r}>
+                    {ROLE_LABEL[r]}
+                  </option>
+                ))}
+              </select>
+              <label className="flex shrink-0 items-center gap-2 text-body-sm whitespace-nowrap">
+                Attivo
+                <Switch
+                  checked={!m.disabled}
+                  disabled={m.id === viewerId || update.isPending}
+                  onCheckedChange={(v) => update.mutate({ id: m.id, input: { disabled: !v } })}
+                />
+              </label>
+            </div>
           </li>
         ))}
       </ul>
@@ -232,12 +240,13 @@ export function AuditLog({ initial, timeZone }: { initial: Paginated<AuditEntryD
               type="button"
               onClick={() => setOpen(open === a.id ? null : a.id)}
               aria-expanded={open === a.id}
-              className="flex w-full flex-wrap items-center gap-x-4 gap-y-1 px-5 py-3 text-left hover:bg-surface-2"
+              // Phones: date and type on top, what happened below at full width. Desktop: one line.
+              className="flex w-full flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 text-left hover:bg-surface-2 sm:flex-nowrap sm:px-5"
             >
-              <span className="w-36 shrink-0 text-body-sm text-fg-muted tabular-nums">
+              <span className="shrink-0 text-body-sm text-fg-muted tabular-nums sm:w-36">
                 {formatOrderDate(a.createdAt, timeZone)}
               </span>
-              <span className="min-w-0 flex-1 text-body-sm">
+              <span className="order-last w-full min-w-0 text-body-sm sm:order-none sm:w-auto sm:flex-1">
                 <span className="font-semibold">{ACTION_LABEL[a.action] ?? a.action}</span>
                 <span className="text-fg-muted">
                   {" "}
@@ -245,7 +254,7 @@ export function AuditLog({ initial, timeZone }: { initial: Paginated<AuditEntryD
                   {a.actorRole ? ` (${ROLE_LABEL[a.actorRole]})` : ""}
                 </span>
               </span>
-              <span className="text-caption text-fg-subtle">{a.entityType}</span>
+              <span className="ml-auto text-caption text-fg-subtle sm:ml-0">{a.entityType}</span>
               <ChevronDown
                 className={cn("size-4 text-fg-subtle transition-transform", open === a.id && "rotate-180")}
               />
