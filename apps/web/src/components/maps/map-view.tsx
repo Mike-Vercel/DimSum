@@ -22,6 +22,8 @@ export interface MapMarker {
   position: LatLng;
   heading?: number | null;
   label?: string;
+  /** Smaller pin, for overview maps where it must not cover what is around it. */
+  compact?: boolean;
 }
 
 export interface MapPolygon {
@@ -56,7 +58,8 @@ function markerElement(m: MapMarker): HTMLElement {
   el.setAttribute("role", "img");
   if (m.kind === "restaurant") {
     el.setAttribute("aria-label", m.label ?? "Ristorante");
-    el.innerHTML = `<div style="width:44px;height:44px;border-radius:9999px;background:#0e0d0c;display:grid;place-items:center;box-shadow:0 6px 18px rgba(14,13,12,.35);border:3px solid #fff"><svg viewBox="${LOGO.seal.x} 0 ${LOGO.seal.width} ${LOGO.seal.height}" height="24" fill="#e8382b"><path d="${LOGO.seal.d}"/></svg></div>`;
+    const size = m.compact ? 28 : 44;
+    el.innerHTML = `<div style="width:${size}px;height:${size}px;border-radius:9999px;background:#0e0d0c;display:grid;place-items:center;box-shadow:0 6px 18px rgba(14,13,12,.35);border:${m.compact ? 2 : 3}px solid #fff"><svg viewBox="${LOGO.seal.x} 0 ${LOGO.seal.width} ${LOGO.seal.height}" height="${m.compact ? 14 : 24}" fill="#e8382b"><path d="${LOGO.seal.d}"/></svg></div>`;
   } else if (m.kind === "destination") {
     el.setAttribute("aria-label", m.label ?? "Destinazione");
     el.innerHTML = `<svg width="40" height="50" viewBox="0 0 40 50" style="filter:drop-shadow(0 6px 10px rgba(14,13,12,.3));transform:translateY(-22px)"><path d="M20 49c0 0 18-17.4 18-29.2A18 18 0 0 0 2 19.8C2 31.6 20 49 20 49z" fill="#d82a1e" stroke="#fff" stroke-width="3"/><circle cx="20" cy="20" r="6.5" fill="#fff"/></svg>`;

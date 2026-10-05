@@ -2,8 +2,8 @@ import type { GeocodedAddressDTO, GeoPoint } from "@dimsum/types";
 import { provinceCode } from "./italy";
 
 /**
- * Photon (komoot): OpenStreetMap geocoding. Shared by the server provider and the address search
- * that runs on the customer's device (the public instance does not answer cloud servers).
+ * Photon (komoot): OpenStreetMap geocoding, used by the server provider only when the local street
+ * index (server/maps/street-index.ts) is not available.
  */
 export interface PhotonProps {
   name?: string;

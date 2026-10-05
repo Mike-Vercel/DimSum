@@ -29,7 +29,7 @@ export default async function PrivacyPage() {
       ? "Google Ireland Ltd. (Google Maps Platform) per la ricerca degli indirizzi e il calcolo dei percorsi"
       : f.mapsProvider === "mapbox"
         ? "Mapbox Inc. per la ricerca degli indirizzi e il calcolo dei percorsi"
-        : "servizi basati su OpenStreetMap: Nominatim della OpenStreetMap Foundation per la ricerca degli indirizzi (interrogato direttamente dal tuo dispositivo, riceve il testo cercato o la posizione scelta), OSRM per i percorsi e OpenFreeMap per le mappe";
+        : "servizi basati su OpenStreetMap: OSRM per il calcolo dei percorsi e OpenFreeMap per le mappe (la ricerca degli indirizzi usa un archivio delle vie ospitato da noi e non coinvolge terzi)";
 
   return (
     <LegalDocument

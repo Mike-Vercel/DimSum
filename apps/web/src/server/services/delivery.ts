@@ -6,7 +6,7 @@ import {
   type LatLng,
   type RouteInfo,
 } from "@dimsum/domain";
-import type { DeliveryQuoteDTO, DeliveryZoneDTO, GeoPoint } from "@dimsum/types";
+import type { DeliveryAreaDTO, DeliveryQuoteDTO, DeliveryZoneDTO, GeoPoint } from "@dimsum/types";
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "../db";
 import { routeBetween } from "../maps";
@@ -41,6 +41,33 @@ export async function getDeliveryZones(): Promise<DeliveryZoneRule[]> {
   cacheLife("hours");
   cacheTag(ZONES_TAG);
   return loadDeliveryZones();
+}
+
+/** Active zones with their exact shapes, largest first so the map draws the inner ones on top. */
+export async function getDeliveryArea(): Promise<DeliveryAreaDTO> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(ZONES_TAG);
+  const [rows, config] = await Promise.all([
+    db.deliveryZone.findMany({ where: { isActive: true }, orderBy: [{ priority: "desc" }] }),
+    getRestaurantConfig(),
+  ]);
+  return {
+    restaurant: config.location,
+    zones: rows.map((z) => ({
+      id: z.id,
+      name: z.name,
+      type: z.type,
+      color: z.color ?? "#D82A1E",
+      deliveryFeeCents: z.deliveryFeeCents,
+      minimumOrderCents: z.minimumOrderCents,
+      freeDeliveryThresholdCents: z.freeDeliveryThresholdCents,
+      center: z.centerLat !== null && z.centerLng !== null ? { lat: z.centerLat, lng: z.centerLng } : null,
+      radiusMeters: z.radiusMeters,
+      polygon: (z.polygon as GeoPoint[] | null) ?? null,
+      maxDistanceMeters: z.maxDistanceMeters,
+    })),
+  };
 }
 
 export function toZoneDTO(z: DeliveryZoneRule): DeliveryZoneDTO {

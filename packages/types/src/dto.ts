@@ -205,12 +205,6 @@ export interface RestaurantPublicDTO {
   loyalty: { enabled: boolean; programName: string };
   legal: { companyName: string | null; vatNumber: string | null };
   social: { googleReviewUrl: string | null; instagramUrl: string | null; facebookUrl: string | null };
-  /**
-   * Address search. "device": the app queries Nominatim (OpenStreetMap) directly from the
-   * customer's device, with explicit searches only (its usage policy forbids autocomplete), because
-   * the free public services do not answer cloud servers reliably. "server": /api/v1/geo/*.
-   */
-  geocoding: { mode: "device" | "server"; nominatimUrl: string | null };
 }
 
 export interface TimeSlotDTO {
@@ -274,6 +268,19 @@ export interface DeliveryZoneDTO {
   deliveryFeeCents: Cents;
   minimumOrderCents: Cents;
   freeDeliveryThresholdCents: Cents | null;
+}
+
+/** Where the restaurant delivers, with the exact shape of every active zone (map + legend). */
+export interface DeliveryAreaDTO {
+  restaurant: GeoPoint;
+  zones: (DeliveryZoneDTO & {
+    color: string;
+    /** CIRCLE: centre + radius; POLYGON: points; DISTANCE_BAND: route distance from the restaurant. */
+    center: GeoPoint | null;
+    radiusMeters: number | null;
+    polygon: GeoPoint[] | null;
+    maxDistanceMeters: number | null;
+  })[];
 }
 
 export type DeliveryRefusalReason =

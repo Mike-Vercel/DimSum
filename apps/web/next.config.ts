@@ -4,8 +4,6 @@ const isDev = process.env.NODE_ENV !== "production";
 // Only real HTTPS deployments (Vercel, or APP_URL on https) upgrade sub-requests: a local
 // production run is plain http.
 const https = !!process.env.VERCEL || (process.env.APP_URL ?? "").startsWith("https://");
-// Address search runs on the customer device with the OpenStreetMap provider (lib/geo/geocoder.ts).
-const geocoder = new URL(process.env.NOMINATIM_URL || "https://nominatim.openstreetmap.org").origin;
 
 /**
  * Content Security Policy without nonces: menu and storefront pages are prerendered (Cache
@@ -18,7 +16,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  `connect-src 'self' ${geocoder} https://api.stripe.com https://m.stripe.network https://*.openfreemap.org https://tiles.openfreemap.org https://maps.googleapis.com https://api.mapbox.com https://*.tiles.mapbox.com https://events.mapbox.com`,
+  "connect-src 'self' https://api.stripe.com https://m.stripe.network https://*.openfreemap.org https://tiles.openfreemap.org https://maps.googleapis.com https://api.mapbox.com https://*.tiles.mapbox.com https://events.mapbox.com",
   "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://accounts.google.com",
   "worker-src 'self' blob:",
   "child-src 'self' blob:",

@@ -99,6 +99,7 @@ function AddressEditor({
       open={open}
       onOpenChange={onOpenChange}
       title={editing ? "Modifica indirizzo" : "Nuovo indirizzo"}
+      fullHeight
       footer={
         picked ? (
           <Button size="lg" block loading={save.isPending} onClick={() => save.mutate(picked)}>

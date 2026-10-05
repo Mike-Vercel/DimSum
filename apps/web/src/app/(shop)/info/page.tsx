@@ -1,6 +1,7 @@
 import { ALLERGEN_DISCLAIMER } from "@dimsum/domain";
-import { Clock, CreditCard, Mail, MapPin, Phone, Star } from "lucide-react";
+import { Bike, Clock, CreditCard, Mail, MapPin, Phone, Star } from "lucide-react";
 import type { Metadata } from "next";
+import { DeliveryAreaMap } from "@/components/address/delivery-area-map";
 import { InstagramIcon } from "@/components/brand/provider-icons";
 import { RestaurantMap } from "@/components/shop/restaurant-map";
 import { summarizeHours } from "@/lib/hours";
@@ -61,6 +62,12 @@ export default async function InfoPage() {
                 </div>
               ))}
             </div>
+          </section>
+          <section aria-labelledby="zone" className="space-y-4">
+            <h2 id="zone" className="text-title-lg flex items-center gap-2 font-extrabold">
+              <Bike className="size-5" /> Dove consegniamo
+            </h2>
+            <DeliveryAreaMap />
           </section>
           <section aria-labelledby="allergeni" className="rounded-2xl bg-warning-soft p-5">
             <h2 id="allergeni" className="font-bold">

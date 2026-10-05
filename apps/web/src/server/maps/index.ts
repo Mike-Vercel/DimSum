@@ -8,7 +8,11 @@ import { logger } from "../logger";
 import { googleProvider } from "./google";
 import { mapboxProvider } from "./mapbox";
 import { osmProvider } from "./osm";
+import { searchStreets, streetAddress, streetAt, streetIndexAvailable } from "./street-index";
 import type { GeoProvider, RouteResult } from "./types";
+
+/** OpenStreetMap: addresses come from our own street index of the delivery area (instant, no third party). */
+const localStreets = () => features().mapsProvider === "osm" && streetIndexAvailable();
 
 export function geoProvider(): GeoProvider {
   const p = features().mapsProvider;
@@ -47,6 +51,7 @@ export async function suggestAddresses(
   near: GeoPoint,
   sessionToken?: string,
 ): Promise<AddressSuggestionDTO[]> {
+  if (localStreets()) return searchStreets(query, near);
   const p = geoProvider();
   return cached(
     `${p.name}:suggest:${norm(query)}:${round(near.lat, 2)},${round(near.lng, 2)}`,
@@ -56,11 +61,13 @@ export async function suggestAddresses(
 }
 
 export async function placeDetails(id: string, sessionToken?: string): Promise<GeocodedAddressDTO | null> {
+  if (localStreets()) return streetAddress(id);
   const p = geoProvider();
   return cached(`${p.name}:details:${id}`, 30 * 24 * HOUR, () => p.details(id, sessionToken));
 }
 
 export async function reverseGeocode(point: GeoPoint): Promise<GeocodedAddressDTO | null> {
+  if (localStreets()) return streetAt(point);
   const p = geoProvider();
   const key = `${p.name}:reverse:${round(point.lat, 5)},${round(point.lng, 5)}`;
   const result = await cached(key, 30 * 24 * HOUR, () => p.reverse(point));

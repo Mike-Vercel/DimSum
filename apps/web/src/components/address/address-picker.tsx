@@ -8,7 +8,7 @@ import type {
   SavedAddressDTO,
 } from "@dimsum/types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChevronDown, Home, LocateFixed, MapPin, Search, X } from "lucide-react";
+import { ChevronDown, Home, LocateFixed, MapPin, PenLine, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Map } from "@/components/maps/map";
@@ -19,10 +19,10 @@ import { Field, Input, Textarea } from "@/components/ui/input";
 import { api, ApiError } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
-import { createGeocoder, GeocodingError } from "@/lib/geo/geocoder";
 import { currentPosition, GeolocationFailure } from "@/lib/geolocation";
 import { haptics } from "@/lib/haptics";
 import type { DeliveryAddress } from "@/lib/stores/order-prefs";
+import { DeliveryAreaMap } from "./delivery-area-map";
 import { DeliveryCheck } from "./delivery-check";
 
 type Stage = "search" | "confirm";
@@ -38,14 +38,24 @@ function useDebounced<T>(value: T, ms: number): T {
 
 const emptyDetails = { staircase: null, floor: null, apartment: null, intercom: null, riderNotes: null };
 
+const LOWERCASE_WORDS = new Set(["di", "del", "della", "dello", "dei", "degli", "delle", "da", "e"]);
+
 /**
- * House number typed at the end of the search ("via ruggero settimo 20, palermo" → "20", "12/b",
- * "7a"), kept when the map data has no number for that building. "Via 20 Settembre" has none.
+ * Street and house number as typed, for a street missing from the map data:
+ * "via adragna 12, palermo" → "Via Adragna", "12"; "via della liberta" → "Via della Liberta".
  */
-function typedHouseNumber(text: string): string | null {
-  const words = (text.split(",")[0] ?? "").trim().split(/\s+/);
-  const last = words.at(-1) ?? "";
-  return words.length > 1 && /^\d{1,4}[a-z]?(?:\/[a-z0-9]{1,3})?$/i.test(last) ? last.toUpperCase() : null;
+function typedAddress(text: string): { street: string; number: string } {
+  const head = (text.split(",")[0] ?? "").trim().replace(/\s+/g, " ");
+  const m = head.match(/\s(\d{1,4})\s*\/?\s*([a-z])?$/i);
+  const street = (m ? head.slice(0, m.index) : head)
+    .split(" ")
+    .map((w, i) =>
+      i > 0 && LOWERCASE_WORDS.has(w.toLowerCase())
+        ? w.toLowerCase()
+        : w.charAt(0).toUpperCase() + w.slice(1),
+    )
+    .join(" ");
+  return { street, number: m ? `${m[1]}${m[2] ?? ""}`.toUpperCase() : "" };
 }
 
 /**
@@ -72,27 +82,26 @@ export function AddressPicker({
   const [stage, setStage] = useState<Stage>(initial ? "confirm" : "search");
   const [query, setQuery] = useState("");
   const [sessionToken] = useState(() => crypto.randomUUID());
-  const [geocoder] = useState(() => createGeocoder(restaurant));
-  // Without autocomplete (OpenStreetMap on the device) the search runs when the customer submits it.
-  const [submitted, setSubmitted] = useState("");
   const [address, setAddress] = useState<DeliveryAddress | null>(initial);
   const [pin, setPin] = useState<GeoPoint | null>(initial?.location ?? null);
   const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
   const [showFields, setShowFields] = useState(false);
   const skipNextReverse = useRef(true);
-  const debounced = useDebounced(query.trim(), 250);
-  const searchTerm = geocoder.autocomplete ? debounced : submitted;
+  // Typed by hand (street missing from the map data): moving the pin keeps the customer's text.
+  const manual = useRef(false);
+  const debounced = useDebounced(query.trim(), 200);
 
   const suggestions = useQuery({
-    queryKey: ["geo", "suggest", searchTerm],
-    queryFn: ({ signal }) => geocoder.suggest(searchTerm, sessionToken, signal),
-    enabled: stage === "search" && searchTerm.length >= 3,
+    queryKey: ["geo", "suggest", debounced],
+    queryFn: ({ signal }) => api.geo.suggest(debounced, sessionToken, signal),
+    enabled: stage === "search" && debounced.length >= 3,
     staleTime: 5 * 60_000,
     retry: 1,
+    placeholderData: keepPreviousData,
   });
   const searchError = suggestions.error
-    ? suggestions.error instanceof ApiError || suggestions.error instanceof GeocodingError
+    ? suggestions.error instanceof ApiError
       ? suggestions.error.message
       : "La ricerca degli indirizzi non risponde. Riprova o usa la tua posizione."
     : null;
@@ -124,6 +133,7 @@ export function AddressPicker({
 
   const choose = (a: GeocodedAddressDTO, details: Partial<DeliveryAddress> = {}) => {
     setError(null);
+    manual.current = false;
     skipNextReverse.current = true;
     setAddress({ ...emptyDetails, ...a, ...details, savedAddressId: details.savedAddressId ?? null });
     setPin(a.location);
@@ -133,13 +143,37 @@ export function AddressPicker({
 
   const pickSuggestion = async (s: AddressSuggestionDTO) => {
     try {
-      const a = await geocoder.details(s.id, sessionToken);
+      const { address: a } = await api.geo.details(s.id, sessionToken);
       haptics.select();
-      const typed = a.streetNumber ? null : typedHouseNumber(searchTerm || query);
-      choose(a, typed ? { streetNumber: typed } : {});
+      choose(a);
     } catch (e) {
-      setError(e instanceof ApiError || e instanceof GeocodingError ? e.message : "Indirizzo non trovato.");
+      setError(e instanceof ApiError ? e.message : "Indirizzo non trovato.");
     }
+  };
+
+  /** Street missing from the map data: the customer types it and places the pin on the map. */
+  const enterManually = () => {
+    const typed = typedAddress(query);
+    setError(null);
+    manual.current = true;
+    skipNextReverse.current = true;
+    setAddress({
+      ...emptyDetails,
+      street: typed.street,
+      streetNumber: typed.number,
+      postalCode: "",
+      city: restaurant.address.city,
+      province: restaurant.address.province,
+      country: "IT",
+      formatted: "",
+      location: restaurant.location,
+      placeId: null,
+      precision: "approximate",
+      savedAddressId: null,
+    });
+    setPin(restaurant.location);
+    setStage("confirm");
+    setShowFields(true);
   };
 
   const useMyPosition = async () => {
@@ -147,7 +181,7 @@ export function AddressPicker({
     setError(null);
     try {
       const p = await currentPosition();
-      const a = await geocoder.reverse(p);
+      const { address: a } = await api.geo.reverse(p.lat, p.lng);
       if (a) choose(a);
       else {
         setPin(p);
@@ -156,9 +190,7 @@ export function AddressPicker({
       }
     } catch (e) {
       setError(
-        e instanceof GeolocationFailure || e instanceof ApiError || e instanceof GeocodingError
-          ? e.message
-          : "Posizione non disponibile.",
+        e instanceof GeolocationFailure || e instanceof ApiError ? e.message : "Posizione non disponibile.",
       );
     } finally {
       setLocating(false);
@@ -173,8 +205,12 @@ export function AddressPicker({
     }
     if (pin && Math.abs(center.lat - pin.lat) < 1e-6 && Math.abs(center.lng - pin.lng) < 1e-6) return;
     setPin(center);
+    if (manual.current) {
+      setAddress((prev) => (prev ? { ...prev, location: center } : prev));
+      return;
+    }
     try {
-      const a = await geocoder.reverse(center);
+      const { address: a } = await api.geo.reverse(center.lat, center.lng);
       if (!a) return;
       setAddress((prev) => ({
         ...emptyDetails,
@@ -199,151 +235,146 @@ export function AddressPicker({
   const canConfirm = !!address && !!pin && !missingNumber && !!quote?.deliverable && !quoting;
 
   if (stage === "search") {
-    const list = suggestions.data ?? [];
+    const list = suggestions.data?.suggestions ?? [];
+    const searching = debounced.length >= 3;
     return (
       <div className={cn("flex flex-col gap-4 pb-6", gutter)}>
-        <form
-          role="search"
-          onSubmit={(e) => {
-            e.preventDefault();
-            const term = query.trim();
-            if (term.length < 3) return;
-            if (term === submitted) void suggestions.refetch();
-            else setSubmitted(term);
-          }}
-        >
-          <label className="relative block">
-            <span className="sr-only">Cerca il tuo indirizzo</span>
-            <Search
-              className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-fg-subtle"
-              aria-hidden
-            />
-            <Input
-              autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={
-                geocoder.autocomplete ? "Cerca il tuo indirizzo (via e numero civico)" : "Via e numero civico"
-              }
-              className={cn("rounded-full pl-12", geocoder.autocomplete ? "pr-10" : "pr-32")}
-              autoComplete="street-address"
-              enterKeyHint="search"
-            />
-            <span className="absolute top-1/2 right-1.5 flex -translate-y-1/2 items-center gap-1">
-              {query ? (
-                <button
-                  type="button"
-                  aria-label="Cancella"
-                  onClick={() => setQuery("")}
-                  className="grid size-9 tap place-items-center rounded-full text-fg-subtle"
-                >
-                  <X className="size-4.5" />
-                </button>
-              ) : null}
-              {!geocoder.autocomplete ? (
-                <Button
-                  type="submit"
-                  size="sm"
-                  variant="dark"
-                  className="rounded-full"
-                  disabled={query.trim().length < 3}
-                  loading={suggestions.isFetching}
-                >
-                  Cerca
-                </Button>
-              ) : null}
-            </span>
-          </label>
-        </form>
-
-        <button
-          type="button"
-          onClick={useMyPosition}
-          disabled={locating}
-          className="flex tap items-center gap-3 rounded-2xl bg-surface p-4 text-left ring-1 ring-line"
-        >
-          <span className="grid size-10 place-items-center rounded-full bg-brand-soft text-brand">
-            <LocateFixed className={cn("size-5", locating && "animate-pulse")} />
-          </span>
-          <span>
-            <span className="block font-semibold">
-              {locating ? "Sto cercando la tua posizione…" : "Usa la mia posizione"}
-            </span>
-            <span className="block text-caption text-fg-muted">Ti chiediamo il permesso solo per questo</span>
-          </span>
-        </button>
+        <label className="relative block">
+          <span className="sr-only">Cerca il tuo indirizzo</span>
+          <Search
+            className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-fg-subtle"
+            aria-hidden
+          />
+          <Input
+            autoFocus
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Via e numero civico, es. Via Roma 12"
+            className="rounded-full pr-12 pl-12"
+            autoComplete="street-address"
+            enterKeyHint="search"
+          />
+          {query ? (
+            <button
+              type="button"
+              aria-label="Cancella"
+              onClick={() => setQuery("")}
+              className="absolute top-1/2 right-1.5 grid size-9 -translate-y-1/2 tap place-items-center rounded-full text-fg-subtle"
+            >
+              <X className="size-4.5" />
+            </button>
+          ) : null}
+        </label>
 
         {error ? <InlineAlert tone="danger" title={error} /> : null}
 
-        {list.length > 0 ? (
-          <ul
-            className="divide-y divide-line overflow-hidden rounded-2xl bg-surface ring-1 ring-line"
-            role="listbox"
-            aria-label="Suggerimenti"
-          >
-            {list.map((s) => (
-              <li key={s.id}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={false}
-                  onClick={() => void pickSuggestion(s)}
-                  className="flex w-full items-start gap-3 px-4 py-3.5 text-left hover:bg-surface-2"
-                >
-                  <MapPin className="mt-0.5 size-4.5 shrink-0 text-fg-subtle" aria-hidden />
-                  <span>
-                    <span className="block font-semibold">{s.primaryText}</span>
-                    <span className="block text-caption text-fg-muted">{s.secondaryText}</span>
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : searchTerm.length < 3 ? (
-          !geocoder.autocomplete ? (
-            <p className="px-1 text-body-sm text-fg-muted">
-              Scrivi via e numero civico, poi premi Cerca. Oppure usa la tua posizione.
-            </p>
-          ) : null
-        ) : suggestions.isFetching ? (
-          <p className="px-1 text-body-sm text-fg-muted" role="status">
-            Cerco l&apos;indirizzo…
-          </p>
-        ) : searchError ? (
-          <InlineAlert tone="danger" title={searchError} />
-        ) : (
-          <p className="px-1 text-body-sm text-fg-muted">
-            Nessun indirizzo trovato. Prova ad aggiungere il comune (es. “Palermo”) oppure usa la tua
-            posizione.
-          </p>
-        )}
-
-        {saved.data?.addresses.length ? (
-          <section>
-            <h3 className="mb-2 text-caption font-semibold tracking-wide text-fg-muted uppercase">
-              I tuoi indirizzi
-            </h3>
-            <ul className="divide-y divide-line overflow-hidden rounded-2xl bg-surface ring-1 ring-line">
-              {saved.data.addresses.map((a: SavedAddressDTO) => (
-                <li key={a.id}>
-                  <button
-                    type="button"
-                    onClick={() => choose(a, { ...a, savedAddressId: a.id })}
-                    className="flex w-full items-start gap-3 px-4 py-3.5 text-left hover:bg-surface-2"
-                  >
-                    <Home className="mt-0.5 size-4.5 shrink-0 text-fg-subtle" aria-hidden />
-                    <span>
-                      <span className="block font-semibold">
-                        {a.label ?? `${a.street} ${a.streetNumber}`}
+        {searching ? (
+          <div className="space-y-3">
+            {list.length > 0 ? (
+              <ul
+                className="divide-y divide-line overflow-hidden rounded-2xl bg-surface ring-1 ring-line"
+                role="listbox"
+                aria-label="Suggerimenti"
+              >
+                {list.map((s) => (
+                  <li key={s.id}>
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={false}
+                      onClick={() => void pickSuggestion(s)}
+                      className="flex w-full items-start gap-3 px-4 py-3.5 text-left hover:bg-surface-2"
+                    >
+                      <MapPin className="mt-0.5 size-4.5 shrink-0 text-fg-subtle" aria-hidden />
+                      <span>
+                        <span className="block font-semibold">{s.primaryText}</span>
+                        <span className="block text-caption text-fg-muted">{s.secondaryText}</span>
                       </span>
-                      <span className="block text-caption text-fg-muted">{a.formatted}</span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : suggestions.isFetching ? (
+              <p className="px-1 text-body-sm text-fg-muted" role="status">
+                Cerco l&apos;indirizzo…
+              </p>
+            ) : searchError ? (
+              <InlineAlert tone="danger" title={searchError} />
+            ) : (
+              <p className="px-1 text-body-sm text-fg-muted" role="status">
+                Non troviamo questa via nella zona in cui consegniamo.
+              </p>
+            )}
+            {!suggestions.isFetching ? (
+              <button
+                type="button"
+                onClick={enterManually}
+                className="flex w-full tap items-center gap-3 rounded-2xl px-4 py-3 text-left ring-1 ring-line ring-inset"
+              >
+                <PenLine className="size-4.5 shrink-0 text-fg-muted" aria-hidden />
+                <span className="text-body-sm">
+                  <span className="block font-semibold">Non trovi la tua via?</span>
+                  <span className="block text-fg-muted">Inseriscila a mano e sposta il pin sulla mappa</span>
+                </span>
+              </button>
+            ) : null}
+          </div>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={useMyPosition}
+              disabled={locating}
+              className="flex tap items-center gap-3 rounded-2xl bg-surface p-4 text-left ring-1 ring-line"
+            >
+              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
+                <LocateFixed className={cn("size-5", locating && "animate-pulse")} />
+              </span>
+              <span>
+                <span className="block font-semibold">
+                  {locating ? "Sto cercando la tua posizione…" : "Usa la mia posizione"}
+                </span>
+                <span className="block text-caption text-fg-muted">
+                  Ti chiediamo il permesso solo per questo
+                </span>
+              </span>
+            </button>
+
+            {saved.data?.addresses.length ? (
+              <section>
+                <h3 className="mb-2 text-caption font-semibold tracking-wide text-fg-muted uppercase">
+                  I tuoi indirizzi
+                </h3>
+                <ul className="divide-y divide-line overflow-hidden rounded-2xl bg-surface ring-1 ring-line">
+                  {saved.data.addresses.map((a: SavedAddressDTO) => (
+                    <li key={a.id}>
+                      <button
+                        type="button"
+                        onClick={() => choose(a, { ...a, savedAddressId: a.id })}
+                        className="flex w-full items-start gap-3 px-4 py-3.5 text-left hover:bg-surface-2"
+                      >
+                        <Home className="mt-0.5 size-4.5 shrink-0 text-fg-subtle" aria-hidden />
+                        <span>
+                          <span className="block font-semibold">
+                            {a.label ?? `${a.street} ${a.streetNumber}`}
+                          </span>
+                          <span className="block text-caption text-fg-muted">{a.formatted}</span>
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            <section>
+              <h3 className="mb-2 text-caption font-semibold tracking-wide text-fg-muted uppercase">
+                Dove consegniamo
+              </h3>
+              <DeliveryAreaMap />
+            </section>
+          </>
+        )}
       </div>
     );
   }

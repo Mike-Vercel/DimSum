@@ -82,7 +82,12 @@ export function AddressSheet({
     );
 
   return (
-    <ResponsiveSheet open={open} onOpenChange={onOpenChange} title={title}>
+    <ResponsiveSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={title}
+      fullHeight={fulfillment !== "PICKUP"}
+    >
       {body}
     </ResponsiveSheet>
   );

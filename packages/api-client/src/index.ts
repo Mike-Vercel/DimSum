@@ -33,6 +33,7 @@ import type {
   CheckoutResultDTO,
   CouponPublicDTO,
   DaySlotsDTO,
+  DeliveryAreaDTO,
   DeliveryQuoteDTO,
   GeocodedAddressDTO,
   LoyaltySummaryDTO,
@@ -208,6 +209,7 @@ export function createApiClient(options: ApiClientOptions) {
     delivery: {
       quote: (input: z.input<typeof deliveryQuoteRequest>) =>
         request<DeliveryQuoteDTO>("POST", "/delivery/quote", input),
+      area: () => request<DeliveryAreaDTO>("GET", "/delivery/area"),
     },
     checkout: {
       placeOrder: (input: z.input<typeof checkoutRequest>) =>

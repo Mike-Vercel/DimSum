@@ -18,6 +18,7 @@ export function BottomSheet({
   className,
   hideTitle = false,
   dismissible = true,
+  fullHeight = false,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -28,6 +29,11 @@ export function BottomSheet({
   className?: string;
   hideTitle?: boolean;
   dismissible?: boolean;
+  /**
+   * Opens almost to the top of the screen, for content that starts with a text field: the keyboard
+   * takes the bottom and the field stays visible (no reposition jump on iOS).
+   */
+  fullHeight?: boolean;
 }) {
   return (
     <Drawer.Root
@@ -35,12 +41,14 @@ export function BottomSheet({
       onOpenChange={onOpenChange}
       dismissible={dismissible}
       shouldScaleBackground={false}
+      repositionInputs={!fullHeight}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-50 bg-overlay backdrop-blur-[2px]" />
         <Drawer.Content
           className={cn(
             "fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-xl flex-col rounded-t-3xl bg-canvas shadow-sheet outline-none",
+            fullHeight && "h-[calc(100dvh-var(--safe-top)-12px)] max-h-none",
             className,
           )}
         >

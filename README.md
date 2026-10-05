@@ -85,8 +85,14 @@ In locale nulla esce dal computer:
   locale crea un client OAuth (vedi [Deploy](#deploy-su-vercel), punto 7) con URI di
   reindirizzamento `http://localhost:3000/api/auth/callback/google` e imposta
   `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` nel `.env`.
-- **Mappe:** `MAPS_PROVIDER=osm` usa servizi OpenStreetMap senza chiavi (Photon, OSRM,
-  OpenFreeMap). In produzione conviene un'istanza propria o Google/Mapbox.
+- **Mappe:** `MAPS_PROVIDER=osm` non richiede chiavi. Le mappe vengono da OpenFreeMap e i percorsi
+  da OSRM.
+- **Ricerca indirizzi:** usa un indice delle vie e dei civici dell'area di consegna, preso da
+  OpenStreetMap e salvato nel progetto (`apps/web/src/server/maps/street-index.json`). Risponde
+  subito mentre si scrive, tollera gli errori di battitura e non dipende da servizi esterni (quelli
+  pubblici non rispondono in modo affidabile ai server cloud). Se le zone di consegna si allargano,
+  rigeneralo con `node apps/web/scripts/build-street-index.mjs` e pubblica il file aggiornato.
+  Dati © OpenStreetMap contributors, licenza ODbL.
 
 ### Comandi
 
