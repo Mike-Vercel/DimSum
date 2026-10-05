@@ -1,7 +1,7 @@
 import "server-only";
 import type { AddressSuggestionDTO, GeocodedAddressDTO, GeoPoint } from "@dimsum/types";
 import { env } from "../env";
-import { provinceCode } from "./italy";
+import { provinceCode } from "@/lib/geo/italy";
 import { GeoProviderError, type GeoProvider, type RouteResult } from "./types";
 
 /** Mapbox: Search Box API (suggest/retrieve), Geocoding v6 (reverse), Directions API. */

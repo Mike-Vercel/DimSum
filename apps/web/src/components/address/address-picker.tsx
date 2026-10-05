@@ -19,6 +19,7 @@ import { Field, Input, Textarea } from "@/components/ui/input";
 import { api, ApiError } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
+import { createGeocoder, GeocodingError } from "@/lib/geo/geocoder";
 import { currentPosition, GeolocationFailure } from "@/lib/geolocation";
 import { haptics } from "@/lib/haptics";
 import type { DeliveryAddress } from "@/lib/stores/order-prefs";
@@ -36,6 +37,16 @@ function useDebounced<T>(value: T, ms: number): T {
 }
 
 const emptyDetails = { staircase: null, floor: null, apartment: null, intercom: null, riderNotes: null };
+
+/**
+ * House number typed at the end of the search ("via ruggero settimo 20, palermo" → "20", "12/b",
+ * "7a"), kept when the map data has no number for that building. "Via 20 Settembre" has none.
+ */
+function typedHouseNumber(text: string): string | null {
+  const words = (text.split(",")[0] ?? "").trim().split(/\s+/);
+  const last = words.at(-1) ?? "";
+  return words.length > 1 && /^\d{1,4}[a-z]?(?:\/[a-z0-9]{1,3})?$/i.test(last) ? last.toUpperCase() : null;
+}
 
 /**
  * Address entry: autocomplete → map with draggable pin → structured fields + rider details,
@@ -61,6 +72,9 @@ export function AddressPicker({
   const [stage, setStage] = useState<Stage>(initial ? "confirm" : "search");
   const [query, setQuery] = useState("");
   const [sessionToken] = useState(() => crypto.randomUUID());
+  const [geocoder] = useState(() => createGeocoder(restaurant));
+  // Without autocomplete (OpenStreetMap on the device) the search runs when the customer submits it.
+  const [submitted, setSubmitted] = useState("");
   const [address, setAddress] = useState<DeliveryAddress | null>(initial);
   const [pin, setPin] = useState<GeoPoint | null>(initial?.location ?? null);
   const [error, setError] = useState<string | null>(null);
@@ -68,13 +82,20 @@ export function AddressPicker({
   const [showFields, setShowFields] = useState(false);
   const skipNextReverse = useRef(true);
   const debounced = useDebounced(query.trim(), 250);
+  const searchTerm = geocoder.autocomplete ? debounced : submitted;
 
   const suggestions = useQuery({
-    queryKey: ["geo", "suggest", debounced],
-    queryFn: ({ signal }) => api.geo.suggest(debounced, sessionToken, signal),
-    enabled: stage === "search" && debounced.length >= 3,
+    queryKey: ["geo", "suggest", searchTerm],
+    queryFn: ({ signal }) => geocoder.suggest(searchTerm, sessionToken, signal),
+    enabled: stage === "search" && searchTerm.length >= 3,
     staleTime: 5 * 60_000,
+    retry: 1,
   });
+  const searchError = suggestions.error
+    ? suggestions.error instanceof ApiError || suggestions.error instanceof GeocodingError
+      ? suggestions.error.message
+      : "La ricerca degli indirizzi non risponde. Riprova o usa la tua posizione."
+    : null;
 
   const saved = useQuery({
     queryKey: ["me", "addresses"],
@@ -107,16 +128,17 @@ export function AddressPicker({
     setAddress({ ...emptyDetails, ...a, ...details, savedAddressId: details.savedAddressId ?? null });
     setPin(a.location);
     setStage("confirm");
-    setShowFields(!a.streetNumber);
+    setShowFields(!(details.streetNumber ?? a.streetNumber));
   };
 
   const pickSuggestion = async (s: AddressSuggestionDTO) => {
     try {
-      const { address: a } = await api.geo.details(s.id, sessionToken);
+      const a = await geocoder.details(s.id, sessionToken);
       haptics.select();
-      choose(a);
+      const typed = a.streetNumber ? null : typedHouseNumber(searchTerm || query);
+      choose(a, typed ? { streetNumber: typed } : {});
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Indirizzo non trovato.");
+      setError(e instanceof ApiError || e instanceof GeocodingError ? e.message : "Indirizzo non trovato.");
     }
   };
 
@@ -125,7 +147,7 @@ export function AddressPicker({
     setError(null);
     try {
       const p = await currentPosition();
-      const { address: a } = await api.geo.reverse(p.lat, p.lng);
+      const a = await geocoder.reverse(p);
       if (a) choose(a);
       else {
         setPin(p);
@@ -134,7 +156,9 @@ export function AddressPicker({
       }
     } catch (e) {
       setError(
-        e instanceof GeolocationFailure || e instanceof ApiError ? e.message : "Posizione non disponibile.",
+        e instanceof GeolocationFailure || e instanceof ApiError || e instanceof GeocodingError
+          ? e.message
+          : "Posizione non disponibile.",
       );
     } finally {
       setLocating(false);
@@ -150,7 +174,7 @@ export function AddressPicker({
     if (pin && Math.abs(center.lat - pin.lat) < 1e-6 && Math.abs(center.lng - pin.lng) < 1e-6) return;
     setPin(center);
     try {
-      const { address: a } = await api.geo.reverse(center.lat, center.lng);
+      const a = await geocoder.reverse(center);
       if (!a) return;
       setAddress((prev) => ({
         ...emptyDetails,
@@ -175,35 +199,62 @@ export function AddressPicker({
   const canConfirm = !!address && !!pin && !missingNumber && !!quote?.deliverable && !quoting;
 
   if (stage === "search") {
-    const list = suggestions.data?.suggestions ?? [];
+    const list = suggestions.data ?? [];
     return (
       <div className={cn("flex flex-col gap-4 pb-6", gutter)}>
-        <label className="relative block">
-          <span className="sr-only">Cerca il tuo indirizzo</span>
-          <Search
-            className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-fg-subtle"
-            aria-hidden
-          />
-          <Input
-            autoFocus
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Cerca il tuo indirizzo (via e numero civico)"
-            className="rounded-full pr-10 pl-12"
-            autoComplete="street-address"
-            enterKeyHint="search"
-          />
-          {query ? (
-            <button
-              type="button"
-              aria-label="Cancella"
-              onClick={() => setQuery("")}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-fg-subtle"
-            >
-              <X className="size-4.5" />
-            </button>
-          ) : null}
-        </label>
+        <form
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const term = query.trim();
+            if (term.length < 3) return;
+            if (term === submitted) void suggestions.refetch();
+            else setSubmitted(term);
+          }}
+        >
+          <label className="relative block">
+            <span className="sr-only">Cerca il tuo indirizzo</span>
+            <Search
+              className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-fg-subtle"
+              aria-hidden
+            />
+            <Input
+              autoFocus
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={
+                geocoder.autocomplete ? "Cerca il tuo indirizzo (via e numero civico)" : "Via e numero civico"
+              }
+              className={cn("rounded-full pl-12", geocoder.autocomplete ? "pr-10" : "pr-32")}
+              autoComplete="street-address"
+              enterKeyHint="search"
+            />
+            <span className="absolute top-1/2 right-1.5 flex -translate-y-1/2 items-center gap-1">
+              {query ? (
+                <button
+                  type="button"
+                  aria-label="Cancella"
+                  onClick={() => setQuery("")}
+                  className="grid size-9 tap place-items-center rounded-full text-fg-subtle"
+                >
+                  <X className="size-4.5" />
+                </button>
+              ) : null}
+              {!geocoder.autocomplete ? (
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="dark"
+                  className="rounded-full"
+                  disabled={query.trim().length < 3}
+                  loading={suggestions.isFetching}
+                >
+                  Cerca
+                </Button>
+              ) : null}
+            </span>
+          </label>
+        </form>
 
         <button
           type="button"
@@ -248,12 +299,24 @@ export function AddressPicker({
               </li>
             ))}
           </ul>
-        ) : debounced.length >= 3 && !suggestions.isFetching ? (
+        ) : searchTerm.length < 3 ? (
+          !geocoder.autocomplete ? (
+            <p className="px-1 text-body-sm text-fg-muted">
+              Scrivi via e numero civico, poi premi Cerca. Oppure usa la tua posizione.
+            </p>
+          ) : null
+        ) : suggestions.isFetching ? (
+          <p className="px-1 text-body-sm text-fg-muted" role="status">
+            Cerco l&apos;indirizzo…
+          </p>
+        ) : searchError ? (
+          <InlineAlert tone="danger" title={searchError} />
+        ) : (
           <p className="px-1 text-body-sm text-fg-muted">
             Nessun indirizzo trovato. Prova ad aggiungere il comune (es. “Palermo”) oppure usa la tua
             posizione.
           </p>
-        ) : null}
+        )}
 
         {saved.data?.addresses.length ? (
           <section>

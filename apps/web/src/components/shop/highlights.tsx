@@ -27,20 +27,21 @@ export function Highlights() {
         action={
           <Link
             href="/menu"
-            className="inline-flex items-center gap-1 text-body-sm font-semibold text-brand-ink"
+            className="-my-2 inline-flex items-center gap-1 py-2 text-body-sm font-semibold text-brand-ink"
           >
             Vedi tutti <ArrowRight className="size-4" />
           </Link>
         }
       />
-      <div className="-mx-4 scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 lg:grid-cols-4">
+      {/* Phones: two whole cards between equal 16 px margins (scroll-px keeps the snap off the edge). */}
+      <div className="-mx-4 scrollbar-none flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 lg:grid-cols-4">
         {items.map((p, i) => (
           <ProductTile
             key={p.id}
             product={p}
             bestseller={best.length >= 4}
             priority={i < 2}
-            className="w-[46vw] max-w-56 shrink-0 snap-start md:w-auto md:max-w-none"
+            className="w-[calc((100vw-3rem)/2)] max-w-56 shrink-0 snap-start md:w-auto md:max-w-none"
           />
         ))}
       </div>

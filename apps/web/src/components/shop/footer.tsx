@@ -21,7 +21,12 @@ export function ShopFooter({ restaurant }: { restaurant: RestaurantInfo }) {
         </div>
         <div className="min-w-0 space-y-3 text-body-sm">
           <h2 className="text-caption font-semibold tracking-widest text-fg-subtle uppercase">Dove siamo</h2>
-          <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="flex gap-2 hover:underline">
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="-my-1.5 flex gap-2 py-1.5 hover:underline"
+          >
             <MapPin className="mt-0.5 size-4 shrink-0 text-red-400" aria-hidden />
             <span>
               {restaurant.address.street} {restaurant.address.streetNumber}
@@ -30,7 +35,7 @@ export function ShopFooter({ restaurant }: { restaurant: RestaurantInfo }) {
             </span>
           </a>
           {restaurant.phone ? (
-            <a href={`tel:${restaurant.phone}`} className="flex gap-2 hover:underline">
+            <a href={`tel:${restaurant.phone}`} className="-my-1.5 flex gap-2 py-1.5 hover:underline">
               <Phone className="mt-0.5 size-4 shrink-0 text-red-400" aria-hidden />
               {restaurant.phone.replace(/^\+39(\d{3})(\d{3})(\d+)$/, "+39 $1 $2 $3")}
             </a>

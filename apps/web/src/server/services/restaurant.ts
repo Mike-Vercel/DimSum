@@ -11,7 +11,7 @@ import {
 import type { FulfillmentType, RestaurantPublicDTO, ServiceStatusDTO, WeeklyHoursDTO } from "@dimsum/types";
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "../db";
-import { features } from "../env";
+import { env, features } from "../env";
 
 export const SETTINGS_TAG = "settings";
 
@@ -333,6 +333,10 @@ export function toRestaurantInfo(c: RestaurantConfig): Omit<RestaurantPublicDTO,
     loyalty: { enabled: c.loyalty.enabled, programName: c.loyalty.programName },
     legal: { companyName: c.legalName, vatNumber: c.vatNumber },
     social: { googleReviewUrl: c.googleReviewUrl, instagramUrl: c.instagramUrl, facebookUrl: c.facebookUrl },
+    geocoding:
+      features().mapsProvider === "osm"
+        ? { mode: "device", nominatimUrl: env().NOMINATIM_URL }
+        : { mode: "server", nominatimUrl: null },
   };
 }
 

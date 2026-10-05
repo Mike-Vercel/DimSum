@@ -205,6 +205,12 @@ export interface RestaurantPublicDTO {
   loyalty: { enabled: boolean; programName: string };
   legal: { companyName: string | null; vatNumber: string | null };
   social: { googleReviewUrl: string | null; instagramUrl: string | null; facebookUrl: string | null };
+  /**
+   * Address search. "device": the app queries Nominatim (OpenStreetMap) directly from the
+   * customer's device, with explicit searches only (its usage policy forbids autocomplete), because
+   * the free public services do not answer cloud servers reliably. "server": /api/v1/geo/*.
+   */
+  geocoding: { mode: "device" | "server"; nominatimUrl: string | null };
 }
 
 export interface TimeSlotDTO {

@@ -138,7 +138,7 @@ export function ShopHeader() {
               compact && "h-0 opacity-0",
             )}
           >
-            <Link href="/" aria-label="DIMSUM, home" className="block w-fit">
+            <Link href="/" aria-label="DIMSUM, home" className="block h-full w-fit">
               <Logo className="h-[18px] text-fg" />
             </Link>
           </div>

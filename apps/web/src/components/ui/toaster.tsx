@@ -24,11 +24,15 @@ export function Toaster() {
         unstyled: true,
         classNames: {
           toast:
-            "flex w-[min(92vw,380px)] items-center gap-3 rounded-2xl bg-ink-900/95 px-4 py-3.5 text-body-sm text-white shadow-lg backdrop-blur-md",
+            "flex w-[min(92vw,380px)] items-center gap-3 rounded-2xl font-sans bg-ink-900/95 px-4 py-3.5 text-body-sm text-white shadow-lg backdrop-blur-md",
+          // The text wraps; icons and buttons never shrink or break ("Annulla", not "Annul/la").
+          icon: "shrink-0",
+          content: "min-w-0 flex-1",
           title: "font-semibold",
           description: "text-caption text-white/70",
-          actionButton: "ml-auto rounded-full bg-white px-3 py-1.5 text-caption font-semibold text-ink-900",
-          cancelButton: "rounded-full px-3 py-1.5 text-caption text-white/70",
+          actionButton:
+            "ml-auto h-9 shrink-0 whitespace-nowrap rounded-full bg-white px-3.5 text-caption font-semibold text-ink-900",
+          cancelButton: "h-9 shrink-0 whitespace-nowrap rounded-full px-3 text-caption text-white/70",
         },
       }}
     />

@@ -14,11 +14,15 @@ export function OffersStrip({ offers, className }: { offers: CouponPublicDTO[]; 
   const setCoupon = useCart((s) => s.setCoupon);
   const active = offers.filter((o) => !o.validUntil || new Date(o.validUntil) > now);
   if (active.length === 0) return null;
+  // One offer: a full-width banner. Several: a row to swipe, each card snapping inside the margins.
+  const single = active.length === 1;
   return (
     <section
       aria-label="Offerte"
       className={cn(
-        "-mx-4 scrollbar-none flex snap-x gap-3 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-2 md:px-0",
+        single
+          ? "md:grid md:grid-cols-2"
+          : "-mx-4 scrollbar-none flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-2 md:px-0",
         className,
       )}
     >
@@ -27,7 +31,10 @@ export function OffersStrip({ offers, className }: { offers: CouponPublicDTO[]; 
         return (
           <article
             key={o.id}
-            className="relative flex w-[82vw] max-w-md shrink-0 snap-start items-center gap-4 overflow-hidden rounded-2xl bg-brand p-4 text-white shadow-cta md:w-auto md:max-w-none"
+            className={cn(
+              "relative flex items-center gap-4 overflow-hidden rounded-2xl bg-brand p-4 text-white shadow-cta",
+              single ? "w-full" : "w-[calc(100vw-3rem)] max-w-md shrink-0 snap-start md:w-auto md:max-w-none",
+            )}
           >
             <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-white/15 text-body font-extrabold tracking-tight">
               {o.type === "PERCENTAGE" ? o.valueLabel : <Icon className="size-6" />}
@@ -50,7 +57,7 @@ export function OffersStrip({ offers, className }: { offers: CouponPublicDTO[]; 
                     description: "Lo applichiamo al tuo carrello.",
                   });
                 }}
-                className="inline-flex h-9 tap items-center gap-1.5 rounded-full bg-white px-3 text-caption font-bold text-brand-ink"
+                className="relative z-10 inline-flex h-9 shrink-0 tap items-center gap-1.5 rounded-full bg-white px-3 text-caption font-bold whitespace-nowrap text-brand-ink"
               >
                 <Copy className="size-3.5" /> {o.code}
               </button>

@@ -374,6 +374,12 @@
   }
 }
 
+/* Map zoom buttons big enough for a finger (MapLibre default: 29 px). */
+.maplibregl-ctrl-group button {
+  width: 36px;
+  height: 36px;
+}
+
 .maplibregl-ctrl-attrib {
   font-family: var(--font-sans);
   font-size: 10px;

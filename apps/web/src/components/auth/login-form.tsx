@@ -129,7 +129,7 @@ export function LoginForm({
         <div className="flex justify-end">
           <Link
             href={`/password-dimenticata${email ? `?email=${encodeURIComponent(email)}` : ""}`}
-            className="text-body-sm font-semibold text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+            className="-my-2 inline-block py-2 text-body-sm font-semibold text-fg-muted underline-offset-4 hover:text-fg hover:underline"
           >
             Password dimenticata?
           </Link>
