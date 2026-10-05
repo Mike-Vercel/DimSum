@@ -14,14 +14,15 @@ export function OffersStrip({ offers, className }: { offers: CouponPublicDTO[]; 
   const setCoupon = useCart((s) => s.setCoupon);
   const active = offers.filter((o) => !o.validUntil || new Date(o.validUntil) > now);
   if (active.length === 0) return null;
-  // One offer: a full-width banner. Several: a row to swipe, each card snapping inside the margins.
+  // One offer: a full-width banner on phones, centered on wider screens. Several: a row to swipe,
+  // each card snapping inside the margins.
   const single = active.length === 1;
   return (
     <section
       aria-label="Offerte"
       className={cn(
         single
-          ? "md:grid md:grid-cols-2"
+          ? "md:mx-auto md:max-w-xl"
           : "-mx-4 scrollbar-none flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-2 md:px-0",
         className,
       )}
