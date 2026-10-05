@@ -495,9 +495,11 @@ export function AddressPicker({
 
         {address ? (
           <fieldset className="space-y-3">
-            <legend className="mb-2 font-bold">Dettagli per il rider</legend>
+            <legend className="mb-2 font-bold">
+              Dettagli per il rider <span className="font-normal text-fg-muted">(facoltativi)</span>
+            </legend>
             <div className="grid grid-cols-3 gap-3">
-              <Field label="Scala" optional>
+              <Field label="Scala">
                 {(p) => (
                   <Input
                     {...p}
@@ -506,7 +508,7 @@ export function AddressPicker({
                   />
                 )}
               </Field>
-              <Field label="Piano" optional>
+              <Field label="Piano">
                 {(p) => (
                   <Input
                     {...p}
@@ -515,7 +517,7 @@ export function AddressPicker({
                   />
                 )}
               </Field>
-              <Field label="Interno" optional>
+              <Field label="Interno">
                 {(p) => (
                   <Input
                     {...p}
@@ -525,7 +527,7 @@ export function AddressPicker({
                 )}
               </Field>
             </div>
-            <Field label="Citofono" optional>
+            <Field label="Citofono">
               {(p) => (
                 <Input
                   {...p}
@@ -535,7 +537,7 @@ export function AddressPicker({
                 />
               )}
             </Field>
-            <Field label="Note per il rider" optional>
+            <Field label="Note per il rider">
               {(p) => (
                 <Textarea
                   {...p}
