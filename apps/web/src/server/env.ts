@@ -1,5 +1,6 @@
 import "server-only";
 import { z } from "zod";
+import { resolveAppUrl } from "@/lib/app-url";
 import type { ProviderButton } from "@/lib/auth-providers";
 
 /**
@@ -20,6 +21,8 @@ const schema = z.object({
 
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   DIRECT_DATABASE_URL: optional,
+  // Name used by the Neon integration on Vercel for the direct (non-pooled) connection.
+  DATABASE_URL_UNPOOLED: optional,
 
   BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
   BETTER_AUTH_URL: optional,
@@ -74,7 +77,7 @@ let cached: ServerEnv | null = null;
 
 export function env(): ServerEnv {
   if (cached) return cached;
-  const parsed = schema.safeParse(process.env);
+  const parsed = schema.safeParse({ ...process.env, APP_URL: resolveAppUrl() });
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `  - ${i.path.join(".")}: ${i.message}`).join("\n");
     throw new Error(`Invalid server environment:\n${issues}`);

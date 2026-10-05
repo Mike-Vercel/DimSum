@@ -112,8 +112,8 @@ quelle `NEXT_PUBLIC_*`. In produzione servono:
 
 | Area | Variabili |
 | --- | --- |
-| Base | `APP_URL` (es. `https://dimsum.it`) |
-| Database | `DATABASE_URL` (connessione pooled), `DIRECT_DATABASE_URL` (diretta: migrazioni e `LISTEN` del tempo reale) |
+| Base | `APP_URL` (es. `https://dimsum.it`); su Vercel, se manca, vale il dominio di produzione |
+| Database | `DATABASE_URL` (pooled), `DIRECT_DATABASE_URL` o `DATABASE_URL_UNPOOLED` (diretta: migrazioni e `LISTEN` del tempo reale) |
 | Accesso | `BETTER_AUTH_SECRET`; opzionali `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`, `APPLE_*` |
 | Pagamenti | `PAYMENT_PROVIDER=stripe`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` |
 | E-mail | `EMAIL_PROVIDER=resend` con `RESEND_API_KEY`, oppure `smtp` con `SMTP_URL`; `EMAIL_FROM` |
@@ -124,31 +124,30 @@ quelle `NEXT_PUBLIC_*`. In produzione servono:
 
 ## Deploy su Vercel
 
-1. **Database.** Crea un PostgreSQL gestito in UE (Neon, Vercel Postgres, Supabase). Usa l'URL
-   pooled per `DATABASE_URL` e quello diretto per `DIRECT_DATABASE_URL`.
+1. **Database.** Nel progetto Vercel apri Storage e collega un database **Neon** (regione
+   Frankfurt): Vercel imposta da solo `DATABASE_URL` (pooled) e `DATABASE_URL_UNPOOLED` (diretta),
+   entrambe riconosciute dall'app. Con un altro PostgreSQL usa `DATABASE_URL` e
+   `DIRECT_DATABASE_URL`.
 2. **Progetto.** Importa il repository su Vercel con **Root Directory `apps/web`**.
    [apps/web/vercel.json](apps/web/vercel.json) installa dalla radice del monorepo (`npm ci`) ed
-   esegue `npm run vercel-build`: genera il client Prisma, applica le migrazioni e compila.
-   La regione è `fra1`, vicina ai clienti e a un database europeo.
+   esegue `npm run vercel-build`: genera il client Prisma, applica le migrazioni, esegue il seed e
+   compila. La regione è `fra1`, vicina ai clienti e al database europeo.
 3. **Variabili.** Imposta quelle della tabella sopra per Production (e Preview, con un database
-   separato).
-4. **Primo caricamento dei dati.** Una sola volta, dal tuo computer, verso il database di
-   produzione:
-
-   ```bash
-   DATABASE_URL="<url diretto di produzione>" SEED_ADMIN_EMAIL="…" SEED_ADMIN_PASSWORD="…" \
-     SEED_ADMIN_NAME="…" npm run db:seed
-   ```
-
-   Il seed crea impostazioni, orari, zone, promozione e catalogo, più il primo super admin. Gli
-   altri account (cucina, rider, admin) si creano poi da `/admin/team` e `/admin/rider`, con
-   invito via e-mail.
-5. **Cron.** `vercel.json` dichiara `/api/cron/operations` ogni minuto (ordini non accettati,
-   pagamenti online abbandonati, fine delle pause) e `/api/cron/daily` alle 02:30 UTC
-   (compleanni e scadenze del Club, conservazione dei dati). Vercel invia `CRON_SECRET` come
-   bearer token e gli endpoint rifiutano le altre chiamate. **Il cron ogni minuto richiede il
-   piano Pro:** con il piano Hobby i cron sono
-   giornalieri. In quel caso basta uno scheduler esterno che chiami gli stessi URL con
+   separato). Il minimo per partire: `BETTER_AUTH_SECRET`, `HASH_SALT`, `CRON_SECRET` e gli
+   account `SEED_ADMIN_*` del punto 4.
+4. **Catalogo e super admin.** Il seed gira a ogni deploy ed è idempotente: al primo crea
+   impostazioni, orari, zone di consegna, promozione e i 116 piatti con le foto; ai successivi
+   aggiunge solo ciò che manca e non tocca le modifiche fatte dall'admin. Con `SEED_ADMIN_EMAIL`,
+   `SEED_ADMIN_PASSWORD` (almeno 10 caratteri) e `SEED_ADMIN_NAME` crea il primo super admin.
+   Dopo il primo accesso puoi togliere `SEED_ADMIN_PASSWORD`: un account esistente non viene mai
+   modificato. Per lo stesso motivo non registrarti dal sito con quell'e-mail prima del primo
+   deploy. Gli altri account (cucina, rider, admin) si creano da `/admin/team` e `/admin/rider`.
+5. **Cron.** Il piano Hobby permette solo cron giornalieri, ed è l'unico dichiarato in
+   `vercel.json`: `/api/cron/daily` alle 02:30 UTC (compleanni e scadenze del Club, conservazione
+   dei dati). I lavori al minuto (avviso per gli ordini non accettati, pagamenti online
+   abbandonati, fine delle pause) partono dal traffico normale: lo schermo cucina si aggiorna ogni
+   20 secondi durante il servizio. Per renderli indipendenti dal traffico, con il piano Pro o uno
+   scheduler esterno, chiama `/api/cron/operations` ogni minuto con
    `Authorization: Bearer <CRON_SECRET>`.
 6. **Stripe.** In Dashboard → Developers → Webhooks crea l'endpoint
    `https://<dominio>/api/webhooks/stripe` con gli eventi `payment_intent.succeeded`,

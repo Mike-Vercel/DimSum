@@ -23,13 +23,16 @@ process.loadEnvFile(envFile);
 
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 const children = new Set();
+// npm is a .cmd script on Windows and needs a shell; node itself must not go through one
+// (its path, "C:\Program Files\nodejs\node.exe", would be split at the space).
+const shellFor = (command) => process.platform === "win32" && command !== process.execPath;
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       cwd: root,
       stdio: "inherit",
-      shell: process.platform === "win32",
+      shell: shellFor(command),
       ...options,
     });
     child.on("exit", (code) =>
@@ -39,7 +42,7 @@ function run(command, args, options = {}) {
 }
 
 function background(command, args) {
-  const child = spawn(command, args, { cwd: root, stdio: "inherit", shell: process.platform === "win32" });
+  const child = spawn(command, args, { cwd: root, stdio: "inherit", shell: shellFor(command) });
   children.add(child);
   child.on("exit", () => children.delete(child));
   return child;

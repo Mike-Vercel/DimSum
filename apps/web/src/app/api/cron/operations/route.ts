@@ -1,18 +1,15 @@
 import { assertCronRequest } from "@/server/cron";
 import { apiRoute } from "@/server/http";
-import { endExpiredPauses, escalateWaitingOrders } from "@/server/services/maintenance";
-import { expireUnpaidOrders } from "@/server/services/payments";
+import { runOperations } from "@/server/services/operations";
 
-/** Every minute: unaccepted-order alerts, abandoned online payments, timed pauses. */
+/**
+ * Order-flow housekeeping on demand. The app already runs it from ordinary traffic (see
+ * scheduleOperations); on Vercel Pro, or with an external scheduler, this endpoint can also be
+ * called every minute with "Authorization: Bearer <CRON_SECRET>".
+ */
 export const maxDuration = 60;
 
 export const GET = apiRoute({ auth: "public" }, async ({ req }) => {
   assertCronRequest(req.headers);
-  const now = new Date();
-  const [escalated, expired, reopened] = await Promise.all([
-    escalateWaitingOrders(now),
-    expireUnpaidOrders(30),
-    endExpiredPauses(now),
-  ]);
-  return { escalated, expired, reopened };
+  return runOperations();
 });

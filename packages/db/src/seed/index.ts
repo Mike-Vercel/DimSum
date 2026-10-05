@@ -28,6 +28,11 @@ try {
   console.log(
     accounts.length ? `[seed] accounts created: ${accounts.join(", ")}` : "[seed] no new bootstrap accounts",
   );
+  if ((await db.user.count({ where: { role: "SUPER_ADMIN" } })) === 0) {
+    console.warn(
+      "[seed] nessun super admin: imposta SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD e SEED_ADMIN_NAME e rilancia il seed (o il deploy).",
+    );
+  }
 } finally {
   await db.$disconnect();
 }

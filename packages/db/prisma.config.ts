@@ -9,7 +9,8 @@ for (const file of [path.resolve(process.cwd(), "../../.env"), path.resolve(proc
 }
 
 // Migrations need a direct (non-pooled) connection; the app runtime uses DATABASE_URL.
-const url = process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
+// DATABASE_URL_UNPOOLED is the name used by the Neon integration on Vercel.
+const url = process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

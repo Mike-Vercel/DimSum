@@ -28,7 +28,7 @@
     "catalog:import": "npm run catalog:import -w @dimsum/db",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "vercel-build": "npm run db:generate && npm run db:deploy && npm run build -w @dimsum/web"
+    "vercel-build": "npm run db:generate && npm run db:deploy && npm run db:seed && npm run build -w @dimsum/web"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",

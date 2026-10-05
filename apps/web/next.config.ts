@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
-// Only real HTTPS deployments upgrade sub-requests (a local production run is plain http).
-const https = (process.env.APP_URL ?? "").startsWith("https://");
+// Only real HTTPS deployments (Vercel, or APP_URL on https) upgrade sub-requests: a local
+// production run is plain http.
+const https = !!process.env.VERCEL || (process.env.APP_URL ?? "").startsWith("https://");
 
 /**
  * Content Security Policy without nonces: menu and storefront pages are prerendered (Cache

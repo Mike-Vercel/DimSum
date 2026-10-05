@@ -75,7 +75,9 @@ class Hub {
     if (this.connecting) return this.connecting;
     this.connecting = (async () => {
       const e = env();
-      const client = new pg.Client({ connectionString: e.DIRECT_DATABASE_URL ?? e.DATABASE_URL });
+      const client = new pg.Client({
+        connectionString: e.DIRECT_DATABASE_URL ?? e.DATABASE_URL_UNPOOLED ?? e.DATABASE_URL,
+      });
       client.on("notification", (msg) => {
         if (msg.channel !== PG_CHANNEL || !msg.payload) return;
         try {

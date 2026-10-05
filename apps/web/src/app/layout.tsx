@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { resolveAppUrl } from "@/lib/app-url";
 import "@/styles/globals.css";
 
 const archivo = Archivo({
@@ -10,7 +11,7 @@ const archivo = Archivo({
   display: "swap",
 });
 
-const appUrl = process.env.APP_URL ?? "http://localhost:3000";
+const appUrl = resolveAppUrl();
 
 const splash = [
   [1320, 2868, 440, 956, 3],
