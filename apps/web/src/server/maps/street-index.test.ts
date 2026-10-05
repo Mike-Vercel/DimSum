@@ -24,6 +24,10 @@ describe("street index", () => {
     expect(streetAddress(hit!.id)?.precision).toBe("rooftop");
   });
 
+  it("ranks names that start with the typed words first", () => {
+    expect(first("via ruggero")?.primaryText).toBe("Via Ruggero Settimo");
+  });
+
   it("tolerates typos and abbreviations", () => {
     expect(first("v. ruggiero setimo 5")?.primaryText).toBe("Via Ruggero Settimo 5");
     expect(first("c.so vittorio emanuele")?.primaryText).toMatch(/^Corso Vittorio Emanuele/);

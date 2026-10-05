@@ -274,6 +274,8 @@ export function searchStreets(query: string, near: LatLng, limit = 6): AddressSu
       if (!Number.isFinite(penalty)) continue;
       let score = 100 - penalty * 10 - Math.max(0, v.core.length - q.core.length) * 2;
       if (q.type) score += q.type === v.type ? 8 : -12;
+      // Names are typed from the start: "via ruggero" means Ruggero Settimo before Conte Ruggero.
+      if (v.core[0]?.startsWith(q.core[0]!)) score += 5;
       if (v.main) score += 1;
       best = Math.max(best, score);
     }
