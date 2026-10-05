@@ -13,7 +13,7 @@ export function ResponsiveSheet({
   description,
   children,
   footer,
-  fullHeight,
+  keepFieldCentered,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -21,8 +21,8 @@ export function ResponsiveSheet({
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
-  /** Phones: open almost full screen (content that starts with a text field). */
-  fullHeight?: boolean;
+  /** Phones: content that starts with a search field, kept in the middle of the visible screen. */
+  keepFieldCentered?: boolean;
 }) {
   const desktop = useIsDesktop();
   if (desktop) {
@@ -46,7 +46,7 @@ export function ResponsiveSheet({
       title={title}
       description={description}
       footer={footer}
-      fullHeight={fullHeight}
+      keepFieldCentered={keepFieldCentered}
     >
       <div className="pt-3">{children}</div>
     </BottomSheet>

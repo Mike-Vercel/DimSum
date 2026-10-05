@@ -245,8 +245,9 @@ export function AddressPicker({
             className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-fg-subtle"
             aria-hidden
           />
+          {/* No autofocus: the keyboard opens when the customer taps the field, not with the sheet. */}
           <Input
-            autoFocus
+            data-sheet-anchor
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Via e numero civico, es. Via Roma 12"

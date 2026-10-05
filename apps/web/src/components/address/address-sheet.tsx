@@ -86,7 +86,7 @@ export function AddressSheet({
       open={open}
       onOpenChange={onOpenChange}
       title={title}
-      fullHeight={fulfillment !== "PICKUP"}
+      keepFieldCentered={fulfillment !== "PICKUP"}
     >
       {body}
     </ResponsiveSheet>

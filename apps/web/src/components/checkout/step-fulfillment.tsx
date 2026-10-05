@@ -189,7 +189,7 @@ export function StepFulfillment({
           <div className="pt-2">{picker(false)}</div>
         </Dialog>
       ) : (
-        <BottomSheet open={editing} onOpenChange={setEditing} title="Indirizzo di consegna" fullHeight>
+        <BottomSheet open={editing} onOpenChange={setEditing} title="Indirizzo di consegna" keepFieldCentered>
           <div className="pt-3">{picker(false)}</div>
         </BottomSheet>
       )}
