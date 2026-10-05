@@ -30,8 +30,8 @@ export function BottomSheet({
   hideTitle?: boolean;
   dismissible?: boolean;
   /**
-   * Opens almost to the top of the screen, for content that starts with a text field: the keyboard
-   * takes the bottom and the field stays visible (no reposition jump on iOS).
+   * Fixed height of about three quarters of the screen, for content that starts with a text field:
+   * the field sits towards the middle, above the keyboard, and nothing jumps when it opens.
    */
   fullHeight?: boolean;
 }) {
@@ -48,7 +48,7 @@ export function BottomSheet({
         <Drawer.Content
           className={cn(
             "fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92dvh] w-full max-w-xl flex-col rounded-t-3xl bg-canvas shadow-sheet outline-none",
-            fullHeight && "h-[calc(100dvh-var(--safe-top)-12px)] max-h-none",
+            fullHeight && "h-[76dvh] max-h-[calc(100dvh-var(--safe-top)-12px)]",
             className,
           )}
         >
