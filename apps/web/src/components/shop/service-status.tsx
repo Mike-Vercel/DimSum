@@ -79,19 +79,23 @@ export function ServiceStatusBanner({
   const next = nextOpeningLabel(f.nextAvailableAt ?? data.nextOpeningAt);
 
   return (
-    <div className={cn("rounded-2xl bg-ink-900 px-4 py-3.5 text-white", className)} role="status">
-      <div className="flex items-center gap-3">
-        <span className="size-2.5 shrink-0 rounded-full bg-red-400" />
-        <p className="min-w-0 flex-1 text-body-sm">
-          <span className="font-semibold">{reason}</span>
-          {data.closureReason ? <span className="text-white/70"> · {data.closureReason}</span> : null}
-          {next ? <span className="block text-white/70">{next}</span> : null}
-        </p>
-      </div>
+    <div
+      className={cn(
+        "flex flex-col items-center rounded-2xl bg-ink-900 px-5 py-4 text-center text-white",
+        className,
+      )}
+      role="status"
+    >
+      <p className="flex items-center justify-center gap-2 text-body-sm font-semibold">
+        <span className="size-2.5 shrink-0 rounded-full bg-red-400" aria-hidden />
+        {reason}
+      </p>
+      {data.closureReason ? <p className="mt-0.5 text-body-sm text-white/70">{data.closureReason}</p> : null}
+      {next ? <p className="mt-0.5 text-body-sm text-white/70">{next}</p> : null}
       {data.schedulingEnabled && !data.isPaused ? (
         <Link
           href="/checkout?programma=1"
-          className="mt-3 inline-flex h-9 tap items-center gap-2 rounded-full bg-white px-4 text-caption font-semibold text-ink-900"
+          className="mt-3 inline-flex h-10 tap items-center gap-2 rounded-full bg-white px-5 text-caption font-semibold whitespace-nowrap text-ink-900"
         >
           <CalendarClock className="size-4" /> Programma il tuo ordine
         </Link>
