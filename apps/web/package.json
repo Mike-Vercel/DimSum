@@ -5,13 +5,14 @@
   "scripts": {
     "predev": "node scripts/copy-maplibre-worker.mjs",
     "dev": "node scripts/run-next.mjs dev",
-    "prebuild": "node scripts/copy-maplibre-worker.mjs",
+    "prebuild": "node ../../scripts/check-private-files.mjs && node scripts/copy-maplibre-worker.mjs",
     "build": "node scripts/run-next.mjs build",
     "start": "node scripts/run-next.mjs start",
     "lint": "eslint",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:e2e": "playwright test",
-    "brand:assets": "node scripts/generate-brand-assets.mjs"
+    "brand:assets": "node scripts/generate-brand-assets.mjs",
+    "postbuild": "node ../../scripts/check-private-files.mjs --artifacts"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",

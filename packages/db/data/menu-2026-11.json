@@ -1,0 +1,411 @@
+{
+  "revision": "2026-11-21",
+  "description": "Trascrizione del menu cartaceo fornito dal ristorante. Le icone degli ingredienti non costituiscono una dichiarazione completa degli allergeni.",
+  "categories": [
+    {
+      "sourceId": "6a313c8fbca5ac6859477052",
+      "name": "Bao fritti in padella"
+    }
+  ],
+  "products": [
+    {
+      "sourceId": "6a313c8fbca5ac6859477038",
+      "name": "Ravioli al vapore con maiale e sedano fresco",
+      "priceCents": 390,
+      "description": "Maiale, sedano, cipollotto, zenzero, salsa dolce di soia."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477039",
+      "name": "Ravioli al vapore con maiale e cipollotto",
+      "priceCents": 390,
+      "description": "Maiale, porro cinese, cipollotto, zenzero, salsa di soia dolce."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947703a",
+      "name": "Ravioli al vapore con maiale e cavolo cinese",
+      "priceCents": 390,
+      "description": "Maiale, cavolo cinese, cipollotto, zenzero, salsa dolce di soia."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947703b",
+      "name": "Ravioli al vapore con manzo e cipolla",
+      "priceCents": 390,
+      "description": "Manzo, cipolla, cipollotto, zenzero, salsa di fagioli fermentati."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947703c",
+      "name": "Ravioli al vapore di manzo con pomodoro e patate",
+      "priceCents": 390,
+      "description": "Manzo, pomodoro, patate, zenzero, cipollotto."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947703d",
+      "name": "Ravioli al vapore di manzo e sedano",
+      "priceCents": 390,
+      "description": "Manzo, sedano, cipollotto, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947703e",
+      "name": "Ravioli al vapore con agnello",
+      "priceCents": 490,
+      "description": "Agnello, cipollotto, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947703f",
+      "name": "Ravioli al vapore vegetariani",
+      "priceCents": 390,
+      "description": "Germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shiitake, vermicelli di soia, cavolo cinese."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477040",
+      "name": "Ravioli al vapore con gamberi",
+      "priceCents": 390,
+      "description": "Gamberi, zenzero, cipollotto."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477043",
+      "name": "Ravioli alla piastra con maiale e sedano fresco",
+      "priceCents": 390,
+      "description": "Maiale, sedano, cipollotto, zenzero, salsa dolce di soia."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477044",
+      "name": "Ravioli alla piastra con maiale e cipollotto",
+      "priceCents": 390,
+      "description": "Maiale, porro cinese, cipollotto, zenzero, salsa di soia dolce."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477045",
+      "name": "Ravioli alla piastra con maiale e cavolo cinese",
+      "priceCents": 390,
+      "description": "Maiale, cavolo cinese, cipollotto, zenzero, salsa dolce di soia."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477046",
+      "name": "Ravioli alla piastra con manzo e cipolla",
+      "priceCents": 390,
+      "description": "Manzo, cipolla, cipollotto, zenzero, salsa di fagioli fermentati."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477047",
+      "name": "Ravioli alla piastra di manzo con pomodoro e patate",
+      "priceCents": 390,
+      "description": "Manzo, pomodoro, patate, zenzero, cipollotto."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477048",
+      "name": "Ravioli alla piastra di manzo e sedano",
+      "priceCents": 390,
+      "description": "Manzo, sedano, cipollotto, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477049",
+      "name": "Ravioli alla piastra con agnello",
+      "priceCents": 490,
+      "description": "Agnello, cipollotto, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947704a",
+      "name": "Ravioli alla piastra vegetariani",
+      "priceCents": 390,
+      "description": "Germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shiitake, vermicelli di soia, cavolo cinese."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947704b",
+      "name": "Ravioli alla piastra con gamberi",
+      "priceCents": 390,
+      "description": "Gamberi, zenzero, cipollotto."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477041",
+      "name": "Piatto misto di ravioli al vapore",
+      "priceCents": 490,
+      "description": "Ravioli al vapore con maiale e cavolo cinese, manzo e sedano, agnello, gamberi e vegetariani."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947704d",
+      "name": "Bao con carne di maiale",
+      "priceCents": 490,
+      "description": "Pane bao, carne di maiale, salsa."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947704e",
+      "name": "Bao con pollo croccante",
+      "priceCents": 490,
+      "description": "Pane bao, pollo croccante."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947704f",
+      "name": "Bao al vapore con maiale",
+      "priceCents": 390,
+      "description": "Maiale, salsa dolce di soia, cipolla, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477050",
+      "name": "Bao al vapore con manzo",
+      "priceCents": 390,
+      "description": "Manzo, salsa di soia fermentata, cipolla, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477051",
+      "name": "Bao al vapore vegetariani",
+      "priceCents": 390,
+      "description": "Germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shiitake, vermicelli di soia, cavolo cinese."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477053",
+      "name": "Bao fritti in padella con maiale",
+      "priceCents": 450,
+      "description": "Maiale, salsa dolce di soia, cipolla, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477054",
+      "name": "Bao fritti in padella con manzo",
+      "priceCents": 450,
+      "description": "Manzo, salsa di soia fermentata, cipolla, zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477055",
+      "name": "Bao fritti in padella vegetariani",
+      "priceCents": 450,
+      "description": "Germogli di soia, youtiao, tofu secco, funghi neri cinesi, funghi shiitake, vermicelli di soia, cavolo cinese."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477057",
+      "name": "Noodles freschi con costine di maiale in brodo",
+      "priceCents": 890,
+      "description": "Maiale, noodles freschi, pak choi, cipollotto, brodo di ossa di maiale."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477058",
+      "name": "Noodles freschi con manzo in brodo",
+      "priceCents": 890,
+      "description": "Manzo, noodles freschi, pak choi, cipollotto, brodo di manzo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477059",
+      "name": "Noodles freschi con pollo croccante",
+      "priceCents": 890,
+      "description": "Cotoletta di pollo, noodles freschi, pak choi, cipollotto, brodo di ossa di maiale."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947705a",
+      "name": "Noodles freschi con frutti di mare",
+      "priceCents": 990,
+      "description": "Gamberi, cozze, calamari, noodles freschi, pak choi, cipollotto, brodo di pesce."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947705c",
+      "name": "Noodles di riso con costine di maiale in brodo",
+      "priceCents": 890,
+      "description": "Maiale, noodles di riso, pak choi, cipollotto, brodo di ossa di maiale."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947705d",
+      "name": "Noodles di riso con manzo in brodo",
+      "priceCents": 890,
+      "description": "Manzo, noodles di riso, pak choi, cipollotto, brodo di manzo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947705e",
+      "name": "Noodles di riso con pollo croccante",
+      "priceCents": 890,
+      "description": "Cotoletta di pollo, noodles di riso, pak choi, cipollotto, brodo di ossa di maiale."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947705f",
+      "name": "Noodles di riso con frutti di mare",
+      "priceCents": 990,
+      "description": "Gamberi, cozze, calamari, noodles di riso, pak choi, cipollotto, brodo di pesce."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477065",
+      "name": "Noodles saltati con manzo",
+      "priceCents": 800,
+      "description": "Manzo, noodles, uovo, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477066",
+      "name": "Noodles saltati con gamberi",
+      "priceCents": 800,
+      "description": "Gamberi, noodles, uovo, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477067",
+      "name": "Noodles saltati con verdure",
+      "priceCents": 700,
+      "description": "Noodles, uovo, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477069",
+      "name": "Spaghetti di riso saltati con gamberi",
+      "priceCents": 800,
+      "description": "Spaghetti di riso, gamberi, uovo, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947706a",
+      "name": "Spaghetti di riso saltati con manzo macinato",
+      "priceCents": 800,
+      "description": "Spaghetti di riso, manzo, uovo, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947706b",
+      "name": "Spaghetti di riso saltati con verdure",
+      "priceCents": 700,
+      "description": "Spaghetti di riso, uovo, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947706c",
+      "name": "Spaghetti di soia saltati con carne macinata di manzo",
+      "priceCents": 800,
+      "description": "Vermicelli di soia, manzo macinato, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947706d",
+      "name": "Spaghetti di soia saltati con gamberi",
+      "priceCents": 800,
+      "description": "Vermicelli di soia, gamberi, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947706e",
+      "name": "Spaghetti di soia saltati con verdure",
+      "priceCents": 700,
+      "description": "Vermicelli di soia, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947706f",
+      "name": "Riso saltato alla cantonese",
+      "priceCents": 800,
+      "description": "Riso, uova, prosciutto cotto a dadini, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477070",
+      "name": "Riso saltato con manzo",
+      "priceCents": 800,
+      "description": "Riso, manzo, uova, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477071",
+      "name": "Riso saltato con verdure",
+      "priceCents": 700,
+      "description": "Riso, uovo, verdure miste."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477072",
+      "name": "Pancetta di maiale brasata in salsa di soia",
+      "priceCents": 790,
+      "description": "Pancetta di maiale, salsa di soia, zucchero di roccia, zenzero, cipollotto."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477073",
+      "name": "Manzo alla maniera del Sichuan",
+      "priceCents": 790,
+      "description": "Manzo, peperoncino, pepe di Sichuan, aglio, cipollotto, semi di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477074",
+      "name": "Manzo saltato in wok piccante",
+      "priceCents": 900,
+      "description": "Manzo, peperoncino, cipolla, aglio, cipollotto, semi di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477075",
+      "name": "Gamberoni saltati in wok piccante",
+      "priceCents": 900,
+      "description": "Gamberoni, peperoncino, cipolla, aglio, cipollotto, semi di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477076",
+      "name": "Calamari saltati in wok piccante",
+      "priceCents": 900,
+      "description": "Calamari, peperoncino, cipolla, aglio, cipollotto, semi di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477077",
+      "name": "Pollo saltato in wok piccante",
+      "priceCents": 900,
+      "description": "Pollo, peperoncino, cipolla, aglio, cipollotto, semi di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477078",
+      "name": "Takoyaki",
+      "priceCents": 490,
+      "description": "Polpo, pastella, uovo, cipollotto, scaglie di tempura (tenkasu), salsa takoyaki, maionese, scaglie di bonito (katsuobushi), alga nori in polvere."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477079",
+      "name": "Goma wakame",
+      "priceCents": 350,
+      "description": "Alghe (wakame), sesamo, salsa di soia, zucchero, aceto di riso, olio di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947707a",
+      "name": "Edamame",
+      "priceCents": 390,
+      "description": "Edamame, sale, acqua."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947707b",
+      "name": "Ebi tempura",
+      "priceCents": 490,
+      "description": "Gamberi, verdure, pastella, farina, uovo, acqua fredda, olio per friggere."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947707c",
+      "name": "Focaccia cinese ripiena di manzo",
+      "priceCents": 590,
+      "description": "Con salsa di soia, cipolla e zenzero."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947707d",
+      "name": "Pollo piccante del Sichuan",
+      "priceCents": 690,
+      "description": "Coriandolo, carne di coscia di pollo, peperoncino, semi di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947707e",
+      "name": "Pollo con zenzero e cipollotto",
+      "priceCents": 690,
+      "description": "Zenzero, cipollotto, carne di coscia di pollo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac685947707f",
+      "name": "Manzo freddo condito",
+      "priceCents": 790,
+      "description": "Manzo, semi di sesamo, peperoncino, carota, cetriolo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477080",
+      "name": "Trippa di manzo fredda condita",
+      "priceCents": 690,
+      "description": "Cipollotto, trippa di manzo, semi di sesamo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477081",
+      "name": "Maiale fritto croccante",
+      "priceCents": 590,
+      "description": "Maiale."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477083",
+      "name": "Alette di pollo fritte croccanti",
+      "priceCents": 490,
+      "description": "Alette di pollo."
+    },
+    {
+      "sourceId": "6a313c8fbca5ac6859477084",
+      "name": "Dadini di pollo fritti",
+      "priceCents": 590,
+      "description": "Pollo."
+    },
+    {
+      "sourceId": "menu-focaccia-vegetariana",
+      "name": "Focaccia vegetariana",
+      "priceCents": 500,
+      "description": "Con verdure miste.",
+      "categorySourceId": "6175746f2d6d656e752d3132",
+      "slug": "focaccia-vegetariana",
+      "nameZh": "蔬菜馅饼"
+    }
+  ]
+}

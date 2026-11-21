@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalDocument, LegalSection } from "@/components/legal/legal-document";
-import { features } from "@/server/env";
 import { POLICY_VERSION } from "@/server/services/consents";
 
 export const metadata: Metadata = {
@@ -38,7 +37,6 @@ const STORAGE: [string, string][] = [
 ];
 
 export default function CookiePage() {
-  const stripe = features().paymentProvider === "stripe";
   return (
     <LegalDocument
       title="Cookie policy"
@@ -46,8 +44,8 @@ export default function CookiePage() {
       intro={
         <p>
           Usiamo esclusivamente cookie e strumenti tecnici, necessari a far funzionare carrello, accesso e
-          pagamenti. Non usiamo cookie di profilazione, pubblicità o statistiche di terze parti: per questo
-          non ti chiediamo alcun consenso.
+          ordini. Non usiamo cookie di profilazione, pubblicità o statistiche di terze parti: per questo non
+          ti chiediamo alcun consenso.
         </p>
       }
     >
@@ -96,20 +94,6 @@ export default function CookiePage() {
           checkout.
         </p>
       </LegalSection>
-
-      {stripe ? (
-        <LegalSection title="Pagamenti">
-          <p>
-            Durante il pagamento online il modulo di Stripe può impostare cookie tecnici propri per la
-            prevenzione delle frodi (es. <code>__stripe_mid</code>, <code>__stripe_sid</code>). Sono necessari
-            a completare il pagamento in sicurezza; maggiori dettagli nella{" "}
-            <a href="https://stripe.com/it/cookie-settings" target="_blank" rel="noopener noreferrer">
-              cookie policy di Stripe
-            </a>
-            .
-          </p>
-        </LegalSection>
-      ) : null}
 
       <LegalSection title="Mappe">
         <p>

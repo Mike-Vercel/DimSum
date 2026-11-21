@@ -38,6 +38,8 @@ async function loadOrder(orderId: string) {
 function paymentLabel(o: Order): string {
   if (o.paymentMethod === "CASH_ON_DELIVERY")
     return o.fulfillmentType === "DELIVERY" ? "Contanti alla consegna" : "Contanti al ritiro";
+  if (o.paymentMethod === "POS_ON_DELIVERY")
+    return o.fulfillmentType === "DELIVERY" ? "Carta con POS alla consegna" : "Carta con POS al ritiro";
   const p = o.payments[0];
   if (p?.wallet === "apple_pay") return "Apple Pay";
   if (p?.wallet === "google_pay") return "Google Pay";
@@ -114,7 +116,7 @@ function customerMessage(
       return {
         title: "Ordine ricevuto",
         body: `Abbiamo ricevuto l'ordine ${n}. Ti avvisiamo appena la cucina lo conferma.`,
-        ...(o.paymentMethod === "CASH_ON_DELIVERY" ? { email: orderReceivedEmail } : {}),
+        ...(o.paymentMethod !== "ONLINE" ? { email: orderReceivedEmail } : {}),
       };
     case "PAYMENT_CONFIRMED":
       return {

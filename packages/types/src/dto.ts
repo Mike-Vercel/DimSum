@@ -504,7 +504,7 @@ export interface RiderLocationDTO {
 /* ------------------------------------------------------------------ */
 
 export interface CheckoutPaymentDTO {
-  provider: "STRIPE" | "DEV" | "CASH";
+  provider: "STRIPE" | "DEV" | "CASH" | "POS";
   clientSecret: string | null;
   publishableKey: string | null;
   amountCents: Cents;

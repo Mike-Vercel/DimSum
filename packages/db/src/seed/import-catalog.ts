@@ -10,13 +10,71 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Database } from "../client";
-import type { NormalizedCatalog } from "../catalog-source/types";
+import type { NormalizedCatalog, NormalizedProduct } from "../catalog-source/types";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
 export function loadCatalog(): NormalizedCatalog {
   const file = path.resolve(here, "../../data/brenvo/catalog.json");
-  return JSON.parse(fs.readFileSync(file, "utf8")) as NormalizedCatalog;
+  const catalog = JSON.parse(fs.readFileSync(file, "utf8")) as NormalizedCatalog;
+  const menu = JSON.parse(fs.readFileSync(path.resolve(here, "../../data/menu-2026-11.json"), "utf8")) as {
+    revision: string;
+    categories: { sourceId: string; name: string }[];
+    products: {
+      sourceId: string;
+      name: string;
+      priceCents: number;
+      description: string;
+      categorySourceId?: string;
+      slug?: string;
+      nameZh?: string;
+    }[];
+  };
+  for (const row of menu.categories) {
+    const category = catalog.categories.find((c) => c.sourceId === row.sourceId);
+    if (!category) throw new Error(`Unknown menu category ${row.sourceId}`);
+    category.name = row.name;
+    category.menuRevision = menu.revision;
+  }
+  for (const row of menu.products) {
+    let product = catalog.products.find((p) => p.sourceId === row.sourceId);
+    if (!product) {
+      if (!row.categorySourceId || !row.slug) throw new Error(`Unknown menu product ${row.sourceId}`);
+      product = {
+        sourceId: row.sourceId,
+        categorySourceId: row.categorySourceId,
+        slug: row.slug,
+        position: 99,
+        name: row.name,
+        sourceName: row.name,
+        sourceName2: row.nameZh ?? "",
+        nameZh: row.nameZh ?? null,
+        description: row.description,
+        descriptionZh: null,
+        sourceDescription: row.description,
+        ingredients: [],
+        posCode: null,
+        priceCents: row.priceCents,
+        vatRateBps: catalog.restaurant.vatRateBps,
+        allergens: [],
+        allergensDeclared: false,
+        tags: ["VEGETARIAN"],
+        spicyLevel: 0,
+        excludedFromDiscounts: false,
+        isAvailable: true,
+        image: null,
+      } satisfies NormalizedProduct;
+      catalog.products.push(product);
+    }
+    product.name = row.name;
+    product.description = row.description;
+    product.priceCents = row.priceCents;
+    product.ingredients = row.description.replace(/\.$/, "").split(/,\s*/);
+    product.menuRevision = menu.revision;
+    // Ingredient pictograms on the paper menu are not a certified allergen declaration.
+    // Preserve existing declared allergens; never infer absence from a shorter description.
+  }
+  return catalog;
 }
 
 export interface ImportReport {
@@ -43,7 +101,7 @@ export async function importCatalog(
     const existing = await db.category.findUnique({ where });
     if (existing) {
       categoryIds.set(c.sourceId, existing.id);
-      if (options.sync) {
+      if (options.sync || (c.menuRevision && existing.name === "Bao grigliati")) {
         await db.category.update({
           where: { id: existing.id },
           data: { name: c.name, position: c.position },
@@ -76,6 +134,7 @@ export async function importCatalog(
       name2: p.sourceName2,
       description: p.sourceDescription,
       importedAt: catalog.source.capturedAt,
+      ...(p.menuRevision ? { menuRevision: p.menuRevision } : {}),
     };
     const fromSource = {
       name: p.name,
@@ -91,7 +150,8 @@ export async function importCatalog(
 
     let product = await db.product.findUnique({ where });
     if (product) {
-      if (options.sync) {
+      const prior = product.sourceData as { menuRevision?: string } | null;
+      if (options.sync || (p.menuRevision && prior?.menuRevision !== p.menuRevision)) {
         product = await db.product.update({ where: { id: product.id }, data: fromSource });
         report.products.updated++;
       }

@@ -30,7 +30,7 @@ export function CookieNotice() {
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 lg:px-8">
         <Cookie className="size-4 shrink-0 text-red-400" aria-hidden />
         <p className="min-w-0 flex-1 text-caption leading-snug text-white/80">
-          Solo cookie tecnici, per carrello, accesso e pagamenti. Niente profilazione né pubblicità.{" "}
+          Solo cookie tecnici, per carrello, accesso e ordini. Niente profilazione né pubblicità.{" "}
           <Link href="/cookie" className="font-semibold text-white underline underline-offset-2">
             Dettagli
           </Link>

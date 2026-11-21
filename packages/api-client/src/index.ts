@@ -237,7 +237,7 @@ export function createApiClient(options: ApiClientOptions) {
       claim: (publicId: string) =>
         request<{ ok: true }>("POST", `/orders/${encodeURIComponent(publicId)}/claim`, {}),
       paymentIntent: (publicId: string) =>
-        request<{ clientSecret: string | null; status: string }>(
+        request<{ clientSecret: string | null; status: string; payOnReceipt: boolean }>(
           "GET",
           `/orders/${encodeURIComponent(publicId)}/payment`,
         ),

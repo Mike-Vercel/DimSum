@@ -15,7 +15,7 @@ export function onlineGateway(): PaymentGateway {
   );
 }
 
-export function gatewayFor(provider: "STRIPE" | "DEV" | "CASH"): PaymentGateway | null {
+export function gatewayFor(provider: "STRIPE" | "DEV" | "CASH" | "POS"): PaymentGateway | null {
   if (provider === "STRIPE") return stripeGateway;
   if (provider === "DEV") return features().paymentProvider === "dev" ? devGateway : null;
   return null;

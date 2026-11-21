@@ -46,8 +46,10 @@ export const REAL_ORDER: Prisma.OrderWhereInput = {
 
 function collectionOf(o: AdminOrderRow): CollectionState {
   if (o.refundedAt) return "REFUNDED";
-  if (o.paymentMethod === "CASH_ON_DELIVERY")
-    return o.payments.some((p) => p.provider === "CASH" && p.status === "SUCCEEDED") ? "PAID" : "TO_COLLECT";
+  if (o.paymentMethod !== "ONLINE")
+    return o.payments.some((p) => (p.provider === "CASH" || p.provider === "POS") && p.status === "SUCCEEDED")
+      ? "PAID"
+      : "TO_COLLECT";
   return o.paidAt ? "PAID" : "PENDING";
 }
 
@@ -251,7 +253,10 @@ export async function getAdminOrder(orderId: string, now = new Date()): Promise<
   const actorName = new Map(actors.map((a) => [a.id, a.name]));
 
   const onlinePayment = o.payments.find(
-    (p) => p.provider !== "CASH" && (p.status === "SUCCEEDED" || p.status === "PARTIALLY_REFUNDED"),
+    (p) =>
+      p.provider !== "CASH" &&
+      p.provider !== "POS" &&
+      (p.status === "SUCCEEDED" || p.status === "PARTIALLY_REFUNDED"),
   );
   const rider = o.delivery?.rider;
   const live =

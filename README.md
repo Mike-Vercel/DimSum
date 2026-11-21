@@ -3,7 +3,22 @@
 Piattaforma proprietaria di DIMSUM (Via Emerico Amari 47, Palermo): sito e PWA per i clienti,
 pannello per il ristorante con schermo cucina, app web per i rider e un'API versionata
 (`/api/v1`) pronta per le future app native. Il catalogo è quello reale del ristorante
-(116 prodotti, 16 categorie, foto originali), importato dalla piattaforma precedente.
+(117 prodotti, 16 categorie, foto originali), con 66 piatti aggiornati dal menu cartaceo.
+
+## Configurazione attuale
+
+Il checkout accetta **contanti oppure carta con POS fisico alla consegna o al ritiro**.
+Il rider porta il POS al domicilio: nessun pagamento online e nessun dato della carta
+richiesto dal sito. I riferimenti a Stripe più avanti documentano esclusivamente
+l’integrazione storica, mantenuta per gli ordini precedenti; non serve configurarla
+per ricevere nuovi ordini e non va riattivata.
+
+`REFERENCE/` contiene materiale sensibile locale: è esclusa da Git, Vercel, contesti
+Docker e archivi Git. Non forzarne mai l’aggiunta né caricarla sul servizio di hosting.
+`npm run check:private` controlla l’indice Git e i file pubblici; la build verifica
+anche gli artefatti. I documenti originali non sono necessari per il deploy.
+Le sole informazioni pubbliche derivate sono il menu, i dati societari necessari
+e la mascotte approvata. I dettagli del nuovo seed sono in [packages/db/README.md](packages/db/README.md).
 
 ## Cosa c'è
 
@@ -121,7 +136,7 @@ quelle `NEXT_PUBLIC_*`. In produzione servono:
 | Base | `APP_URL` (es. `https://dimsum.it`); su Vercel, se manca, vale il dominio di produzione |
 | Database | `DATABASE_URL` (pooled), `DIRECT_DATABASE_URL` o `DATABASE_URL_UNPOOLED` (diretta: migrazioni e `LISTEN` del tempo reale) |
 | Accesso | `BETTER_AUTH_SECRET`; opzionali `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`, `APPLE_*` |
-| Pagamenti | `PAYMENT_PROVIDER=stripe`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` |
+| Pagamenti | Contanti/POS fisico: nessuna chiave Stripe richiesta. Applicare migrazioni e seed. |
 | E-mail | `EMAIL_PROVIDER=brevo` con `BREVO_API_KEY` (oppure `resend` con `RESEND_API_KEY`, `smtp` con `SMTP_URL`); `EMAIL_FROM` |
 | Foto | `STORAGE_PROVIDER=vercel-blob`, `BLOB_READ_WRITE_TOKEN` |
 | Notifiche push | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (`npx web-push generate-vapid-keys`) |
@@ -155,7 +170,7 @@ quelle `NEXT_PUBLIC_*`. In produzione servono:
    20 secondi durante il servizio. Per renderli indipendenti dal traffico, con il piano Pro o uno
    scheduler esterno, chiama `/api/cron/operations` ogni minuto con
    `Authorization: Bearer <CRON_SECRET>`.
-6. **Stripe.** In Dashboard → Developers → Webhooks crea l'endpoint
+6. **Stripe (solo integrazione storica, non richiesta per il checkout attuale).** In Dashboard → Developers → Webhooks crea l'endpoint
    `https://<dominio>/api/webhooks/stripe` con gli eventi `payment_intent.succeeded`,
    `payment_intent.payment_failed`, `payment_intent.processing`, `payment_intent.canceled`,
    `refund.created`, `refund.updated`, e copia il signing secret in `STRIPE_WEBHOOK_SECRET`. Per

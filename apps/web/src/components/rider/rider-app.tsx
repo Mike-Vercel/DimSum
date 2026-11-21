@@ -183,7 +183,8 @@ function DeliveryCard({
 
       {d.collectCents !== null ? (
         <p className="mx-5 mt-1 flex items-center gap-2 rounded-xl bg-warning-soft px-4 py-3 font-bold">
-          <Banknote className="size-5 text-warning" /> Incassa {formatEuro(d.collectCents)} in contanti
+          <Banknote className="size-5 text-warning" /> Incassa {formatEuro(d.collectCents)}{" "}
+          {d.paymentMethod === "POS_ON_DELIVERY" ? "con il POS" : "in contanti"}
         </p>
       ) : (
         <p className="mx-5 mt-1 flex items-center gap-2 text-body-sm text-fg-muted">
@@ -426,7 +427,7 @@ export function RiderApp({ initial }: { initial: RiderHomeDTO }) {
         title={confirming ? `Consegnato #${confirming.number}?` : ""}
         description={
           confirming?.collectCents !== null && confirming
-            ? `Conferma di aver incassato ${formatEuro(confirming.collectCents)} in contanti.`
+            ? `Conferma di aver incassato ${formatEuro(confirming.collectCents)} ${confirming.paymentMethod === "POS_ON_DELIVERY" ? "con il POS" : "in contanti"}.`
             : "Conferma solo dopo aver consegnato la busta al cliente."
         }
         size="sm"

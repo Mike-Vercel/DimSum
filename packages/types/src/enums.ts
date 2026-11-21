@@ -44,6 +44,7 @@ export const PaymentMethod = {
   /** Stripe Payment Element: card, Apple Pay, Google Pay. */
   ONLINE: "ONLINE",
   CASH_ON_DELIVERY: "CASH_ON_DELIVERY",
+  POS_ON_DELIVERY: "POS_ON_DELIVERY",
 } as const;
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];
 export const PAYMENT_METHODS = values(PaymentMethod);
@@ -53,6 +54,7 @@ export const PaymentProvider = {
   /** Local test simulator. Refused at runtime in production. */
   DEV: "DEV",
   CASH: "CASH",
+  POS: "POS",
 } as const;
 export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider];
 

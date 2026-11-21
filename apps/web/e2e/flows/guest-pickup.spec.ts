@@ -1,7 +1,7 @@
 import { addFromMenu, DISHES, expect, openAs, orderNumberFrom, staff, test } from "../helpers";
 
 /**
- * Guest → menu → cart → checkout as guest (pickup, online payment) → confirmation → live tracking;
+ * Guest → menu → cart → checkout as guest (pickup, POS payment) → confirmation → live tracking;
  * the kitchen accepts, prepares and hands the order over, the customer sees every step.
  */
 test("ordine da ospite con ritiro, gestito dalla cucina in tempo reale", async ({ page, browser }) => {
@@ -33,9 +33,10 @@ test("ordine da ospite con ritiro, gestito dalla cucina in tempo reale", async (
   await page.getByLabel(/Telefono/).fill("+39 333 765 4321");
   await page.getByRole("button", { name: "Continua", exact: true }).click();
 
-  // Step 3: pay (local payment simulator: the order is confirmed by the server, not the browser).
-  await page.getByRole("button", { name: /Conferma e paga/ }).click();
-  await page.getByRole("button", { name: /^Paga € / }).click();
+  // No online charge: POS is collected when the customer picks up the order.
+  await page.getByRole("radio", { name: /Carta con POS al ritiro/ }).click();
+  await expect(page.getByText(/Non ti chiediamo i dati della carta/)).toBeVisible();
+  await page.getByRole("button", { name: /Conferma ordine/ }).click();
   await expect(page.getByRole("heading", { name: "Ordine confermato!" })).toBeVisible();
   const number = orderNumberFrom(
     await page

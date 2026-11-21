@@ -52,6 +52,9 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   poweredByHeader: false,
   // Social preview images read the bundled menu photos from disk.
+  outputFileTracingExcludes: {
+    "/*": ["../../[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee]/**/*"],
+  },
   outputFileTracingIncludes: {
     // Keys are route globs (picomatch): match the generated image routes.
     "/opengraph-image*": ["./public/menu/**/*"],

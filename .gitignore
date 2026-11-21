@@ -1,4 +1,7 @@
 # dependencies
+# Sensitive local source material: never commit or deploy (any letter case).
+[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee]/
+
 node_modules/
 .pnp
 .pnp.*

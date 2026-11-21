@@ -13,7 +13,7 @@ export function ShopFooter({ restaurant }: { restaurant: RestaurantInfo }) {
       <div className="mx-auto grid max-w-7xl gap-10 px-5 pt-14 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div className="min-w-0 space-y-4">
           {/* Sized by the column width: the wordmark never spills into the next column. */}
-          <Logo withTagline className="h-auto w-full max-w-60 text-white" />
+          <Logo withTagline className="h-20 max-w-64 text-white" />
           <p className="max-w-xs text-body-sm text-fg-muted">
             Ravioli, bao e noodles fatti a mano. Ordina direttamente da noi: consegna a domicilio o ritiro al
             locale.
@@ -107,7 +107,7 @@ export function ShopFooter({ restaurant }: { restaurant: RestaurantInfo }) {
           {restaurant.legal.companyName ? ` · ${restaurant.legal.companyName}` : ""}
           {restaurant.legal.vatNumber ? ` · P.IVA ${restaurant.legal.vatNumber}` : ""}
         </p>
-        <p>Prezzi IVA inclusa · Pagamenti sicuri</p>
+        <p>Prezzi IVA inclusa · Contanti o POS alla consegna e al ritiro</p>
       </div>
     </footer>
   );

@@ -18,19 +18,6 @@ import { useCheckoutDraft } from "@/lib/stores/checkout";
 import { useOrderPrefs } from "@/lib/stores/order-prefs";
 import { OrderLines } from "./order-lines";
 
-function CardBrands() {
-  return (
-    <span className="flex items-center gap-1" aria-hidden>
-      <span className="rounded bg-[#1a1f71] px-1.5 py-0.5 text-[9px] font-black text-white italic">VISA</span>
-      <span className="flex">
-        <span className="size-3.5 rounded-full bg-[#eb001b]" />
-        <span className="-ml-1.5 size-3.5 rounded-full bg-[#f79e1b]/90" />
-      </span>
-      <span className="rounded bg-black px-1.5 py-0.5 text-[9px] font-semibold text-white">Pay</span>
-    </span>
-  );
-}
-
 export function StepPayment({
   quote,
   settling,
@@ -57,12 +44,8 @@ export function StepPayment({
 
   const methods = restaurant.checkout.paymentMethods;
   const cashAllowed = fulfillment === "DELIVERY" ? methods.cashOnDelivery : methods.cashOnPickup;
-  const method =
-    !methods.online && cashAllowed
-      ? "CASH_ON_DELIVERY"
-      : draft.paymentMethod === "CASH_ON_DELIVERY" && !cashAllowed
-        ? "ONLINE"
-        : draft.paymentMethod;
+  // Old persisted drafts may still contain ONLINE: default them to cash.
+  const method = draft.paymentMethod === "POS_ON_DELIVERY" ? "POS_ON_DELIVERY" : "CASH_ON_DELIVERY";
   const total = quote?.totals.totalCents ?? 0;
   const tipOptions = [0, ...restaurant.checkout.tipOptionsCents];
 
@@ -189,20 +172,19 @@ export function StepPayment({
         </h2>
         <RadioCardGroup
           value={method}
-          onValueChange={(v) => draft.set("paymentMethod", v as "ONLINE" | "CASH_ON_DELIVERY")}
+          onValueChange={(v) => draft.set("paymentMethod", v as "CASH_ON_DELIVERY" | "POS_ON_DELIVERY")}
           className="grid gap-2.5"
         >
-          {methods.online ? (
+          {cashAllowed ? (
             <RadioCard
-              value="ONLINE"
+              value="POS_ON_DELIVERY"
               icon={<CreditCard className="size-4.5" />}
-              title="Carta, Apple Pay o Google Pay"
+              title={fulfillment === "DELIVERY" ? "Carta con POS alla consegna" : "Carta con POS al ritiro"}
               description={
-                restaurant.checkout.onlinePaymentsLive
-                  ? "Pagamento sicuro online"
-                  : "Ambiente di prova: nessun addebito"
+                fulfillment === "DELIVERY"
+                  ? "Portiamo il POS a casa tua: paghi con la carta quando ricevi l’ordine."
+                  : "Paghi con la carta al POS del locale quando ritiri l’ordine."
               }
-              trailing={<CardBrands />}
             />
           ) : null}
           {cashAllowed ? (
@@ -210,13 +192,17 @@ export function StepPayment({
               value="CASH_ON_DELIVERY"
               icon={<Banknote className="size-4.5" />}
               title={fulfillment === "DELIVERY" ? "Contanti alla consegna" : "Contanti al ritiro"}
-              description="Paghi direttamente al rider o al banco"
+              description={
+                fulfillment === "DELIVERY"
+                  ? "Paghi in contanti al rider quando ricevi l’ordine."
+                  : "Paghi in contanti al banco quando ritiri l’ordine."
+              }
             />
           ) : null}
         </RadioCardGroup>
         <p className="flex items-center gap-2 text-caption text-fg-muted">
-          <ShieldCheck className="size-4 text-success" aria-hidden /> I dati di pagamento sono cifrati e
-          gestiti da Stripe: non li memorizziamo.
+          <ShieldCheck className="size-4 text-success" aria-hidden /> Nessun pagamento online. Paghi alla
+          consegna o al ritiro, in contanti o con POS. Non ti chiediamo i dati della carta sul sito.
         </p>
       </section>
 
@@ -282,11 +268,10 @@ export function StepPayment({
           block
           className="h-14"
           loading={placing}
-          disabled={!quote || settling || (hasAlcohol && !draft.ageConfirmed)}
+          disabled={!quote || settling || !cashAllowed || (hasAlcohol && !draft.ageConfirmed)}
           onClick={() => void place()}
         >
-          {method === "ONLINE" ? "Conferma e paga" : "Conferma ordine"} <span aria-hidden>•</span>{" "}
-          <span className="tabular-nums">{formatEuro(total)}</span>
+          Conferma ordine <span aria-hidden>•</span> <span className="tabular-nums">{formatEuro(total)}</span>
         </Button>
         <p className="text-center text-caption text-fg-muted">
           Confermando accetti i{" "}

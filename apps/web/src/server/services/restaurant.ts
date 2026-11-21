@@ -1,3 +1,4 @@
+import { BUSINESS_DETAILS } from "@dimsum/types";
 import "server-only";
 import {
   DEFAULT_ETA_SETTINGS,
@@ -110,8 +111,8 @@ export async function loadRestaurantConfig(): Promise<RestaurantConfig> {
   return {
     name: s.name,
     tagline: s.tagline,
-    legalName: s.legalName,
-    vatNumber: s.vatNumber,
+    legalName: s.legalName ?? BUSINESS_DETAILS.legalName,
+    vatNumber: s.vatNumber ?? BUSINESS_DETAILS.vatNumber,
     phone: s.phone,
     email: s.email,
     supportEmail: s.supportEmail,
@@ -150,7 +151,7 @@ export async function loadRestaurantConfig(): Promise<RestaurantConfig> {
     maxRouteDistanceMeters: s.maxRouteDistanceMeters,
     maxTravelSeconds: s.maxTravelSeconds,
     customerCancelWindowMinutes: s.customerCancelWindowMinutes,
-    onlinePaymentsEnabled: s.onlinePaymentsEnabled,
+    onlinePaymentsEnabled: false,
     cashOnDeliveryEnabled: s.cashOnDeliveryEnabled,
     cashOnPickupEnabled: s.cashOnPickupEnabled,
     tipsEnabled: s.tipsEnabled,
@@ -322,7 +323,7 @@ export function toRestaurantInfo(c: RestaurantConfig): Omit<RestaurantPublicDTO,
         cashOnDelivery: c.cashOnDeliveryEnabled,
         cashOnPickup: c.cashOnPickupEnabled,
       },
-      onlinePaymentsLive: features().paymentProvider === "stripe",
+      onlinePaymentsLive: false,
       tipOptionsCents: c.tipOptionsCents,
       tipsEnabled: c.tipsEnabled,
       phoneRequiredForDelivery: c.phoneRequiredForDelivery,

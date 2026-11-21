@@ -125,7 +125,7 @@ export function ShopHeader() {
         "sticky top-0 z-40 border-b border-transparent bg-canvas/85 pt-safe backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/75",
         // The folded row becomes margin below the header: the page underneath never moves.
         "transition-[margin-bottom] duration-300 ease-out motion-reduce:transition-none",
-        compact && "mb-[29px] lg:mb-0",
+        compact && "mb-[48px] lg:mb-0",
       )}
     >
       {/* Mobile */}
@@ -134,12 +134,12 @@ export function ShopHeader() {
           <div
             inert={compact}
             className={cn(
-              "h-[29px] overflow-hidden transition-[height,opacity] duration-300 ease-out motion-reduce:transition-none",
+              "h-[48px] overflow-hidden transition-[height,opacity] duration-300 ease-out motion-reduce:transition-none",
               compact && "h-0 opacity-0",
             )}
           >
-            <Link href="/" aria-label="DIMSUM, home" className="block h-full w-fit">
-              <Logo className="h-[18px] text-fg" />
+            <Link href="/" aria-label="DIMSUM, home" className="block h-full w-fit max-w-full">
+              <Logo className="h-11 text-fg" />
             </Link>
           </div>
           <LocationButton />
@@ -160,7 +160,7 @@ export function ShopHeader() {
       {/* Tablet & desktop */}
       <div className="mx-auto hidden h-18 max-w-7xl items-center gap-3 px-6 lg:flex xl:gap-6 xl:px-8">
         <Link href="/" aria-label="DIMSUM, home" className="shrink-0">
-          <Logo className="h-5 text-fg xl:h-6" />
+          <Logo className="h-12 text-fg xl:h-14" />
         </Link>
         <nav aria-label="Principale" className="flex shrink-0 items-center gap-1">
           {NAV.map((n) => (

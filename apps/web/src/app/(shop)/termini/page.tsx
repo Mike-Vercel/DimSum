@@ -1,3 +1,4 @@
+import { BUSINESS_DETAILS } from "@dimsum/types";
 import { ALLERGEN_DISCLAIMER } from "@dimsum/domain";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -15,13 +16,14 @@ export const metadata: Metadata = {
 export default async function TermsPage() {
   const config = await getRestaurantConfig();
   const seller = [
-    config.legalName ?? config.name,
-    config.address.formatted,
-    config.vatNumber ? `P.IVA ${config.vatNumber}` : null,
+    BUSINESS_DETAILS.legalName,
+    `Sede legale: ${BUSINESS_DETAILS.legalAddress}`,
+    `P.IVA ${BUSINESS_DETAILS.vatNumber}`,
+    `REA ${BUSINESS_DETAILS.rea}`,
   ]
     .filter(Boolean)
     .join(" · ");
-  const contact = config.supportEmail ?? config.email;
+  const contact = config.supportEmail ?? config.email ?? BUSINESS_DETAILS.pec;
   return (
     <LegalDocument
       title="Termini e condizioni di vendita"
@@ -50,8 +52,7 @@ export default async function TermsPage() {
         <p>
           Il contratto si conclude quando la cucina accetta l&apos;ordine: ricevi la conferma via e-mail e
           sulla pagina di tracking. Se un prodotto non è più disponibile o l&apos;indirizzo non è servito,
-          l&apos;ordine può essere rifiutato: in questo caso non paghi nulla e l&apos;eventuale pagamento
-          online viene rimborsato per intero.
+          l&apos;ordine può essere rifiutato: in questo caso non paghi nulla.
         </p>
         <p>
           Puoi ordinare come ospite oppure con un account. Gli ordini programmati vengono preparati per
@@ -70,9 +71,10 @@ export default async function TermsPage() {
 
       <LegalSection title="4. Pagamento">
         <p>
-          Puoi pagare online con i metodi proposti al checkout oppure, se attivo, in contanti alla consegna o
-          al ritiro. L&apos;ordine pagato online viene inviato alla cucina solo dopo la conferma del pagamento
-          da parte del circuito.
+          Paghi alla consegna o al ritiro, scegliendo in fase d’ordine tra contanti e carta tramite POS. Per
+          la consegna a domicilio il rider porta il POS a casa tua: puoi quindi pagare con la carta quando
+          ricevi l’ordine. Per il ritiro paghi direttamente al banco. Non sono previsti pagamenti online o
+          addebiti anticipati e non devi inserire i dati della carta sul sito.
         </p>
       </LegalSection>
 
@@ -88,8 +90,8 @@ export default async function TermsPage() {
       <LegalSection title="6. Annullamento e diritto di recesso">
         <p>
           Puoi annullare l&apos;ordine dalla pagina di tracking finché la cucina non lo ha accettato ed entro{" "}
-          {config.customerCancelWindowMinutes} minuti dall&apos;invio: il pagamento online viene rimborsato
-          per intero. Dopo l&apos;accettazione contatta il ristorante.
+          {config.customerCancelWindowMinutes} minuti dall&apos;invio, senza alcun addebito. Dopo
+          l&apos;accettazione contatta il ristorante.
         </p>
         <p>
           Trattandosi di alimenti preparati su ordinazione e deperibili, il diritto di recesso non si applica

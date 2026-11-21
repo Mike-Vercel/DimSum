@@ -5,10 +5,9 @@ import type { CheckoutRequest } from "@dimsum/validation";
 import type { Viewer } from "../auth/session";
 import { db, Prisma } from "../db";
 import { AppError } from "../errors";
-import { appUrl, env, features } from "../env";
+import { appUrl, env } from "../env";
 import { newPublicId } from "../ids";
 import { logger } from "../logger";
-import { gatewayFor, onlineGateway } from "../payments";
 import { recordConsents } from "./consents";
 import { runOrderCommand } from "./orders/commands";
 import { quoteCart } from "./quote";
@@ -36,33 +35,15 @@ async function paymentResult(orderId: string): Promise<CheckoutResultDTO["paymen
     include: { payments: { orderBy: { createdAt: "desc" }, take: 1 } },
   });
   const payment = order.payments[0];
-  if (!payment || payment.provider === "CASH")
-    return { provider: "CASH", clientSecret: null, publishableKey: null, amountCents: order.totalCents };
-  const gateway = gatewayFor(payment.provider);
-  const open = order.status === "PENDING_PAYMENT" && payment.status !== "SUCCEEDED";
-  let clientSecret: string | null = null;
-  if (open && gateway) {
-    if (!payment.providerPaymentId) {
-      // A previous attempt failed to create the intent: create it now (same idempotency key).
-      const created = await gateway.createIntent({
-        amountCents: payment.amountCents,
-        currency: "eur",
-        idempotencyKey: payment.idempotencyKey,
-        orderId: order.id,
-        publicId: order.publicId,
-        orderNumber: order.displayNumber,
-        email: order.customerEmail,
-        description: `Ordine #${order.displayNumber} · DIMSUM`,
-      });
-      await db.payment.update({
-        where: { id: payment.id },
-        data: { providerPaymentId: created.providerPaymentId },
-      });
-      clientSecret = created.clientSecret;
-    } else {
-      clientSecret = await gateway.clientSecret(payment.providerPaymentId);
-    }
-  }
+  if (!payment || payment.provider === "CASH" || payment.provider === "POS")
+    return {
+      provider: payment?.provider ?? "CASH",
+      clientSecret: null,
+      publishableKey: null,
+      amountCents: order.totalCents,
+    };
+  // Existing online orders remain readable, but no new online charge is initiated.
+  const clientSecret = null;
   return {
     provider: payment.provider,
     clientSecret,
@@ -84,16 +65,13 @@ async function resultFor(orderId: string): Promise<CheckoutResultDTO> {
 }
 
 function assertPaymentMethod(input: CheckoutRequest, config: RestaurantConfig) {
-  if (input.paymentMethod === "ONLINE") {
-    if (!config.onlinePaymentsEnabled || !features().paymentProvider) {
-      throw new AppError("PAYMENT_UNAVAILABLE", "Il pagamento online non è disponibile in questo momento.");
-    }
-    return;
-  }
   const allowed =
     input.fulfillmentType === "DELIVERY" ? config.cashOnDeliveryEnabled : config.cashOnPickupEnabled;
   if (!allowed)
-    throw new AppError("VALIDATION_FAILED", "Il pagamento in contanti non è disponibile per questo ordine.");
+    throw new AppError(
+      "VALIDATION_FAILED",
+      "Il pagamento alla consegna o al ritiro non è disponibile per questo ordine.",
+    );
 }
 
 /**
@@ -196,7 +174,7 @@ export async function placeOrder(
   }
 
   const publicId = newPublicId();
-  const provider = input.paymentMethod === "ONLINE" ? onlineGateway().name : "CASH";
+  const provider = input.paymentMethod === "POS_ON_DELIVERY" ? "POS" : "CASH";
   const coupon = quote.coupon;
   const t = quote.totals;
   const lineDiscounts = new Map<string, number>();
@@ -433,18 +411,6 @@ export async function placeOrder(
     method: input.paymentMethod,
   });
 
-  if (input.paymentMethod === "CASH_ON_DELIVERY") {
-    await runOrderCommand(order.id, { type: "RECEIVE" }, { actor: "system", userId: null });
-    return resultFor(order.id);
-  }
-
-  try {
-    return await resultFor(order.id);
-  } catch (error) {
-    logger.error("payment intent creation failed", { error, orderId: order.id });
-    throw new AppError(
-      "PAYMENT_UNAVAILABLE",
-      "Non riusciamo a contattare il sistema di pagamento. Riprova: il tuo ordine non è stato addebitato.",
-    );
-  }
+  await runOrderCommand(order.id, { type: "RECEIVE" }, { actor: "system", userId: null });
+  return resultFor(order.id);
 }

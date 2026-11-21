@@ -29,8 +29,8 @@ const STEPS = [
   },
   {
     icon: CircleCheck,
-    title: "Paga in sicurezza",
-    text: "Carta, Apple Pay o Google Pay. Anche senza account, come ospite.",
+    title: "Paga quando arriva",
+    text: "Contanti o carta alla consegna: il POS lo portiamo noi. Nessun pagamento online.",
   },
   {
     icon: Bike,
@@ -58,6 +58,10 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: jsonLdScript(restaurantJsonLd(config, catalog)) }}
       />
       <DesktopHero images={heroImages} />
+      <p className="my-4 rounded-2xl bg-brand-soft px-4 py-3 text-body-sm font-medium text-brand-ink">
+        Paghi alla consegna in contanti o con carta: portiamo noi il POS a casa tua. Anche al ritiro puoi
+        pagare in contanti o con POS.
+      </p>
 
       <div className="mt-1 space-y-7 lg:mt-10 lg:space-y-14">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-center lg:gap-5">

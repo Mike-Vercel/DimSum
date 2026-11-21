@@ -5,7 +5,6 @@ import { DeliveryAreaMap } from "@/components/address/delivery-area-map";
 import { InstagramIcon } from "@/components/brand/provider-icons";
 import { RestaurantMap } from "@/components/shop/restaurant-map";
 import { summarizeHours } from "@/lib/hours";
-import { features } from "@/server/env";
 import { getRestaurantConfig, toRestaurantInfo } from "@/server/services/restaurant";
 
 export const metadata: Metadata = {
@@ -24,13 +23,10 @@ export default async function InfoPage() {
     { title: "Ritiro al locale", rows: summarizeHours(info.pickupHours) },
   ];
   const payments = [
-    info.checkout.paymentMethods.online
-      ? features().paymentProvider === "stripe"
-        ? "Carta, Apple Pay e Google Pay online"
-        : "Pagamento online"
+    info.checkout.paymentMethods.cashOnDelivery
+      ? "Contanti o carta alla consegna: portiamo noi il POS a casa tua"
       : null,
-    info.checkout.paymentMethods.cashOnDelivery ? "Contanti alla consegna" : null,
-    info.checkout.paymentMethods.cashOnPickup ? "Contanti al ritiro" : null,
+    info.checkout.paymentMethods.cashOnPickup ? "Contanti o carta con POS al ritiro" : null,
   ].filter(Boolean);
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${config.location.lat},${config.location.lng}`;
 

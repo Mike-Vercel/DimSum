@@ -322,9 +322,11 @@ export function SettingsEditor({
                 Configura le chiavi Stripe per incassare con carta, Apple Pay e Google Pay.
               </InlineAlert>
             ) : null}
-            {toggle("onlinePaymentsEnabled", "Pagamento online", "Carta, Apple Pay, Google Pay.")}
-            {toggle("cashOnDeliveryEnabled", "Contanti alla consegna")}
-            {toggle("cashOnPickupEnabled", "Contanti al ritiro")}
+            <p className="text-body-sm text-fg-muted">
+              Il cliente paga di persona in contanti o con carta tramite POS. Nessun pagamento online.
+            </p>
+            {toggle("cashOnDeliveryEnabled", "Contanti e POS alla consegna")}
+            {toggle("cashOnPickupEnabled", "Contanti e POS al ritiro")}
             {toggle("tipsEnabled", "Mance per i rider", "Interamente ai rider, separate dall'incasso.")}
             <div className="grid gap-4 sm:grid-cols-2">
               {text("tipOptions", "Mance proposte (€)", { hint: "Es. 1,00 · 2,00 · 3,00" })}

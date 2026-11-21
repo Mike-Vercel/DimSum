@@ -398,9 +398,11 @@ export function TrackingView({ initial }: { initial: OrderTrackingDTO }) {
                     <p className="text-caption text-fg-muted">
                       {order.payment.method === "CASH_ON_DELIVERY"
                         ? "Pagamento in contanti"
-                        : order.payment.brand
-                          ? `Pagato con ${order.payment.brand.toUpperCase()} •••• ${order.payment.last4}`
-                          : "Pagamento online"}
+                        : order.payment.method === "POS_ON_DELIVERY"
+                          ? "Pagamento con carta tramite POS alla consegna o al ritiro"
+                          : order.payment.brand
+                            ? `Pagato con ${order.payment.brand.toUpperCase()} •••• ${order.payment.last4}`
+                            : "Pagamento online"}
                       {order.delivery
                         ? ` · Consegna a ${order.delivery.addressLine}`
                         : ` · Ritiro da ${order.restaurant.addressLine}`}

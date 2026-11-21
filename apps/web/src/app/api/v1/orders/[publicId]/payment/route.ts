@@ -1,7 +1,6 @@
 import { db } from "@/server/db";
 import { notFound } from "@/server/errors";
 import { apiRoute } from "@/server/http";
-import { gatewayFor } from "@/server/payments";
 
 /** Resume an unfinished online payment (refresh, 3-D Secure interruption). */
 export const GET = apiRoute<{ publicId: string }>(
@@ -13,13 +12,10 @@ export const GET = apiRoute<{ publicId: string }>(
     });
     if (!order) throw notFound("Ordine");
     const payment = order.payments[0];
-    if (!payment || order.status !== "PENDING_PAYMENT" || !payment.providerPaymentId) {
-      return { clientSecret: null, status: payment?.status ?? "PENDING" };
-    }
-    const gateway = gatewayFor(payment.provider);
     return {
-      clientSecret: gateway ? await gateway.clientSecret(payment.providerPaymentId) : null,
-      status: payment.status,
+      clientSecret: null,
+      status: payment?.status ?? "PENDING",
+      payOnReceipt: order.paymentMethod !== "ONLINE",
     };
   },
 );

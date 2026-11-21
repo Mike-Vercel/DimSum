@@ -1,3 +1,4 @@
+import { BUSINESS_DETAILS } from "@dimsum/types";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalDocument, LegalSection } from "@/components/legal/legal-document";
@@ -17,13 +18,14 @@ export default async function PrivacyPage() {
   const f = features();
   const e = env();
   const controller = [
-    config.legalName ?? config.name,
-    config.address.formatted,
-    config.vatNumber ? `P.IVA ${config.vatNumber}` : null,
+    BUSINESS_DETAILS.legalName,
+    `Sede legale: ${BUSINESS_DETAILS.legalAddress}`,
+    `P.IVA ${BUSINESS_DETAILS.vatNumber}`,
+    `REA ${BUSINESS_DETAILS.rea}`,
   ]
     .filter(Boolean)
     .join(" · ");
-  const contact = config.supportEmail ?? config.email;
+  const contact = config.supportEmail ?? config.email ?? BUSINESS_DETAILS.pec;
   const maps =
     f.mapsProvider === "google"
       ? "Google Ireland Ltd. (Google Maps Platform) per la ricerca degli indirizzi e il calcolo dei percorsi"
@@ -64,9 +66,9 @@ export default async function PrivacyPage() {
             coordinate necessarie a verificare la zona e stimare i tempi.
           </li>
           <li>
-            <strong>Pagamenti</strong>: esito, importo, circuito e ultime 4 cifre della carta. I dati completi
-            della carta sono gestiti esclusivamente dal fornitore dei pagamenti e non transitano sui nostri
-            server.
+            <strong>Pagamenti</strong>: metodo scelto (contanti o POS), importo e stato dell’incasso. Paghi di
+            persona alla consegna o al ritiro. Il sito non raccoglie né conserva i dati della carta; il
+            pagamento con carta avviene sul POS fisico portato dal rider o presente nel locale.
           </li>
           <li>
             <strong>Account</strong> (facoltativo): nome, e-mail, password cifrata o accesso con Google
@@ -144,9 +146,6 @@ export default async function PrivacyPage() {
         <p>Ai soli fornitori che ci aiutano a erogare il servizio, nominati responsabili del trattamento:</p>
         <ul>
           <li>hosting dell&apos;applicazione (Vercel Inc.) e fornitore del database;</li>
-          {f.paymentProvider === "stripe" ? (
-            <li>Stripe Payments Europe Ltd. per i pagamenti online;</li>
-          ) : null}
           {e.EMAIL_PROVIDER === "brevo" ? (
             <li>Sendinblue SAS (Brevo), Francia, per l&apos;invio delle e-mail;</li>
           ) : e.EMAIL_PROVIDER === "resend" ? (

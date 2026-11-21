@@ -100,7 +100,10 @@ export async function updateSettings(
       'Lascia attiva almeno la consegna o il ritiro (per fermare gli ordini usa "Blocca ordini").',
     );
   }
-  if (!input.onlinePaymentsEnabled && !input.cashOnDeliveryEnabled && !input.cashOnPickupEnabled) {
+  if (input.onlinePaymentsEnabled) {
+    throw new AppError("VALIDATION_FAILED", "DIMSUM accetta solo contanti o POS alla consegna e al ritiro.");
+  }
+  if (!input.cashOnDeliveryEnabled && !input.cashOnPickupEnabled) {
     throw new AppError("VALIDATION_FAILED", "Serve almeno un metodo di pagamento attivo.");
   }
   const { location, ...rest } = input;

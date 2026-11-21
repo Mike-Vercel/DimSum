@@ -444,15 +444,17 @@ export function OrderDetail({
                     <span>
                       {p.provider === "CASH"
                         ? "Contanti"
-                        : p.wallet === "apple_pay"
-                          ? "Apple Pay"
-                          : p.wallet === "google_pay"
-                            ? "Google Pay"
-                            : p.cardBrand
-                              ? `${p.cardBrand.toUpperCase()} •••• ${p.cardLast4}`
-                              : p.provider === "DEV"
-                                ? "Pagamento di prova"
-                                : "Carta"}
+                        : p.provider === "POS"
+                          ? "POS alla consegna / ritiro"
+                          : p.wallet === "apple_pay"
+                            ? "Apple Pay"
+                            : p.wallet === "google_pay"
+                              ? "Google Pay"
+                              : p.cardBrand
+                                ? `${p.cardBrand.toUpperCase()} •••• ${p.cardLast4}`
+                                : p.provider === "DEV"
+                                  ? "Pagamento di prova"
+                                  : "Carta"}
                     </span>
                     <span className="tabular-nums">{formatEuro(p.amountCents)}</span>
                   </p>

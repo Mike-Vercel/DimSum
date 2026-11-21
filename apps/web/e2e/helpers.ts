@@ -43,7 +43,7 @@ export const rider = () => account("SEED_RIDER");
 
 /** Real dishes of the imported catalog (no demo products exist). */
 export const DISHES = {
-  ravioli: "Ravioli al vapore di gamberi",
+  ravioli: "Ravioli al vapore con gamberi",
   noodles: "Noodles freschi con manzo in brodo",
 } as const;
 

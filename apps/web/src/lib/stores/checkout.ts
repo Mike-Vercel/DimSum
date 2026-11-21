@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 export type CheckoutStep = "fulfillment" | "identity" | "payment";
-export type PaymentChoice = "ONLINE" | "CASH_ON_DELIVERY";
+export type PaymentChoice = "CASH_ON_DELIVERY" | "POS_ON_DELIVERY";
 
 const STEP_ORDER: CheckoutStep[] = ["fulfillment", "identity", "payment"];
 
@@ -47,7 +47,7 @@ const fresh = () => ({
   direction: 1 as 1 | -1,
   identity: null,
   tipCents: 0,
-  paymentMethod: "ONLINE" as PaymentChoice,
+  paymentMethod: "CASH_ON_DELIVERY" as PaymentChoice,
   kitchenNotes: "",
   ageConfirmed: false,
   marketingConsent: false,

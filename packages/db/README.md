@@ -62,3 +62,24 @@ aliquota IVA, allergeni, livello di piccantezza, indicazioni (coloranti, vegetar
 nome e descrizione in cinese, il gruppo di aggiunte dei noodles in brodo, le tre fasce di
 consegna con minimo d'ordine e costo, la promozione "Sconto 20% per ordini sopra i 30€", gli
 orari e i tempi di preparazione.
+
+## Aggiornamento menu e pagamenti del 21 novembre 2026
+
+Il caricamento del catalogo applica `data/menu-2026-11.json`: 66 piatti trascritti
+con titoli, descrizioni e prezzi dal menu cartaceo. Conserva gli ID e le fotografie
+esistenti; aggiunge la focaccia vegetariana. Il seed applica la revisione una volta
+anche ai database già popolati, poi preserva le successive modifiche admin.
+Le altre categorie del catalogo precedente, non presenti nelle due pagine fornite,
+restano invariate. Le icone degli ingredienti non sono state interpretate come
+una dichiarazione completa degli allergeni.
+
+La migrazione `20261121160000_pay_on_delivery` abilita contanti e POS fisico,
+disattivando il checkout online. I campi storici `cashOnDeliveryEnabled` e
+`cashOnPickupEnabled` abilitano entrambi i metodi di pagamento di persona.
+I pagamenti POS restano distinti dai contanti e non incrementano il denaro da
+versare del rider. Le chiavi online storiche non riattivano il checkout Stripe.
+
+Per applicare a un ambiente: `npm run db:deploy` seguito da `npm run db:seed`.
+Il comando Vercel esistente esegue già entrambi. Gli originali nella cartella
+locale `REFERENCE` non sono necessari al seed, alla build o al deploy e non devono
+mai essere aggiunti a Git né caricati sul servizio di hosting.

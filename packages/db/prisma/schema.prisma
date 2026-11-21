@@ -49,12 +49,14 @@ enum OrderStatus {
 enum PaymentMethod {
   ONLINE
   CASH_ON_DELIVERY
+  POS_ON_DELIVERY
 }
 
 enum PaymentProvider {
   STRIPE
   DEV
   CASH
+  POS
 }
 
 enum PaymentStatus {
@@ -1213,9 +1215,9 @@ model RestaurantSettings {
   maxTravelSeconds            Int?
   customerCancelWindowMinutes Int       @default(30)
 
-  onlinePaymentsEnabled  Boolean @default(true)
-  cashOnDeliveryEnabled  Boolean @default(false)
-  cashOnPickupEnabled    Boolean @default(false)
+  onlinePaymentsEnabled  Boolean @default(false)
+  cashOnDeliveryEnabled  Boolean @default(true)
+  cashOnPickupEnabled    Boolean @default(true)
   tipsEnabled            Boolean @default(true)
   tipOptionsCents        Int[]   @default([100, 200, 300])
   serviceFeeCents        Int     @default(0)

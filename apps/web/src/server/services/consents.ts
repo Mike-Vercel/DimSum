@@ -4,7 +4,7 @@ import { db, type Prisma } from "../db";
 import { privacyHash } from "../security";
 
 /** Version of the privacy policy and terms the consents refer to (shown on the legal pages). */
-export const POLICY_VERSION = "2026-10";
+export const POLICY_VERSION = "2026-11-21";
 
 export interface ConsentInput {
   type: ConsentType;

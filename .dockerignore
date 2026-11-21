@@ -1,0 +1,6 @@
+**/[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee]
+.git
+.env*
+node_modules
+.data
+.serena

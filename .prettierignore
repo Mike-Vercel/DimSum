@@ -1,4 +1,5 @@
 node_modules
+**/[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee]/**
 .next
 .next-e2e
 test-results

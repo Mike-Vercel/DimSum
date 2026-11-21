@@ -61,7 +61,7 @@ async function pickupOrder(
     customer: { name: "Test E2E", email, phone: "+393331234567" },
     couponCode: null,
     tipCents: 0,
-    paymentMethod: "ONLINE",
+    paymentMethod: "CASH_ON_DELIVERY",
     kitchenNotes: null,
     ageConfirmed: false,
     marketingConsent: false,
@@ -119,14 +119,12 @@ test.describe("API v1", () => {
     expect(((await res.json()) as { error: { code: string } }).error.code).toBe("PRICE_CHANGED");
   });
 
-  test("checkout idempotente, pagamento confermato solo dal server, tracking riservato", async ({
-    request,
-  }) => {
+  test("checkout idempotente, incasso alla consegna, tracking riservato", async ({ request }) => {
     const email = `ospite-${Date.now()}@example.com`;
     const { res, body, idempotencyKey } = await pickupOrder(request, email);
     expect(res.ok()).toBeTruthy();
     const order = (await res.json()) as { publicId: string; number: string; status: string };
-    expect(order.status).toBe("PENDING_PAYMENT");
+    expect(order.status).toBe("RECEIVED");
 
     // A double tap or a retry never creates a second order.
     const again = await request.post("/api/v1/checkout/orders", {
@@ -135,30 +133,14 @@ test.describe("API v1", () => {
     });
     expect(((await again.json()) as { publicId: string }).publicId).toBe(order.publicId);
 
-    // Unpaid orders never reach the kitchen.
+    // In-person payments reach the kitchen without an online charge.
     const tracking = (await (await request.get(`/api/v1/orders/${order.publicId}`)).json()) as {
       status: string;
       customer: { email: string };
     };
-    expect(tracking.status).toBe("PENDING_PAYMENT");
+    expect(tracking.status).toBe("RECEIVED");
     expect(tracking.customer.email).not.toBe(email);
     expect(tracking.customer.email).toContain("***");
-
-    expect(
-      (
-        await request.post(`/api/v1/dev/payments/${order.publicId}`, {
-          data: { outcome: "succeed" },
-          headers: json,
-        })
-      ).ok(),
-    ).toBeTruthy();
-    await expect
-      .poll(
-        async () =>
-          ((await (await request.get(`/api/v1/orders/${order.publicId}`)).json()) as { status: string })
-            .status,
-      )
-      .toBe("RECEIVED");
 
     // No rider position is ever exposed before pickup.
     const location = (await (
@@ -168,27 +150,45 @@ test.describe("API v1", () => {
     expect((await request.get(`/api/v1/orders/abcdefghijklmnopqrstuvwx`)).status()).toBe(404);
   });
 
-  test("il cliente può annullare prima che la cucina accetti e viene rimborsato", async ({ request }) => {
+  test("il cliente può annullare prima che la cucina accetti senza addebiti", async ({ request }) => {
     const { res } = await pickupOrder(request, `annullo-${Date.now()}@example.com`);
     const order = (await res.json()) as { publicId: string };
-    await request.post(`/api/v1/dev/payments/${order.publicId}`, {
-      data: { outcome: "succeed" },
-      headers: json,
-    });
-    await expect
-      .poll(
-        async () =>
-          ((await (await request.get(`/api/v1/orders/${order.publicId}`)).json()) as { status: string })
-            .status,
-      )
-      .toBe("RECEIVED");
     const cancel = await request.post(`/api/v1/orders/${order.publicId}/cancel`, {
       data: { reason: "Ho sbagliato indirizzo" },
       headers: json,
     });
     expect(cancel.ok()).toBeTruthy();
     const tracking = (await cancel.json()) as { status: string; canCancel: boolean };
-    expect(["CANCELLED", "REFUNDED"]).toContain(tracking.status);
+    expect(tracking.status).toBe("CANCELLED");
+  });
+
+  test("POS: nessun addebito online, ordine ricevuto e pagamento da incassare", async ({ request }) => {
+    const { res, body, idempotencyKey } = await pickupOrder(request, `pos-${Date.now()}@example.com`, (b) => {
+      b.paymentMethod = "POS_ON_DELIVERY";
+    });
+    expect(res.ok()).toBeTruthy();
+    const order = await res.json();
+    expect(order.status).toBe("RECEIVED");
+    expect(order.payment).toMatchObject({ provider: "POS", clientSecret: null, publishableKey: null });
+    const again = await request.post("/api/v1/checkout/orders", {
+      data: body,
+      headers: { ...json, "Idempotency-Key": idempotencyKey },
+    });
+    expect((await again.json()).publicId).toBe(order.publicId);
+    const tracking = await (await request.get(`/api/v1/orders/${order.publicId}`)).json();
+    expect(tracking.payment).toMatchObject({ method: "POS_ON_DELIVERY", status: "PENDING" });
+    const cancel = await request.post(`/api/v1/orders/${order.publicId}/cancel`, {
+      data: { reason: "Test POS" },
+      headers: json,
+    });
+    expect(cancel.ok()).toBeTruthy();
+  });
+
+  test("il checkout rifiuta ONLINE anche se richiesto direttamente via API", async ({ request }) => {
+    const { res } = await pickupOrder(request, `online-${Date.now()}@example.com`, (b) => {
+      b.paymentMethod = "ONLINE";
+    });
+    expect(res.status()).toBe(422);
   });
 
   test("aree riservate: anonimi, clienti e staff", async ({ request }) => {

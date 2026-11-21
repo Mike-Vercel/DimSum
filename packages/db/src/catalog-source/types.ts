@@ -35,6 +35,7 @@ export interface NormalizedZone {
 }
 
 export interface NormalizedProduct {
+  menuRevision?: string;
   sourceId: string;
   categorySourceId: string;
   position: number;
@@ -111,7 +112,14 @@ export interface NormalizedCatalog {
     redemptionsCount: number;
     isActive: boolean;
   }[];
-  categories: { sourceId: string; name: string; slug: string; position: number; isVisible: boolean }[];
+  categories: {
+    menuRevision?: string;
+    sourceId: string;
+    name: string;
+    slug: string;
+    position: number;
+    isVisible: boolean;
+  }[];
   modifierGroups: {
     key: string;
     name: string;

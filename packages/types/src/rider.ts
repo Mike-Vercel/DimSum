@@ -26,7 +26,8 @@ export interface RiderDeliveryDTO {
   };
   items: { name: string; quantity: number }[];
   itemCount: number;
-  /** Cash to collect at the door (null = already paid online). */
+  paymentMethod: "ONLINE" | "CASH_ON_DELIVERY" | "POS_ON_DELIVERY";
+  /** Amount to collect in person (null = already paid online). */
   collectCents: Cents | null;
   tipCents: Cents;
   eta: EtaDTO | null;

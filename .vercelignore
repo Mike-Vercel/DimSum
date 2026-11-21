@@ -1,0 +1,8 @@
+# Private source documents and originals must never leave the workstation.
+**/[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee]/**
+REFERENCE/
+reference/
+.serena/
+.data/
+.env*
+!.env.example

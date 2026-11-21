@@ -174,11 +174,14 @@ describe("delivery order lifecycle", () => {
 });
 
 describe("pickup and cash orders", () => {
-  it("receives cash orders without online payment", () => {
-    const cash: OrderState = { ...pickup, paymentMethod: "CASH_ON_DELIVERY" };
-    const r = applyCommand(cash, { type: "RECEIVE" }, "system", t0);
-    expect(r).toMatchObject({ ok: true, status: "RECEIVED" });
-  });
+  it.each(["CASH_ON_DELIVERY", "POS_ON_DELIVERY"] as const)(
+    "receives %s orders without online payment",
+    (paymentMethod) => {
+      const cash: OrderState = { ...pickup, paymentMethod };
+      const r = applyCommand(cash, { type: "RECEIVE" }, "system", t0);
+      expect(r).toMatchObject({ ok: true, status: "RECEIVED" });
+    },
+  );
 
   it("completes a pickup when the customer collects it", () => {
     const s = run(pickup, [

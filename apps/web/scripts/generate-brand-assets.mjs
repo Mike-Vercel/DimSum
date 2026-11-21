@@ -17,7 +17,7 @@ fs.mkdirSync(icons, { recursive: true });
 fs.mkdirSync(splash, { recursive: true });
 
 const INK = "#0E0D0C";
-const sealSvg = fs.readFileSync(path.join(brand, "dimsum-seal.svg"));
+const sealSvg = fs.readFileSync(path.join(brand, "mascot.webp"));
 const lockupWhite = fs.readFileSync(path.join(brand, "dimsum-lockup-white.svg"));
 
 async function sealIcon(size, sealHeightRatio, radius = 0) {
@@ -70,10 +70,10 @@ function toIco(pngs) {
 
 async function main() {
   // Manifest icons: "any" keeps a generous seal, "maskable" stays inside the 80 % safe zone.
-  fs.writeFileSync(path.join(icons, "icon-192.png"), await sealIcon(192, 0.56));
-  fs.writeFileSync(path.join(icons, "icon-512.png"), await sealIcon(512, 0.56));
-  fs.writeFileSync(path.join(icons, "maskable-192.png"), await sealIcon(192, 0.42));
-  fs.writeFileSync(path.join(icons, "maskable-512.png"), await sealIcon(512, 0.42));
+  fs.writeFileSync(path.join(icons, "icon-192.png"), await sealIcon(192, 0.85));
+  fs.writeFileSync(path.join(icons, "icon-512.png"), await sealIcon(512, 0.85));
+  fs.writeFileSync(path.join(icons, "maskable-192.png"), await sealIcon(192, 0.68));
+  fs.writeFileSync(path.join(icons, "maskable-512.png"), await sealIcon(512, 0.68));
   fs.writeFileSync(
     path.join(icons, "badge-96.png"),
     await sharp(sealSvg, { density: 600 })

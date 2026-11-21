@@ -1,3 +1,4 @@
+import { BUSINESS_DETAILS } from "@dimsum/types";
 /**
  * Reference data and restaurant configuration taken from the real DIMSUM source.
  * Idempotent: existing rows edited from the admin are never overwritten.
@@ -42,6 +43,9 @@ export async function seedReference(db: Database, catalog: NormalizedCatalog): P
       data: {
         id: "default",
         name: r.name,
+        legalName: BUSINESS_DETAILS.legalName,
+        vatNumber: BUSINESS_DETAILS.vatNumber,
+        onlinePaymentsEnabled: false,
         tagline: "Asian street food · Palermo",
         phone: r.phone,
         street: r.address.street,
@@ -63,8 +67,8 @@ export async function seedReference(db: Database, catalog: NormalizedCatalog): P
         customerCancelWindowMinutes: r.customerCancelWindowMinutes,
         defaultPrepMinutes: r.pickupLeadMinutes,
         deliveryFeeVatRateBps: r.deliveryFeeVatRateBps,
-        cashOnDeliveryEnabled: r.cashOnDelivery,
-        cashOnPickupEnabled: r.cashOnDelivery,
+        cashOnDeliveryEnabled: true,
+        cashOnPickupEnabled: true,
         loyalty: {
           enabled: false,
           programName: "Dimsum Club",
@@ -74,6 +78,17 @@ export async function seedReference(db: Database, catalog: NormalizedCatalog): P
           birthdayBonusPoints: 0,
           signupBonusPoints: 0,
         },
+      },
+    });
+  }
+
+  // Fill missing public legal fields without overwriting admin edits.
+  if (existing && (!existing.legalName || !existing.vatNumber)) {
+    await db.restaurantSettings.update({
+      where: { id: "default" },
+      data: {
+        legalName: existing.legalName || BUSINESS_DETAILS.legalName,
+        vatNumber: existing.vatNumber || BUSINESS_DETAILS.vatNumber,
       },
     });
   }

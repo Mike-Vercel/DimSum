@@ -121,7 +121,7 @@ export async function handleOrderCancelled(orderId: string): Promise<void> {
   }
 
   for (const p of order.payments) {
-    if (p.provider === "CASH") {
+    if (p.provider === "CASH" || p.provider === "POS") {
       await db.payment.update({ where: { id: p.id }, data: { status: "CANCELED" } });
       continue;
     }

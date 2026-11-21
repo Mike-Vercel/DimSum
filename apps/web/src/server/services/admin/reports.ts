@@ -203,6 +203,7 @@ export async function getAnalytics(
       FROM orders o WHERE ${window} AND ${sold} GROUP BY 1 ORDER BY 2 DESC`,
     db.$queryRaw<{ method: string; orders: number; revenue: number }[]>`
       SELECT CASE WHEN o."paymentMethod" = 'CASH_ON_DELIVERY' THEN 'Contanti'
+                  WHEN o."paymentMethod" = 'POS_ON_DELIVERY' THEN 'POS alla consegna / ritiro'
                   WHEN p.wallet = 'apple_pay' THEN 'Apple Pay'
                   WHEN p.wallet = 'google_pay' THEN 'Google Pay'
                   ELSE 'Carta' END AS method,

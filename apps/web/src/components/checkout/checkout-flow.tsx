@@ -23,12 +23,10 @@ import { useCart } from "@/lib/stores/cart";
 import { useCheckoutDraft, type CheckoutStep } from "@/lib/stores/checkout";
 import { useHydrated } from "@/lib/stores/hydration";
 import { useOrderPrefs } from "@/lib/stores/order-prefs";
-import { DevPayment } from "./dev-payment";
 import { OrderLines } from "./order-lines";
 import { StepFulfillment } from "./step-fulfillment";
 import { StepIdentity } from "./step-identity";
 import { StepPayment } from "./step-payment";
-import { StripePayment } from "./stripe-payment";
 
 const STEPS: { key: CheckoutStep; label: string }[] = [
   { key: "fulfillment", label: "Consegna" },
@@ -134,7 +132,7 @@ export function CheckoutFlow({ google }: { google: ProviderButton }) {
       return;
     }
     void api.orders.paymentIntent(pendingOrder.publicId).then((r) => {
-      if (r.status === "SUCCEEDED" || r.status === "PROCESSING") {
+      if (r.payOnReceipt || r.status === "SUCCEEDED" || r.status === "PROCESSING") {
         clearCart();
         resetDraft();
         router.replace(`/order/${pendingOrder.publicId}?placed=1`);
@@ -154,6 +152,7 @@ export function CheckoutFlow({ google }: { google: ProviderButton }) {
   const onPlaced = (result: CheckoutResultDTO) => {
     if (
       result.payment.provider === "CASH" ||
+      result.payment.provider === "POS" ||
       result.status !== "PENDING_PAYMENT" ||
       !result.payment.clientSecret
     ) {
@@ -205,23 +204,12 @@ export function CheckoutFlow({ google }: { google: ProviderButton }) {
           Ordine #{payment.number} · {formatEuro(payment.payment.amountCents)}
         </p>
       </div>
-      {payment.payment.provider === "STRIPE" &&
-      payment.payment.publishableKey &&
-      payment.payment.clientSecret ? (
-        <StripePayment
-          publishableKey={payment.payment.publishableKey}
-          clientSecret={payment.payment.clientSecret}
-          amountCents={payment.payment.amountCents}
-          returnUrl={`${window.location.origin}/order/${payment.publicId}?placed=1`}
-          onSuccess={() => finish(payment.publicId)}
-        />
-      ) : (
-        <DevPayment
-          publicId={payment.publicId}
-          amountCents={payment.payment.amountCents}
-          onSuccess={() => finish(payment.publicId)}
-        />
-      )}
+      <p className="text-body-sm text-fg-muted">
+        Paghi di persona in contanti o con POS. Consulta il tuo ordine per lo stato aggiornato.
+      </p>
+      <Button asChild>
+        <Link href={`/order/${payment.publicId}`}>Vai al tuo ordine</Link>
+      </Button>
     </div>
   ) : step === "fulfillment" ? (
     <StepFulfillment

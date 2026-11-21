@@ -255,7 +255,9 @@ async function afterDelivered(orderId: string) {
   });
   if (!o) return;
   // Cash is collected on delivery/pickup.
-  for (const p of o.payments.filter((x) => x.provider === "CASH" && x.status === "PENDING")) {
+  for (const p of o.payments.filter(
+    (x) => (x.provider === "CASH" || x.provider === "POS") && x.status === "PENDING",
+  )) {
     await db.payment.update({ where: { id: p.id }, data: { status: "SUCCEEDED", succeededAt: new Date() } });
   }
   await db.couponRedemption.updateMany({

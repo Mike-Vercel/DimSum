@@ -73,7 +73,7 @@ export const checkoutRequest = z
     customer: checkoutCustomer,
     couponCode: z.string().trim().max(40).nullable().default(null),
     tipCents: cents.max(5_000).default(0),
-    paymentMethod: z.enum(["ONLINE", "CASH_ON_DELIVERY"]),
+    paymentMethod: z.enum(["CASH_ON_DELIVERY", "POS_ON_DELIVERY"]),
     kitchenNotes: optionalText(300),
     ageConfirmed: z.boolean().default(false),
     marketingConsent: z.boolean().default(false),

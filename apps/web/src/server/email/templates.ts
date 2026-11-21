@@ -145,7 +145,7 @@ export function orderCancelledEmail(brand: BrandContext, o: OrderEmailData): Ren
   const body = html`${h1(`L'ordine #${o.number} è stato annullato`)}
   ${o.cancellationReason ? p(`Motivo: ${o.cancellationReason}`) : ""}
   ${p(
-    o.paymentLabel.startsWith("Contanti")
+    o.paymentLabel.startsWith("Contanti") || o.paymentLabel.startsWith("Carta con POS")
       ? "Non ti è stato addebitato nulla."
       : "Se il pagamento era già stato addebitato riceverai il rimborso completo sullo stesso metodo di pagamento (di solito in 5–10 giorni lavorativi).",
     { muted: true },
