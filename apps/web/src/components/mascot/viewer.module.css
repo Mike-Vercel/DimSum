@@ -1,0 +1,172 @@
+.viewer {
+  border: 1px solid #dfd8ca;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #f3eee4;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2dbcf;
+}
+.badge {
+  font-size: 14px;
+  font-weight: 750;
+  color: #ad2029;
+  letter-spacing: 0.05em;
+}
+.topbar button {
+  font-size: 14px;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 8px 0;
+}
+.stage {
+  position: relative;
+  background: radial-gradient(ellipse at 50% 46%, #fffdf8 0%, #f4eee3 65%);
+}
+.canvas {
+  width: 100%;
+  height: min(69vh, 700px);
+  min-height: 430px;
+  touch-action: none;
+  cursor: grab;
+}
+.canvas:active {
+  cursor: grabbing;
+}
+.canvas canvas {
+  display: block;
+}
+.original {
+  position: absolute;
+  inset: 0 0 32px;
+}
+.caption {
+  position: absolute;
+  bottom: 14px;
+  left: 12px;
+  right: 12px;
+  text-align: center;
+  pointer-events: none;
+  color: #69625b;
+  font-size: 14px;
+}
+.loading {
+  position: absolute;
+  inset: 45% 20px auto;
+  text-align: center;
+  color: #645b53;
+}
+.selected {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 20px;
+  border-radius: 30px;
+  background: #26211e;
+  color: #fff;
+  font-size: 14px;
+  pointer-events: none;
+}
+.error {
+  position: absolute;
+  bottom: 45px;
+  left: 20px;
+  right: 20px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #fff9ed;
+  text-align: center;
+  font-size: 14px;
+}
+.toolbar {
+  padding: 18px 20px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: #fffaf1;
+  border-top: 1px solid #e2dbcf;
+}
+.toolbar button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 12px;
+  background: #f0eadf;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.toolbar button:hover {
+  background: #e5dccd;
+}
+.toolbar button[aria-pressed="true"] {
+  background: #b9212b;
+  color: white;
+}
+.toolbar button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.viewer :is(button, a):focus-visible {
+  outline: 3px solid #b9212b;
+  outline-offset: 3px;
+}
+.download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 19px;
+  border-top: 1px solid #e2dbcf;
+  font-size: 15px;
+  font-weight: 700;
+}
+.download:hover {
+  background: #ebe2d3;
+}
+.download span {
+  font-size: 14px;
+  color: #6c625b;
+  font-weight: 400;
+}
+@media (max-width: 600px) {
+  .viewer {
+    border-radius: 20px;
+  }
+  .topbar {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+  .canvas {
+    height: 480px;
+    min-height: 380px;
+  }
+  .toolbar {
+    gap: 6px;
+    padding: 14px 10px;
+  }
+  .toolbar button {
+    padding: 10px 12px;
+  }
+  .topbar button {
+    font-size: 14px;
+  }
+  .badge {
+    font-size: 14px;
+  }
+  .download {
+    font-size: 14px;
+  }
+}
