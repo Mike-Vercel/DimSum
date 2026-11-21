@@ -19,7 +19,8 @@ import { SearchOverlayTrigger } from "./search/search-trigger";
 const NAV = [
   { href: "/menu", label: "Menu" },
   { href: "/offerte", label: "Offerte" },
-  { href: "/club", label: "Dimsum Club" },
+  { href: "/club", label: "Club" },
+  { href: "/scopri", label: "Scopri" },
 ] as const;
 
 function AccountButton({ className }: { className?: string }) {

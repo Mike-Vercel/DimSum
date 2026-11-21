@@ -1,4 +1,5 @@
 import { Bike, CircleCheck, Clock, UtensilsCrossed } from "lucide-react";
+import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { CategoryCircles } from "@/components/shop/category-circles";
@@ -81,6 +82,19 @@ export default async function HomePage() {
           <SectionTitle title={<span id="categorie">Cosa ti va oggi?</span>} />
           <CategoryCircles />
         </section>
+
+        <Link
+          href="/scopri"
+          className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-ink-950 px-6 py-7 text-white lg:px-9"
+        >
+          <div>
+            <p className="text-title font-extrabold">Piccoli morsi, grandi sorrisi.</p>
+            <p className="mt-1 text-body text-white/75">Ravioli, bao e noodles: entra nel mondo DIMSUM.</p>
+          </div>
+          <span className="rounded-full bg-white px-5 py-3 text-body font-bold text-ink-950">
+            Scopri DIMSUM
+          </span>
+        </Link>
 
         <Highlights />
 
