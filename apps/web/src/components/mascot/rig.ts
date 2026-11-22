@@ -22,6 +22,11 @@ export type MascotPose = {
   lookY: number;
   /** Eyes closed amount 0..1. */
   blink: number;
+  /** 0 = free arms, 1 = arms down and back, hands holding a bar behind the body (dragging). */
+  drag: number;
+  /** Walk cycle phase (radians) and amount 0..1: legs step, body bobs and sways. */
+  walk: number;
+  walkAmount: number;
   /** Seconds, for procedural secondary motion. */
   time: number;
 };
@@ -35,6 +40,9 @@ export const REST_POSE: MascotPose = {
   lookX: 0,
   lookY: 0,
   blink: 0,
+  drag: 0,
+  walk: 0,
+  walkAmount: 0,
   time: 0,
 };
 
@@ -47,6 +55,8 @@ export type MascotRig = {
   /** Midpoint of the hands in the grip pose (rig units, origin between the feet). */
   gripPoint: THREE.Vector3;
   pose: (p: MascotPose) => void;
+  /** Midpoint of the two hands in world space, after the last pose and transform. */
+  handsWorld: (target: THREE.Vector3) => THREE.Vector3;
   dispose: () => void;
 };
 
@@ -92,12 +102,15 @@ export function createMascotRig(): MascotRig {
 
   function pose(p: MascotPose) {
     const t = p.time;
-    // Squash and stretch keeps the volume roughly constant.
+    const step = Math.sin(p.walk) * p.walkAmount;
+    const bob = Math.abs(Math.cos(p.walk)) * p.walkAmount;
+    // Squash and stretch keeps the volume roughly constant; a step lifts the body a little.
     body.scale.set(1 / Math.sqrt(p.stretch), p.stretch, 1 / Math.sqrt(p.stretch));
-    body.rotation.z = p.swing;
-    body.rotation.x = p.swing * 0.15;
+    body.position.y = 0.08 * bob;
+    body.rotation.z = p.swing + 0.045 * step;
+    body.rotation.x = p.swing * 0.15 + 0.07 * p.walkAmount;
+    body.rotation.y = 0.06 * step;
 
-    // Arms: from the sides (rest) to both hands forward and together (grip).
     for (const [side, sign] of [
       ["left", 1],
       ["right", -1],
@@ -105,27 +118,35 @@ export function createMascotRig(): MascotRig {
       const s = shoulders[side];
       const waving = side === "right" ? p.wave : 0;
       const grip = p.grip * (1 - waving);
+      const drag = p.drag * (1 - grip);
       s.rotation.set(
-        -0.95 * grip - 2.3 * waving,
+        -0.95 * grip - 2.3 * waving + drag * (0.62 + 0.05 * sign * step),
         -sign * 1.05 * grip,
-        sign * (0.08 * Math.sin(t * 2.1 + sign) * (1 - grip) + 0.25 * grip) +
+        sign * (0.08 * Math.sin(t * 2.1 + sign) * (1 - grip) * (1 - drag) + 0.25 * grip + 0.1 * drag) +
           (waving ? -sign * (0.6 + 0.35 * Math.sin(t * 14)) * waving : 0),
       );
     }
 
-    // Legs dangle and kick.
-    hips.left.rotation.x = 0.55 * p.kick;
-    hips.right.rotation.x = -0.55 * p.kick;
-    hips.left.rotation.z = 0.08 * Math.abs(p.kick);
-    hips.right.rotation.z = -0.08 * Math.abs(p.kick);
+    // Legs: kick (free) plus the walk cycle, with a slight knee-out on each step.
+    hips.left.rotation.x = 0.55 * p.kick + 0.5 * step;
+    hips.right.rotation.x = -0.55 * p.kick - 0.5 * step;
+    hips.left.rotation.z = 0.08 * Math.abs(p.kick) + 0.04 * Math.max(0, step);
+    hips.right.rotation.z = -0.08 * Math.abs(p.kick) - 0.04 * Math.max(0, -step);
 
-    // Head: look target plus a little breathing bob.
+    // Head: look target, breathing and a soft nod on each step.
     head.rotation.y = THREE.MathUtils.clamp(p.lookX, -0.7, 0.7);
-    head.rotation.x = THREE.MathUtils.clamp(-p.lookY, -0.35, 0.35);
-    head.rotation.z = -p.swing * 0.6 + 0.03 * Math.sin(t * 1.7);
-    head.position.y = 2.05 + 0.025 * Math.sin(t * 3.4);
+    head.rotation.x = THREE.MathUtils.clamp(-p.lookY, -0.35, 0.35) + 0.03 * bob;
+    head.rotation.z = -p.swing * 0.6 + 0.03 * Math.sin(t * 1.7) - 0.03 * step;
+    head.position.y = 2.05 + 0.025 * Math.sin(t * 3.4) * (1 - p.walkAmount) - 0.02 * bob;
 
     eyes.forEach((e, i) => (e.scale.y = eyeScale[i]! * (1 - 0.92 * p.blink)));
+  }
+
+  const handA = new THREE.Vector3();
+  function handsWorld(target: THREE.Vector3) {
+    g("hand-left").getWorldPosition(handA);
+    g("hand-right").getWorldPosition(target);
+    return target.add(handA).multiplyScalar(0.5);
   }
 
   // Where the two hands meet when gripping: the intro puts its bar exactly there.
@@ -137,7 +158,7 @@ export function createMascotRig(): MascotRig {
   g("hand-right").getWorldPosition(b);
   const gripPoint = a.add(b).multiplyScalar(0.5);
   pose(REST_POSE);
-  return { object, height: 4.05, gripY, gripPoint, pose, dispose: model.dispose };
+  return { object, height: 4.05, gripY, gripPoint, pose, handsWorld, dispose: model.dispose };
 }
 
 export { blinkAt } from "@/components/intro/timeline";

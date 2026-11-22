@@ -31,8 +31,9 @@ function finish(root: HTMLElement | null) {
 }
 
 /**
- * Opening of the web app: the DIMSUM mascot (3D) drops onto a dark curtain, waves, grabs the red
- * hem of the page coming down from the top and pulls it all the way down, revealing the home.
+ * Opening of the web app: the DIMSUM mascot (3D), seen from behind, holds the red hem of the page
+ * and walks down the screen, pulling the page down behind it until it walks off the bottom and the
+ * home is fully revealed.
  * Tap anywhere to skip. Without WebGL the same choreography plays with the 2D mascot.
  */
 export function MascotIntro() {
@@ -42,6 +43,8 @@ export function MascotIntro() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const flatRef = useRef<HTMLImageElement>(null);
   const flatBarRef = useRef<HTMLDivElement>(null);
+  const hemShadeRef = useRef<HTMLDivElement>(null);
+  const skipButtonRef = useRef<HTMLButtonElement>(null);
   const skipRef = useRef<() => void>(() => {});
   const [active, setActive] = useState(true);
 
@@ -63,7 +66,6 @@ export function MascotIntro() {
       height: window.innerHeight,
       mascot: mascotSize(window.innerWidth, window.innerHeight),
       gripOffset: 0,
-      safeTop: 0,
     };
     // Development aid: ?introAt=1.2 freezes the opening at 1.2 s.
     const freezeParam = new URLSearchParams(location.search).get("introAt");
@@ -78,8 +80,7 @@ export function MascotIntro() {
         width,
         height,
         mascot,
-        gripOffset: scene ? scene.gripOffset : mascot * FALLBACK_GRIP_RATIO,
-        safeTop: 0,
+        gripOffset: mascot * FALLBACK_GRIP_RATIO,
       };
     };
 
@@ -101,19 +102,29 @@ export function MascotIntro() {
       if (!start) start = now;
       const t = freeze ?? (now - start) / 1000;
       const s = introAt(t, layout, blinkAt(t));
-      if (curtainRef.current) curtainRef.current.style.clipPath = `inset(${Math.max(0, s.edge)}px 0 0 0)`;
       if (brandRef.current) brandRef.current.style.opacity = String(s.brandOpacity);
+      let edge: number;
       if (scene) {
-        scene.render(s);
+        edge = scene.render(s);
       } else {
+        edge = s.feet - layout.gripOffset;
         const img = flatRef.current;
         const flatBar = flatBarRef.current;
         if (img) {
           img.style.height = `${layout.mascot}px`;
-          img.style.transform = `translate(-50%, ${s.feet - layout.mascot}px) rotate(${s.pose.swing}rad) scaleY(${s.pose.stretch})`;
+          const sway = 0.06 * Math.sin(s.pose.walk) * s.pose.walkAmount;
+          img.style.transform = `translate(-50%, ${s.feet - layout.mascot}px) rotate(${sway}rad) scaleY(${s.pose.stretch})`;
         }
-        if (flatBar) flatBar.style.transform = `translateY(${s.edge}px)`;
+        if (flatBar) flatBar.style.transform = `translateY(${edge}px)`;
       }
+      // The page is revealed down to the hem: above it the real home, below it the curtain.
+      if (curtainRef.current) curtainRef.current.style.clipPath = `inset(${Math.max(0, edge)}px 0 0 0)`;
+      // The page bends slightly where it is held: a soft shade just above the hem.
+      if (hemShadeRef.current) hemShadeRef.current.style.transform = `translateY(${edge - 56}px)`;
+      if (skipButtonRef.current)
+        skipButtonRef.current.style.opacity = String(
+          Math.max(0, Math.min(1, (layout.height * 0.82 - edge) / 120)),
+        );
       if (t >= INTRO_DURATION && freeze === null) {
         end();
         return;
@@ -168,7 +179,7 @@ export function MascotIntro() {
       <div ref={curtainRef} data-theme="dark" className="dimsum-intro__curtain absolute inset-0 bg-ink-950">
         <div
           ref={brandRef}
-          className="absolute inset-x-0 top-[calc(var(--safe-top)+11dvh)] flex flex-col items-center px-6 text-center text-white"
+          className="absolute inset-x-0 bottom-[calc(var(--safe-bottom)+14dvh)] flex flex-col items-center px-6 text-center text-white"
         >
           <Logo withTagline className="h-14 text-white sm:h-16" />
           <p className="mt-5 text-body-sm font-medium text-white/60">Ravioli, bao e noodles fatti a mano</p>
@@ -176,6 +187,12 @@ export function MascotIntro() {
         {/* Soft red glow behind the mascot. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60dvh] bg-[radial-gradient(60%_55%_at_50%_70%,rgba(216,42,30,0.28),transparent_70%)]" />
       </div>
+
+      <div
+        ref={hemShadeRef}
+        className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-transparent to-black/15"
+        style={{ transform: "translateY(-80px)" }}
+      />
 
       <canvas ref={canvasRef} className="absolute inset-0 size-full" />
 
@@ -194,6 +211,7 @@ export function MascotIntro() {
       />
 
       <button
+        ref={skipButtonRef}
         type="button"
         tabIndex={-1}
         className="absolute right-4 bottom-[calc(var(--safe-bottom)+16px)] rounded-full bg-white/10 px-4 py-2 text-caption font-semibold text-white/80 ring-1 ring-white/15 backdrop-blur"
