@@ -1,7 +1,7 @@
 import { isActive } from "@dimsum/domain";
-import { ArrowLeft, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { BackButton } from "@/components/ui/back-button";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SupportForm } from "@/components/support/support-form";
@@ -24,13 +24,7 @@ async function SupportContent({ params }: { params: Promise<{ ref: string }> }) 
     <>
       <header className="sticky top-0 z-10 border-b border-line bg-canvas/90 pt-safe backdrop-blur-md">
         <div className="mx-auto flex max-w-xl items-center gap-3 px-4 py-3">
-          <Link
-            href={back}
-            aria-label="Torna all'ordine"
-            className="grid size-10 shrink-0 tap place-items-center rounded-full bg-surface ring-1 ring-line"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
+          <BackButton fallback={back} label="Torna all'ordine" className="bg-surface ring-1 ring-line" />
           <div className="min-w-0">
             <p className="text-caption text-fg-muted">Ordine #{order.number}</p>
             <h1 className="text-title font-extrabold">Assistenza</h1>

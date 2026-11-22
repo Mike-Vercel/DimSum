@@ -1,6 +1,7 @@
 "use client";
 
 import { formatEuro } from "@dimsum/domain";
+import { personName, phone as phoneSchema } from "@dimsum/validation";
 import type { CartQuoteDTO, CheckoutResultDTO } from "@dimsum/types";
 import { Banknote, CreditCard, ShieldCheck, Wine } from "lucide-react";
 import Link from "next/link";
@@ -11,8 +12,9 @@ import { Chip } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox, RadioCard, RadioCardGroup } from "@/components/ui/choice";
 import { InlineAlert } from "@/components/ui/feedback";
-import { Input, Textarea } from "@/components/ui/input";
+import { Field, Input, Textarea } from "@/components/ui/input";
 import { api, ApiError } from "@/lib/api";
+import { useSession } from "@/lib/auth-client";
 import { cartToInput, useCart } from "@/lib/stores/cart";
 import { useCheckoutDraft } from "@/lib/stores/checkout";
 import { useOrderPrefs } from "@/lib/stores/order-prefs";
@@ -41,6 +43,27 @@ export function StepPayment({
   const [customTip, setCustomTip] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState<{ message: string; cartLink?: boolean } | null>(null);
+  const [contactErrors, setContactErrors] = useState<{ name?: string; phone?: string }>({});
+
+  // Signed-in customers skip the "your details" step: name, e-mail and phone come from the account.
+  // Only what the account lacks and the order needs (e.g. a phone for the rider) is asked here.
+  const { data: session } = useSession();
+  const account = session?.user as
+    { name?: string | null; email?: string; phone?: string | null } | undefined;
+  const contact = {
+    name: draft.customer.name.trim() || account?.name?.trim() || "",
+    email: draft.customer.email.trim() || account?.email || "",
+    phone: draft.customer.phone.trim() || account?.phone?.trim() || "",
+  };
+  const phoneRequired =
+    fulfillment === "DELIVERY"
+      ? restaurant.checkout.phoneRequiredForDelivery
+      : restaurant.checkout.phoneRequiredForPickup;
+  // Latched: once a field is shown it stays while the customer types into it.
+  const [askName, setAskName] = useState(false);
+  const [askPhone, setAskPhone] = useState(false);
+  if (account && !askName && !personName.safeParse(contact.name).success) setAskName(true);
+  if (account && !askPhone && phoneRequired && !contact.phone) setAskPhone(true);
 
   const methods = restaurant.checkout.paymentMethods;
   const cashAllowed = fulfillment === "DELIVERY" ? methods.cashOnDelivery : methods.cashOnPickup;
@@ -51,6 +74,19 @@ export function StepPayment({
 
   const place = async () => {
     if (!quote) return;
+    const missing: { name?: string; phone?: string } = {};
+    const nameCheck = personName.safeParse(contact.name);
+    if (!nameCheck.success) missing.name = nameCheck.error.issues[0]?.message ?? "Inserisci nome e cognome.";
+    if (contact.phone) {
+      const phoneCheck = phoneSchema.safeParse(contact.phone);
+      if (!phoneCheck.success) missing.phone = phoneCheck.error.issues[0]?.message ?? "Numero non valido.";
+    } else if (phoneRequired)
+      missing.phone = "Il numero serve al rider o al ristorante in caso di necessità.";
+    setContactErrors(missing);
+    if (missing.name || missing.phone) {
+      document.getElementById("i-tuoi-dati")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     setPlacing(true);
     setError(null);
     const idempotencyKey = draft.ensureKey();
@@ -81,9 +117,9 @@ export function StepPayment({
               }
             : null,
         customer: {
-          name: draft.customer.name,
-          email: draft.customer.email,
-          phone: draft.customer.phone.trim() || null,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone || null,
         },
         couponCode,
         tipCents: fulfillment === "DELIVERY" ? draft.tipCents : 0,
@@ -121,6 +157,48 @@ export function StepPayment({
 
   return (
     <div className="space-y-7">
+      {askName || askPhone || contactErrors.name || contactErrors.phone ? (
+        <section id="i-tuoi-dati" aria-labelledby="dati-titolo" className="space-y-3">
+          <div>
+            <h2 id="dati-titolo" className="text-title-sm font-bold">
+              Completa i tuoi dati
+            </h2>
+            <p className="text-body-sm text-fg-muted">Mancano nel tuo account e servono per questo ordine.</p>
+          </div>
+          {askName || contactErrors.name ? (
+            <Field label="Nome e cognome" error={contactErrors.name}>
+              {(p) => (
+                <Input
+                  {...p}
+                  value={contact.name}
+                  onChange={(e) => draft.setCustomer({ name: e.target.value })}
+                  autoComplete="name"
+                />
+              )}
+            </Field>
+          ) : null}
+          {askPhone || contactErrors.phone ? (
+            <Field
+              label="Telefono"
+              optional={!phoneRequired}
+              error={contactErrors.phone}
+              hint="Lo usiamo solo per comunicazioni sull'ordine."
+            >
+              {(p) => (
+                <Input
+                  {...p}
+                  type="tel"
+                  inputMode="tel"
+                  value={contact.phone}
+                  onChange={(e) => draft.setCustomer({ phone: e.target.value })}
+                  autoComplete="tel"
+                  placeholder="+39 333 123 4567"
+                />
+              )}
+            </Field>
+          ) : null}
+        </section>
+      ) : null}
       {fulfillment === "DELIVERY" && restaurant.checkout.tipsEnabled ? (
         <section aria-labelledby="mancia" className="space-y-3">
           <div>

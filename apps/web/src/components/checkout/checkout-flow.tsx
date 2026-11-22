@@ -17,6 +17,7 @@ import { useSession } from "@/lib/auth-client";
 import type { ProviderButton } from "@/lib/auth-providers";
 import { useCartQuote } from "@/lib/cart-quote";
 import { cn } from "@/lib/cn";
+import { useBack } from "@/lib/nav-history";
 import { ease } from "@/lib/motion";
 import { useServiceStatus } from "@/lib/service-status";
 import { useCart } from "@/lib/stores/cart";
@@ -82,6 +83,7 @@ export function CheckoutFlow({ google }: { google: ProviderButton }) {
   const hydrated = useHydrated();
   const { catalog } = useStorefront();
   const { data: session } = useSession();
+  const pageBack = useBack("/cart");
   const lines = useCart((s) => s.lines);
   const cartUpdatedAt = useCart((s) => s.updatedAt);
   const clearCart = useCart((s) => s.clear);
@@ -189,11 +191,10 @@ export function CheckoutFlow({ google }: { google: ProviderButton }) {
   }
 
   const hasAlcohol = lines.some((l) => catalog.products[l.productId]?.tags.includes("ALCOHOLIC"));
+  // The arrow goes back to the previous page (usually the cart), like the system back button.
   const back = () => {
     if (payment) return setPayment(null);
-    if (step === "payment") return go(session ? "fulfillment" : "identity");
-    if (step === "identity") return go("fulfillment");
-    router.push("/cart");
+    pageBack();
   };
 
   const content = payment ? (

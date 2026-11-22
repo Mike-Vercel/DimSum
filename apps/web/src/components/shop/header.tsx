@@ -123,7 +123,8 @@ export function ShopHeader() {
     <header
       ref={ref}
       className={cn(
-        "sticky top-0 z-40 border-b border-transparent bg-canvas/85 pt-safe backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/75",
+        // Phones: a solid bar (no see-through blur under the status bar); desktop keeps the glass.
+        "sticky top-0 z-40 border-b border-transparent bg-canvas pt-safe lg:bg-canvas/85 lg:backdrop-blur-xl lg:supports-[backdrop-filter]:bg-canvas/75",
         // The folded row becomes margin below the header: the page underneath never moves.
         "transition-[margin-bottom] duration-300 ease-out motion-reduce:transition-none",
         compact && "mb-[48px] lg:mb-0",
@@ -149,12 +150,12 @@ export function ShopHeader() {
         <div
           inert={compact}
           className={cn(
-            "-m-1 flex max-w-[100px] items-center gap-3 overflow-hidden p-1 transition-[max-width,opacity] duration-300 ease-out motion-reduce:transition-none",
+            "-m-1 flex max-w-[60px] items-center gap-3 overflow-hidden p-1 transition-[max-width,opacity] duration-300 ease-out motion-reduce:transition-none",
             compact && "max-w-0 opacity-0",
           )}
         >
+          {/* The profile is in the bottom tab bar on phones: only search here, at the right edge. */}
           <SearchOverlayTrigger variant="icon" />
-          <AccountButton />
         </div>
       </div>
 

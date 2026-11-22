@@ -5,6 +5,7 @@ import type { CartQuoteDTO, CheckoutBlocker } from "@dimsum/types";
 import { ArrowLeft, ArrowRight, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useBack } from "@/lib/nav-history";
 import { FulfillmentSwitch } from "@/components/shop/fulfillment-switch";
 import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui/feedback";
@@ -57,6 +58,7 @@ export function useCheckoutGate(quote: CartQuoteDTO | undefined) {
 export function CartView() {
   const hydrated = useHydrated();
   const router = useRouter();
+  const back = useBack("/menu");
   const offline = useOffline();
   const count = useCart((s) => s.lines.length);
   const estimate = useCart(selectEstimatedSubtotal);
@@ -116,7 +118,7 @@ export function CartView() {
       <div className="flex items-center gap-2 py-2 lg:py-0">
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={back}
           aria-label="Indietro"
           className="grid size-10 tap place-items-center rounded-full hover:bg-surface lg:hidden"
         >

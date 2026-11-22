@@ -50,4 +50,18 @@ test("login dal checkout: carrello conservato, indirizzo salvato, storico ordini
   await expect(page.getByText(/#[A-Z]+\d+/).first()).toBeVisible();
   await page.goto("/account/indirizzi");
   await expect(page.getByText("Via Ruggero Settimo").first()).toBeVisible();
+
+  // Second order, already signed in: the "your details" step is skipped and the order uses the
+  // account's name and e-mail. Nothing asks for the name; only a missing phone may be requested.
+  await page.goto("/menu");
+  await addFromMenu(page, DISHES.ravioli, 6);
+  await page.goto("/checkout");
+  await page.getByRole("button", { name: "Continua", exact: true }).click();
+  await expect(page.getByRole("radio", { name: /Contanti alla consegna/ })).toBeVisible();
+  await expect(page.getByLabel("Nome e cognome")).toHaveCount(0);
+  const phone = page.getByLabel(/Telefono/);
+  if (await phone.count()) await phone.fill("+39 333 222 3333");
+  await page.getByRole("radio", { name: /Contanti alla consegna/ }).click();
+  await page.getByRole("button", { name: /Conferma ordine/ }).click();
+  await expect(page.getByRole("heading", { name: "Ordine confermato!" })).toBeVisible();
 });

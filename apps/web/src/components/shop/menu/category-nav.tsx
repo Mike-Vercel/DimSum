@@ -41,7 +41,7 @@ export function CategoryNav({
       aria-label="Categorie del menu"
       inert={!revealed}
       className={cn(
-        "fixed inset-x-0 top-[var(--shop-header-h,calc(var(--safe-top)+90px))] z-30 border-b border-line/70 bg-canvas/90 backdrop-blur-xl transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none",
+        "fixed inset-x-0 top-[var(--shop-header-h,calc(var(--safe-top)+90px))] z-30 border-b border-line/70 bg-canvas transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none lg:bg-canvas/90 lg:backdrop-blur-xl",
         "lg:sticky lg:inset-x-auto lg:top-[var(--shop-header-h,72px)] lg:translate-y-0 lg:rounded-2xl lg:border lg:bg-surface/90 lg:opacity-100",
         !revealed && "pointer-events-none -translate-y-2 opacity-0 lg:pointer-events-auto",
       )}

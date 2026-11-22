@@ -2,9 +2,10 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MotionConfig } from "motion/react";
-import { useEffect, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { ApiError } from "@/lib/api";
 import { reportNetworkFailure } from "@/lib/connectivity";
+import { useTrackNavigation } from "@/lib/nav-history";
 import { useServiceWorker } from "@/lib/service-worker";
 import { rehydrateStores, useCrossTabSync } from "@/lib/stores/hydration";
 import { Toaster } from "./ui/toaster";
@@ -34,6 +35,11 @@ function makeQueryClient() {
   });
 }
 
+function NavigationTracker() {
+  useTrackNavigation();
+  return null;
+}
+
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(makeQueryClient);
   useEffect(() => rehydrateStores(), []);
@@ -53,6 +59,10 @@ export function Providers({ children }: { children: ReactNode }) {
       <MotionConfig reducedMotion="user">
         {children}
         <Toaster />
+        {/* Reads the URL: inside Suspense so it never blocks prerendering of dynamic routes. */}
+        <Suspense fallback={null}>
+          <NavigationTracker />
+        </Suspense>
       </MotionConfig>
     </QueryClientProvider>
   );
