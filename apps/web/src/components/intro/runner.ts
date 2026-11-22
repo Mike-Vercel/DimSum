@@ -16,7 +16,9 @@
  */
 import sheet from "./walk-sprite.json";
 
-export const INTRO_SPRITE = "/brand/intro-mascot.webp";
+import { INTRO_SPRITE } from "./sprite";
+
+export { INTRO_SPRITE };
 
 export type RunnerConfig = {
   sprite: string;
