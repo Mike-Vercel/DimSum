@@ -9,6 +9,7 @@ import { FoodImage } from "@/components/shop/food-image";
 import { summarizeHours } from "@/lib/hours";
 import { getCatalog } from "@/server/services/catalog";
 import { getRestaurantConfig, toRestaurantInfo } from "@/server/services/restaurant";
+import { DishOrbitCarousel, type OrbitDish } from "./dish-orbit";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -42,6 +43,72 @@ const SPECIALS = [
   },
 ];
 
+/** The hero carousel: one signature dish per category, in menu order. */
+const ORBIT_CATEGORIES = [
+  "ravioli-al-vapore",
+  "ravioli-alla-piastra",
+  "bao-al-vapore",
+  "noodles-in-brodo",
+  "noodles-saltati",
+  "riso-saltato",
+  "piatti-caldi",
+  "mochi-e-daifuku",
+];
+const ORBIT_ACCENTS = [
+  "#f2a65a",
+  "#e2574c",
+  "#e8c547",
+  "#c98b5a",
+  "#7fb069",
+  "#f28c8c",
+  "#d9895b",
+  "#9bc4cb",
+];
+
+function orbitDishesFrom(catalog: Awaited<ReturnType<typeof getCatalog>>): OrbitDish[] {
+  const rank = new Map(catalog.bestsellerIds.map((id, i) => [id, i]));
+  return ORBIT_CATEGORIES.flatMap((slug, i) => {
+    const category = catalog.categories.find((c) => c.slug === slug);
+    if (!category) return [];
+    const product = category.productIds
+      .map((id) => catalog.products[id])
+      .filter((p): p is NonNullable<typeof p> => !!p && p.isAvailable && !!p.image)
+      .sort(
+        (a, b) =>
+          (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999) || Number(b.isFeatured) - Number(a.isFeatured),
+      )[0];
+    if (!product?.image) return [];
+    // "Ravioli al vapore con maiale e sedano" → thin "Ravioli al vapore", heavy "maiale e sedano".
+    const lower = product.name.toLowerCase();
+    const rest = lower.startsWith(category.name.toLowerCase())
+      ? product.name
+          .slice(category.name.length)
+          .trim()
+          .replace(/^(con|di|al|alla|allo|ai|alle)\s+/i, "")
+      : product.name;
+    const description =
+      product.description ??
+      (product.ingredients.length ? product.ingredients.join(", ") + "." : (category.description ?? ""));
+    return [
+      {
+        title: category.name,
+        subtitle: rest || product.name,
+        image: product.image.url,
+        alt: product.image.alt || product.name,
+        eyebrow: `#${i + 1} · Da provare`,
+        name: product.name,
+        nameZh: product.nameZh,
+        price: formatEuro(product.priceCents),
+        description,
+        ingredients: product.ingredients,
+        accent: ORBIT_ACCENTS[i % ORBIT_ACCENTS.length]!,
+        href: `/product/${product.slug}`,
+        menuHref: `/menu#${category.slug}`,
+      },
+    ];
+  });
+}
+
 export default async function DiscoverPage() {
   const [catalog, config] = await Promise.all([getCatalog(), getRestaurantConfig()]);
   const info = toRestaurantInfo(config);
@@ -54,7 +121,7 @@ export default async function DiscoverPage() {
       .map((p) => p!.priceCents);
     return [{ ...item, category, price: prices.length ? Math.min(...prices) : null }];
   });
-  const hero = specials[0];
+  const orbitDishes = orbitDishesFrom(catalog);
   const maps = `https://www.google.com/maps/dir/?api=1&destination=${config.location.lat},${config.location.lng}`;
 
   return (
@@ -74,70 +141,11 @@ export default async function DiscoverPage() {
       </header>
       <CookieNotice />
       <main id="contenuto">
-        <section className={styles.hero} aria-labelledby="hero-title">
-          <div className={styles.heroInner}>
-            <div className={styles.heroCopy}>
-              <p className={styles.eyebrow}>Asian street food · {config.address.city}</p>
-              <h1 id="hero-title">
-                Un piccolo
-                <br />
-                morso.
-                <br />
-                <span>
-                  Un grande
-                  <br />
-                  viaggio.
-                </span>
-              </h1>
-              <p className={styles.intro}>
-                Ravioli, bao e noodles. Il gusto dell’Asia, nel cuore di Palermo. E direttamente a casa tua.
-              </p>
-              <div className={styles.actions}>
-                <Link href="/menu" className={styles.lightButton}>
-                  Esplora il menu <ShoppingBag size={19} aria-hidden />
-                </Link>
-                <a href="#specialita" className={styles.textLink}>
-                  Lasciati ispirare
-                </a>
-              </div>
-              <p className={styles.heroNote}>
-                <Bike size={20} aria-hidden /> A domicilio o da ritirare. Paghi quando arriva.
-              </p>
-            </div>
-            <div className={styles.heroArt}>
-              <div className={styles.orbit} aria-hidden />
-              <FoodImage
-                image={hero?.category.image ?? null}
-                sizes="(max-width: 760px) 88vw, 48vw"
-                priority
-                rounded="rounded-full"
-                className={styles.heroPhoto}
-              />
-              <span className={styles.stamp}>
-                PICCOLI MORSI
-                <br />
-                <b>
-                  GRANDI
-                  <br />
-                  SORRISI
-                </b>
-              </span>
-              <Image
-                src="/brand/mascot.webp"
-                width={459}
-                height={512}
-                alt="La mascotte DIMSUM"
-                className={styles.heroMascot}
-                sizes="(max-width: 760px) 120px, 170px"
-              />
-              {hero && (
-                <Link href={`/menu#${hero.slug}`} className={styles.dishLabel}>
-                  <span>{hero.category.name}</span>
-                  <strong>{hero.price !== null ? `da ${formatEuro(hero.price)}` : "Scopri nel menu"}</strong>
-                </Link>
-              )}
-            </div>
-          </div>
+        <section aria-labelledby="hero-title" className="relative">
+          <h1 id="hero-title" className="sr-only">
+            DIMSUM, Asian street food a {config.address.city}: le nostre specialità
+          </h1>
+          {orbitDishes.length > 1 ? <DishOrbitCarousel dishes={orbitDishes} /> : null}
         </section>
         <div className={styles.ribbon} aria-hidden>
           <span>RAVIOLI</span>
