@@ -191,6 +191,14 @@ export function OrderTicket({
       )}
     >
       <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1.5", accent)} />
+      {/* Not acceptable yet: a white veil over the ticket — readable, but clearly on hold. Taps
+          still go through (details, products, "Rifiuta"); the time line stays sharp above it. */}
+      {locked ? (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10 bg-white/60 dark:bg-ink-950/55"
+        />
+      ) : null}
       <header className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -268,7 +276,12 @@ export function OrderTicket({
       </header>
 
       {order.scheduledFor ? (
-        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-xl bg-info-soft px-3 py-2 text-body-sm font-semibold text-info">
+        <p
+          className={cn(
+            "mt-3 flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-xl bg-info-soft px-3 py-2 text-body-sm font-semibold text-info",
+            locked && "relative z-20 shadow-sm ring-1 ring-info/20",
+          )}
+        >
           <CalendarClock className="size-4" /> {isDelivery ? "Consegna" : "Ritiro"} alle{" "}
           {clock(order.scheduledFor, timeZone)}
           {locked ? (
