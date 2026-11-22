@@ -121,9 +121,11 @@ const CSS =
   ".dsh-dot[aria-current]{height:26px}" +
   ".dsh-plates{position:absolute;left:130px;top:82px;width:245px;height:245px;touch-action:pan-y}" +
   ".dsh-orbit{position:absolute;inset:0;transform-origin:69% -217%;visibility:hidden;will-change:transform}" +
-  ".dsh-plate{display:block;width:245px;height:245px;border-radius:50%;overflow:hidden;background:#fff;" +
-  "box-shadow:0 0 0 7px #fff,0 0 0 8px rgba(0,0,0,.05),0 26px 40px -14px rgba(60,30,10,.35),0 6px 12px rgba(0,0,0,.08)}" +
-  ".dsh-plate img{width:100%;height:100%;max-width:none;object-fit:cover;user-select:none;-webkit-user-drag:none}" +
+  // The photos are top-down cutouts (the dish already has its plate or basket): no frame, just a
+  // shadow that follows the shape.
+  ".dsh-plate{display:block;width:245px;height:245px;" +
+  "filter:drop-shadow(0 18px 20px rgba(60,30,10,.28)) drop-shadow(0 4px 6px rgba(0,0,0,.12))}" +
+  ".dsh-plate img{width:100%;height:100%;max-width:none;object-fit:contain;user-select:none;-webkit-user-drag:none}" +
   ".dsh-head{position:absolute;left:400px;top:96px;width:300px;height:150px}" +
   ".dsh-hd{position:absolute;inset:0;visibility:hidden}" +
   ".dsh-eye{font-size:12.5px;font-weight:600;letter-spacing:.01em;margin:0 0 4px 2px;color:var(--primary)}" +
@@ -164,7 +166,7 @@ const CSS =
   "px;height:122px;display:flex;justify-content:center;padding-top:3px}" +
   ".dsh-th .dsh-btn{width:84px;height:116px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:9px;transition:background .45s}" +
   ".dsh-th .dsh-btn[aria-current]{background:rgba(255,255,255,.75);box-shadow:0 10px 24px -16px rgba(0,0,0,.3)}" +
-  ".dsh-th img{width:56px;height:56px;max-width:none;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px #fff,0 4px 8px rgba(0,0,0,.18);transition:transform .45s}" +
+  ".dsh-th img{width:56px;height:56px;max-width:none;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));transition:transform .45s}" +
   ".dsh-th .dsh-btn[aria-current] img{transform:scale(1.06)}" +
   ".dsh-th span{font-size:10px;line-height:1.25;text-align:center;font-weight:600;color:color-mix(in oklab,var(--fg) 78%,transparent);max-width:80px}" +
   ".dsh-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}" +
@@ -174,7 +176,7 @@ const CSS =
   ".dsh-brand{position:relative;left:auto;top:auto;margin-bottom:10px;font-size:11px}" +
   ".dsh-pager{left:12px;top:50%;transform:translateY(-50%)}" +
   ".dsh-plates{position:relative;left:auto;top:auto;width:min(56vw,30svh);height:min(56vw,30svh);flex:none}" +
-  ".dsh-plate{width:100%;height:100%;box-shadow:0 0 0 5px #fff,0 0 0 6px rgba(0,0,0,.05),0 18px 30px -12px rgba(60,30,10,.35)}" +
+  ".dsh-plate{width:100%;height:100%}" +
   ".dsh-head{position:relative;left:auto;top:auto;width:100%;height:118px;margin-top:16px;flex:none}" +
   ".dsh-hd{text-align:center;transform:scale(.8);transform-origin:50% 0}" +
   ".dsh-acts{position:relative;left:auto;top:auto;margin-top:6px;gap:28px;flex:none}" +
@@ -544,8 +546,8 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
                   <img
                     src={d.image}
                     alt={d.alt}
-                    width={490}
-                    height={490}
+                    width={760}
+                    height={760}
                     draggable={false}
                     loading={i === 0 ? "eager" : "lazy"}
                     fetchPriority={i === 0 ? "high" : "auto"}

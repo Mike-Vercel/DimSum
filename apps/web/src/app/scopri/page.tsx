@@ -43,16 +43,20 @@ const SPECIALS = [
   },
 ];
 
-/** The hero carousel: one signature dish per category, in menu order. */
-const ORBIT_CATEGORIES = [
-  "ravioli-al-vapore",
-  "ravioli-alla-piastra",
-  "bao-al-vapore",
-  "noodles-in-brodo",
-  "noodles-saltati",
-  "riso-saltato",
-  "piatti-caldi",
-  "mochi-e-daifuku",
+/**
+ * The hero carousel: one signature dish per category, in menu order, each with its own top-down
+ * cutout photo (public/images/hero). `prefer` names the dish that photo shows; otherwise the
+ * category's bestseller is used.
+ */
+const ORBIT_CATEGORIES: { slug: string; image: string; prefer?: string }[] = [
+  { slug: "ravioli-al-vapore", image: "/images/hero/ravioli-al-vapore.webp", prefer: "piatto-misto-di-ravioli-al-vapore" },
+  { slug: "ravioli-alla-piastra", image: "/images/hero/ravioli-alla-piastra.webp" },
+  { slug: "bao-al-vapore", image: "/images/hero/bao-pollo-croccante.webp", prefer: "bao-farcito-con-pollo-croccante" },
+  { slug: "noodles-in-brodo", image: "/images/hero/noodles-in-brodo.webp", prefer: "noodles-freschi-con-costine-di-maiale" },
+  { slug: "noodles-saltati", image: "/images/hero/noodles-saltati-manzo.webp", prefer: "noodles-saltati-con-manzo" },
+  { slug: "riso-saltato", image: "/images/hero/riso-cantonese.webp", prefer: "riso-cantonese" },
+  { slug: "piatti-caldi", image: "/images/hero/carne-brasata.webp", prefer: "pancetta-di-maiale-brasata-in-salsa-di-soia" },
+  { slug: "mochi-e-daifuku", image: "/images/hero/mochi-fragola.webp", prefer: "mochi-gelato-fragola" },
 ];
 const ORBIT_ACCENTS = [
   "#f2a65a",
@@ -67,17 +71,19 @@ const ORBIT_ACCENTS = [
 
 function orbitDishesFrom(catalog: Awaited<ReturnType<typeof getCatalog>>): OrbitDish[] {
   const rank = new Map(catalog.bestsellerIds.map((id, i) => [id, i]));
-  return ORBIT_CATEGORIES.flatMap((slug, i) => {
+  return ORBIT_CATEGORIES.flatMap(({ slug, image, prefer }, i) => {
     const category = catalog.categories.find((c) => c.slug === slug);
     if (!category) return [];
     const product = category.productIds
       .map((id) => catalog.products[id])
-      .filter((p): p is NonNullable<typeof p> => !!p && p.isAvailable && !!p.image)
+      .filter((p): p is NonNullable<typeof p> => !!p && p.isAvailable)
       .sort(
         (a, b) =>
-          (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999) || Number(b.isFeatured) - Number(a.isFeatured),
+          Number(b.slug === prefer) - Number(a.slug === prefer) ||
+          (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999) ||
+          Number(b.isFeatured) - Number(a.isFeatured),
       )[0];
-    if (!product?.image) return [];
+    if (!product) return [];
     // "Ravioli al vapore con maiale e sedano" → thin "Ravioli al vapore", heavy "maiale e sedano".
     const lower = product.name.toLowerCase();
     const catWords = category.name.toLowerCase().split(/\s+/);
@@ -90,6 +96,9 @@ function orbitDishesFrom(catalog: Awaited<ReturnType<typeof getCatalog>>): Orbit
     if (rest.toLowerCase().startsWith(catWords[0]! + " ")) rest = rest.slice(catWords[0]!.length).trim();
     if (tail && rest.toLowerCase().endsWith(" " + tail)) rest = rest.slice(0, -tail.length).trim();
     rest = rest.replace(/^(con|di|al|alla|allo|ai|alle)\s+/i, "");
+    // "Piatto misto di ravioli" under "Ravioli al vapore" → "Piatto misto".
+    const ofHead = " di " + catWords[0]!;
+    if (rest.toLowerCase().endsWith(ofHead)) rest = rest.slice(0, -ofHead.length).trim();
     const description =
       product.description ??
       (product.ingredients.length ? product.ingredients.join(", ") + "." : (category.description ?? ""));
@@ -97,8 +106,8 @@ function orbitDishesFrom(catalog: Awaited<ReturnType<typeof getCatalog>>): Orbit
       {
         title: category.name,
         subtitle: rest || product.name,
-        image: product.image.url,
-        alt: product.image.alt || product.name,
+        image,
+        alt: product.name,
         eyebrow: `#${i + 1} · Da provare`,
         name: product.name,
         nameZh: product.nameZh,
