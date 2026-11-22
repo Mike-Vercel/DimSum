@@ -56,7 +56,7 @@ for (const method of ["Contanti alla consegna", "Carta con POS alla consegna"] a
     const ticket = kitchen.locator("article", { hasText: `#${number}` }).filter({ visible: true });
     await ticket.getByRole("button", { name: "Accetta" }).click();
     await kitchen.getByRole("button", { name: "20 minuti" }).click();
-    await kitchen.getByRole("button", { name: /Accetta · pronto in 20 min/ }).click();
+    await kitchen.getByRole("button", { name: /^Accetta · pronto alle/ }).click();
     await ticket.getByRole("button", { name: "Pronto" }).click();
     await ticket.getByRole("button", { name: /Assegna rider/ }).click();
     await kitchen.getByRole("button", { name: /Luca/ }).click();

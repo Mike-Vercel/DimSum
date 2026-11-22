@@ -6,7 +6,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toaster";
 import { unlockAudio, playAlert, type AlertSound } from "@/lib/admin/alert-sound";
-import { useKitchenBoard, useNewOrderAlerts, useOrderCommand } from "@/lib/admin/orders";
+import { isActionable, useKitchenBoard, useNewOrderAlerts, useOrderCommand } from "@/lib/admin/orders";
 import { useWakeLock } from "@/lib/admin/wake-lock";
 import { cn } from "@/lib/cn";
 import { enablePush, pushState } from "@/lib/push";
@@ -24,6 +24,34 @@ const COLUMNS: { key: KitchenColumnKey; title: string; empty: string }[] = [
 ];
 
 const MUTE_KEY = "dimsum.kitchen.muted";
+const OPEN_KEY = "dimsum.kitchen.open";
+
+/** Expanded/collapsed tickets chosen by hand, remembered on this device. */
+function readOpen(): Record<string, boolean> {
+  try {
+    return JSON.parse(localStorage.getItem(OPEN_KEY) ?? "{}") as Record<string, boolean>;
+  } catch {
+    return {};
+  }
+}
+
+const time = (iso: string | null | undefined) => (iso ? new Date(iso).getTime() : Number.POSITIVE_INFINITY);
+
+/** Most urgent first in every column. */
+function sortColumn(key: KitchenColumnKey, orders: KitchenOrderDTO[], now: number): KitchenOrderDTO[] {
+  return orders.toSorted((a, b) => {
+    if (key === "NEW") {
+      // To accept now (longest waiting first), then scheduled ones by when they open.
+      const aa = isActionable(a, now);
+      const bb = isActionable(b, now);
+      if (aa !== bb) return aa ? -1 : 1;
+      return aa ? time(a.receivedAt) - time(b.receivedAt) : time(a.acceptFrom) - time(b.acceptFrom);
+    }
+    if (key === "READY") return time(a.readyAt) - time(b.readyAt);
+    if (key === "OUT") return time(a.eta?.to) - time(b.eta?.to);
+    return time(a.dueAt) - time(b.dueAt);
+  });
+}
 const noop = () => () => {};
 const WIDE = "(min-width: 1024px)";
 
@@ -61,7 +89,29 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
   const [accepting, setAccepting] = useState<KitchenOrderDTO | null>(null);
   const [reason, setReason] = useState<{ order: KitchenOrderDTO; mode: "reject" | "cancel" } | null>(null);
   const [assigning, setAssigning] = useState<KitchenOrderDTO | null>(null);
+  const [retiming, setRetiming] = useState<KitchenOrderDTO | null>(null);
   const [openItem, setOpenItem] = useState<KitchenItemDTO | null>(null);
+  const [openState, setOpenState] = useState<Record<string, boolean> | null>(null);
+  const stored = useSyncExternalStore(
+    noop,
+    () => localStorage.getItem(OPEN_KEY) ?? "{}",
+    () => "{}",
+  );
+  const openMap = openState ?? (JSON.parse(stored) as Record<string, boolean>);
+  // Default: orders to accept are open (their content matters), the others collapsed.
+  const isOpen = (o: KitchenOrderDTO) => openMap[o.id] ?? isActionable(o, now);
+  const setOpen = (changes: Record<string, boolean>) => {
+    const ids = new Set(data.orders.map((o) => o.id));
+    const next = Object.fromEntries(
+      Object.entries({ ...readOpen(), ...openMap, ...changes }).filter(([id]) => ids.has(id)),
+    );
+    setOpenState(next);
+    try {
+      localStorage.setItem(OPEN_KEY, JSON.stringify(next));
+    } catch {
+      /* private mode */
+    }
+  };
   // The activation prompt goes away after one tap, even where the device refuses audio; automated
   // browsers (tests) never see it.
   const [promptDismissed, setPromptDismissed] = useState(false);
@@ -130,7 +180,12 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
     return () => document.removeEventListener("fullscreenchange", onChange);
   }, []);
 
-  const byColumn = (key: KitchenColumnKey) => data.orders.filter((o) => o.column === key);
+  const byColumn = (key: KitchenColumnKey) =>
+    sortColumn(
+      key,
+      data.orders.filter((o) => o.column === key),
+      now,
+    );
   const run = (order: KitchenOrderDTO, a: TicketAction) => {
     switch (a.type) {
       case "accept":
@@ -142,6 +197,9 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
         break;
       case "assign":
         setAssigning(order);
+        break;
+      case "retime":
+        setRetiming(order);
         break;
       case "delay":
         command.mutate({
@@ -179,6 +237,20 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
             {orders.length}
           </span>
         </h2>
+        {orders.length > 1 ? (
+          <div className="flex justify-end px-1">
+            <button
+              type="button"
+              onClick={() => {
+                const anyClosed = orders.some((o) => !isOpen(o));
+                setOpen(Object.fromEntries(orders.map((o) => [o.id, anyClosed])));
+              }}
+              className="text-caption font-semibold text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+            >
+              {orders.some((o) => !isOpen(o)) ? "Apri tutti" : "Chiudi tutti"}
+            </button>
+          </div>
+        ) : null}
         {orders.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-line px-4 py-8 text-center text-body-sm text-fg-subtle">
             {empty}
@@ -193,6 +265,8 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
             busy={busyId === o.id}
             onAction={(a) => run(o, a)}
             onOpenItem={setOpenItem}
+            open={isOpen(o)}
+            onToggle={() => setOpen({ [o.id]: !isOpen(o) })}
           />
         ))}
       </section>
@@ -376,6 +450,33 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
             { onSuccess: () => setAccepting(null) },
           )
         }
+      />
+      <AcceptDialog
+        key={`retime-${retiming?.id ?? "none"}`}
+        mode="retime"
+        order={retiming}
+        options={data.settings.prepTimeOptions}
+        defaultMinutes={data.settings.defaultPrepMinutes}
+        timeZone={timeZone}
+        busy={command.isPending}
+        onClose={() => setRetiming(null)}
+        onConfirm={(fromNow) => {
+          if (!retiming) return;
+          // The stored time counts from acceptance: elapsed minutes plus the new "ready in".
+          const elapsed = retiming.confirmedAt
+            ? Math.max(0, Math.floor((Date.now() - new Date(retiming.confirmedAt).getTime()) / 60_000))
+            : 0;
+          command.mutate(
+            {
+              orderId: retiming.id,
+              input: {
+                command: "UPDATE_PREP_TIME",
+                prepMinutes: Math.min(240, Math.max(1, elapsed + fromNow)),
+              },
+            },
+            { onSuccess: () => setRetiming(null) },
+          );
+        }}
       />
       <ReasonDialog
         key={`reason-${reason ? `${reason.order.id}-${reason.mode}` : "none"}`}

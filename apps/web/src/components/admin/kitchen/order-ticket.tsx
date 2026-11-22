@@ -5,6 +5,7 @@ import type { KitchenItemDTO, KitchenOrderDTO, StaffOrderCommand } from "@dimsum
 import {
   Bike,
   CalendarClock,
+  ChevronDown,
   Clock,
   MessageSquareText,
   MoreHorizontal,
@@ -26,7 +27,8 @@ export type TicketAction =
   | { type: "cancel" }
   | { type: "assign" }
   | { type: "command"; command: "START_PREPARING" | "MARK_READY" | "UNASSIGN_RIDER" | "PICK_UP" | "DELIVER" }
-  | { type: "delay"; minutes: number };
+  | { type: "delay"; minutes: number }
+  | { type: "retime" };
 
 const DELIVERY_STATUS: Record<string, string> = {
   ASSIGNED: "assegnato",
@@ -60,6 +62,8 @@ export function OrderTicket({
   busy,
   onAction,
   onOpenItem,
+  open,
+  onToggle,
 }: {
   order: KitchenOrderDTO;
   now: number;
@@ -67,6 +71,9 @@ export function OrderTicket({
   busy: boolean;
   onAction: (a: TicketAction) => void;
   onOpenItem: (item: KitchenItemDTO) => void;
+  /** Expanded (all the details) or collapsed (summary + next action). */
+  open: boolean;
+  onToggle: () => void;
 }) {
   const has = (c: StaffOrderCommand) => order.commands.includes(c);
   const waited = order.receivedAt ? minutesBetween(order.receivedAt, now) : 0;
@@ -213,10 +220,14 @@ export function OrderTicket({
               {isDelivery ? "Consegna" : "Ritiro"}
             </Badge>
           </div>
-          <p className="mt-0.5 truncate text-body-sm font-semibold">
+          <button
+            type="button"
+            onClick={onToggle}
+            className="mt-0.5 block max-w-full truncate text-left text-body-sm font-semibold"
+          >
             {order.customerName}
             {order.zoneName ? <span className="font-normal text-fg-muted"> · {order.zoneName}</span> : null}
-          </p>
+          </button>
         </div>
         <div className="flex shrink-0 items-start gap-1">
           <span
@@ -229,6 +240,15 @@ export function OrderTicket({
             <Clock className="size-3.5" />
             {duration(waited)}
           </span>
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={open}
+            aria-label={open ? `Chiudi #${order.number}` : `Apri #${order.number}`}
+            className="grid size-8 tap place-items-center rounded-full bg-surface-2 hover:bg-surface-3"
+          >
+            <ChevronDown className={cn("size-4.5 transition-transform duration-200", open && "rotate-180")} />
+          </button>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger
               aria-label={`Altre azioni per #${order.number}`}
@@ -249,9 +269,14 @@ export function OrderTicket({
                   </MenuItem>
                 ) : null}
                 {order.confirmedAt && !order.readyAt ? (
-                  <MenuItem onSelect={() => onAction({ type: "delay", minutes: 5 })}>
-                    +5 minuti di preparazione
-                  </MenuItem>
+                  <>
+                    <MenuItem onSelect={() => onAction({ type: "retime" })}>
+                      Cambia tempo di preparazione
+                    </MenuItem>
+                    <MenuItem onSelect={() => onAction({ type: "delay", minutes: 5 })}>
+                      +5 minuti di preparazione
+                    </MenuItem>
+                  </>
                 ) : null}
                 {isDelivery && has("ASSIGN_RIDER") && order.rider ? (
                   <MenuItem onSelect={() => onAction({ type: "assign" })}>Cambia rider</MenuItem>
@@ -292,101 +317,150 @@ export function OrderTicket({
         </p>
       ) : null}
 
-      <ul className="mt-3 space-y-1.5 border-t border-dashed border-line pt-3">
-        {order.items.map((item) => (
-          <li key={item.id}>
-            <button
-              type="button"
-              onClick={() => onOpenItem(item)}
-              className="-mx-2 flex w-[calc(100%+1rem)] tap items-center gap-3 rounded-2xl px-2 py-1.5 text-left transition-colors hover:bg-surface-2"
-            >
-              <span className="relative">
-                <ItemThumb item={item} />
-                <span className="absolute -top-1.5 -right-1.5 grid h-6 min-w-6 place-items-center rounded-full bg-ink-950 px-1.5 text-caption font-extrabold text-white tabular-nums ring-2 ring-surface">
-                  {item.quantity}
-                </span>
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-body leading-snug font-semibold">
-                  {item.name}
-                  {item.variantName ? (
-                    <span className="font-normal text-fg-muted"> · {item.variantName}</span>
-                  ) : null}
-                  {item.posCode ? (
-                    <span className="ml-1.5 rounded bg-surface-2 px-1.5 py-0.5 align-middle text-micro font-bold text-fg-muted">
-                      {item.posCode}
+      {open ? (
+        <>
+          <ul className="mt-3 space-y-1.5 border-t border-dashed border-line pt-3">
+            {order.items.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => onOpenItem(item)}
+                  className="-mx-2 flex w-[calc(100%+1rem)] tap items-center gap-3 rounded-2xl px-2 py-1.5 text-left transition-colors hover:bg-surface-2"
+                >
+                  <span className="relative">
+                    <ItemThumb item={item} />
+                    <span className="absolute -top-1.5 -right-1.5 grid h-6 min-w-6 place-items-center rounded-full bg-ink-950 px-1.5 text-caption font-extrabold text-white tabular-nums ring-2 ring-surface">
+                      {item.quantity}
                     </span>
-                  ) : null}
-                </span>
-                {item.modifiers.length ? (
-                  <span className="block text-body-sm text-fg-muted">
-                    +{" "}
-                    {item.modifiers
-                      .map((m) => `${m.quantity > 1 ? `${m.quantity}× ` : ""}${m.name}`)
-                      .join(", ")}
                   </span>
-                ) : null}
-                {item.notes ? (
-                  <span className="block text-body-sm font-semibold text-warning">“{item.notes}”</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-body leading-snug font-semibold">
+                      {item.name}
+                      {item.variantName ? (
+                        <span className="font-normal text-fg-muted"> · {item.variantName}</span>
+                      ) : null}
+                      {item.posCode ? (
+                        <span className="ml-1.5 rounded bg-surface-2 px-1.5 py-0.5 align-middle text-micro font-bold text-fg-muted">
+                          {item.posCode}
+                        </span>
+                      ) : null}
+                    </span>
+                    {item.modifiers.length ? (
+                      <span className="block text-body-sm text-fg-muted">
+                        +{" "}
+                        {item.modifiers
+                          .map((m) => `${m.quantity > 1 ? `${m.quantity}× ` : ""}${m.name}`)
+                          .join(", ")}
+                      </span>
+                    ) : null}
+                    {item.notes ? (
+                      <span className="block text-body-sm font-semibold text-warning">“{item.notes}”</span>
+                    ) : null}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          {order.kitchenNotes ? (
+            <p className="mt-3 flex gap-2 rounded-lg bg-warning-soft px-3 py-2 text-body-sm font-medium">
+              <MessageSquareText className="mt-0.5 size-4 shrink-0 text-warning" /> {order.kitchenNotes}
+            </p>
+          ) : null}
+
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-body-sm">
+            <CollectionBadge collection={order.collection} totalCents={order.totalCents} />
+            {order.dueAt && !order.readyAt && (!order.scheduledFor || (dueIn !== null && dueIn <= 90)) ? (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 font-semibold",
+                  late ? "text-danger" : "text-fg-muted",
+                )}
+              >
+                {late ? <TriangleAlert className="size-4" /> : null}
+                Pronto entro {clock(order.dueAt, timeZone)}
+                {dueIn !== null
+                  ? late
+                    ? ` · in ritardo di ${duration(-dueIn)}`
+                    : ` · tra ${duration(dueIn)}`
+                  : ""}
+              </span>
+            ) : null}
+            {order.confirmedAt && !order.readyAt ? (
+              <button
+                type="button"
+                onClick={() => onAction({ type: "retime" })}
+                className="inline-flex h-8 items-center gap-1 rounded-full bg-surface-2 px-3 text-caption font-bold hover:bg-surface-3"
+              >
+                <Clock className="size-3.5" /> Cambia tempo
+              </button>
+            ) : null}
+            {order.collection === "PAID" ? null : (
+              <span className="text-caption text-fg-subtle">Totale {formatEuro(order.totalCents)}</span>
+            )}
+          </div>
+
+          {isDelivery && order.rider ? (
+            <p className="mt-2 flex items-center gap-2 text-body-sm">
+              <Bike className="size-4 text-fg-muted" />
+              <span className="font-semibold">{order.rider.name}</span>
+              <span className="text-fg-muted">
+                {order.deliveryStatus ? DELIVERY_STATUS[order.deliveryStatus] : ""}
+              </span>
+              {order.eta && order.column === "OUT" ? (
+                <span className="ml-auto text-fg-muted">
+                  arrivo {clock(order.eta.from, timeZone)}–{clock(order.eta.to, timeZone)}
+                </span>
+              ) : null}
+            </p>
+          ) : null}
+
+          {order.customerPhone && order.status === "RECEIVED" ? (
+            <a
+              href={`tel:${order.customerPhone}`}
+              className="mt-2 inline-flex items-center gap-1.5 text-caption text-fg-muted hover:text-fg"
+            >
+              <Phone className="size-3.5" /> {order.customerPhone}
+            </a>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={onToggle}
+            className="mt-3 flex w-full items-center gap-3 border-t border-dashed border-line pt-3 text-left"
+            aria-label={`Mostra i prodotti di #${order.number}`}
+          >
+            <span className="flex -space-x-2.5">
+              {order.items.slice(0, 4).map((item) => (
+                <ItemThumb key={item.id} item={item} className="size-10 ring-2 ring-surface" />
+              ))}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-body-sm font-semibold">
+                {order.itemCount} {order.itemCount === 1 ? "articolo" : "articoli"}
+                {order.items.length > 4 ? (
+                  <span className="font-normal text-fg-muted"> · +{order.items.length - 4} altri</span>
                 ) : null}
               </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      {order.kitchenNotes ? (
-        <p className="mt-3 flex gap-2 rounded-lg bg-warning-soft px-3 py-2 text-body-sm font-medium">
-          <MessageSquareText className="mt-0.5 size-4 shrink-0 text-warning" /> {order.kitchenNotes}
-        </p>
-      ) : null}
-
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-body-sm">
-        <CollectionBadge collection={order.collection} totalCents={order.totalCents} />
-        {order.dueAt && !order.readyAt && (!order.scheduledFor || (dueIn !== null && dueIn <= 90)) ? (
-          <span
-            className={cn(
-              "inline-flex items-center gap-1 font-semibold",
-              late ? "text-danger" : "text-fg-muted",
-            )}
-          >
-            {late ? <TriangleAlert className="size-4" /> : null}
-            Pronto entro {clock(order.dueAt, timeZone)}
-            {dueIn !== null
-              ? late
-                ? ` · in ritardo di ${duration(-dueIn)}`
-                : ` · tra ${duration(dueIn)}`
-              : ""}
-          </span>
-        ) : null}
-        {order.collection === "PAID" ? null : (
-          <span className="text-caption text-fg-subtle">Totale {formatEuro(order.totalCents)}</span>
-        )}
-      </div>
-
-      {isDelivery && order.rider ? (
-        <p className="mt-2 flex items-center gap-2 text-body-sm">
-          <Bike className="size-4 text-fg-muted" />
-          <span className="font-semibold">{order.rider.name}</span>
-          <span className="text-fg-muted">
-            {order.deliveryStatus ? DELIVERY_STATUS[order.deliveryStatus] : ""}
-          </span>
-          {order.eta && order.column === "OUT" ? (
-            <span className="ml-auto text-fg-muted">
-              arrivo {clock(order.eta.from, timeZone)}–{clock(order.eta.to, timeZone)}
+              <span className="block truncate text-caption text-fg-muted">
+                {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")}
+              </span>
             </span>
+            {order.kitchenNotes || order.items.some((i) => i.notes) ? (
+              <span className="flex shrink-0 items-center gap-1 rounded-full bg-warning-soft px-2 py-1 text-caption font-bold text-warning">
+                <MessageSquareText className="size-3.5" /> Note
+              </span>
+            ) : null}
+          </button>
+          {order.dueAt && !order.readyAt && (!order.scheduledFor || (dueIn !== null && dueIn <= 90)) ? (
+            <p className={cn("mt-2 text-body-sm font-semibold", late ? "text-danger" : "text-fg-muted")}>
+              {late ? "In ritardo · " : ""}Pronto entro {clock(order.dueAt, timeZone)}
+            </p>
           ) : null}
-        </p>
-      ) : null}
-
-      {order.customerPhone && order.status === "RECEIVED" ? (
-        <a
-          href={`tel:${order.customerPhone}`}
-          className="mt-2 inline-flex items-center gap-1.5 text-caption text-fg-muted hover:text-fg"
-        >
-          <Phone className="size-3.5" /> {order.customerPhone}
-        </a>
-      ) : null}
+        </>
+      )}
 
       {primary ? <div className="mt-4">{primary}</div> : null}
     </article>

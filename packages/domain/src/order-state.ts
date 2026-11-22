@@ -89,7 +89,7 @@ const COMMAND_ACTORS: Record<OrderCommandType, readonly Actor[]> = {
   RECEIVE: ["system"],
   CONFIRM: ["staff", "system"],
   REJECT: ["staff"],
-  START_PREPARING: ["staff"],
+  START_PREPARING: ["staff", "system"],
   MARK_READY: ["staff"],
   ASSIGN_RIDER: ["staff", "system"],
   UNASSIGN_RIDER: ["staff", "system"],

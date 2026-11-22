@@ -59,7 +59,7 @@ test("ordine da ospite con ritiro, gestito dalla cucina in tempo reale", async (
   await expect(ticket).toBeVisible();
   await ticket.getByRole("button", { name: "Accetta" }).click();
   await kitchen.getByRole("button", { name: "15 minuti" }).click();
-  await kitchen.getByRole("button", { name: /Accetta · pronto in 15 min/ }).click();
+  await kitchen.getByRole("button", { name: /^Accetta · pronto alle/ }).click();
   await expect(page.getByText("Confermato").first()).toBeVisible();
 
   await ticket.getByRole("button", { name: "Pronto" }).click();

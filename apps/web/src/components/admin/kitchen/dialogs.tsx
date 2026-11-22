@@ -15,9 +15,19 @@ function clockOf(iso: string, timeZone: string) {
   );
 }
 
+/** "Ready in X minutes" proposed by the app: until the scheduled slot, or the usual prep time. */
+function suggestedMinutes(order: KitchenOrderDTO, defaultMinutes: number, mode: "accept" | "retime"): number {
+  const until = (iso: string) => Math.ceil((new Date(iso).getTime() - Date.now()) / 60_000);
+  if (mode === "retime") return order.dueAt ? Math.min(240, Math.max(1, until(order.dueAt))) : defaultMinutes;
+  if (order.scheduledFor && order.dueAt) return Math.min(240, Math.max(5, until(order.dueAt)));
+  return defaultMinutes;
+}
+
 /**
- * "Accetta": the kitchen promises a preparation time (10/15/20/25/30/45 or custom). A scheduled
- * order keeps the customer's time: "18:30" means 18:30, so there is nothing to choose.
+ * The preparation time, chosen by the kitchen: on "Accetta" (the order then goes straight into
+ * preparation) and while preparing ("Cambia tempo"). The app proposes a time — until the slot for a
+ * scheduled order, the usual one otherwise — but any time can be chosen, quick picks or custom.
+ * `onConfirm` receives the minutes from now.
  */
 export function AcceptDialog({
   order,
@@ -27,6 +37,7 @@ export function AcceptDialog({
   busy,
   onClose,
   onConfirm,
+  mode = "accept",
 }: {
   order: KitchenOrderDTO | null;
   options: number[];
@@ -35,64 +46,55 @@ export function AcceptDialog({
   busy: boolean;
   onClose: () => void;
   onConfirm: (minutes: number) => void;
+  mode?: "accept" | "retime";
 }) {
-  const [minutes, setMinutes] = useState(defaultMinutes);
+  const [suggested] = useState(() =>
+    order ? suggestedMinutes(order, defaultMinutes, mode) : defaultMinutes,
+  );
+  const [minutes, setMinutes] = useState(suggested);
   const [custom, setCustom] = useState("");
   const value = custom ? Number(custom) : minutes;
   const valid = Number.isInteger(value) && value >= 1 && value <= 240;
-
-  if (order?.scheduledFor && order.dueAt) {
-    const scheduledFor = order.scheduledFor;
-    const dueAt = order.dueAt;
-    const untilDue = () =>
-      Math.min(240, Math.max(1, Math.ceil((new Date(dueAt).getTime() - Date.now()) / 60_000)));
-    const isDelivery = order.fulfillmentType === "DELIVERY";
-    return (
-      <Dialog
-        open
-        onOpenChange={(open) => !open && onClose()}
-        title={`Accetta #${order.number}`}
-        description={`Ordine programmato: ${isDelivery ? "consegna" : "ritiro"} alle ${clockOf(scheduledFor, timeZone)}, come scelto dal cliente.`}
-        size="sm"
-        footer={
-          <Button size="lg" block loading={busy} onClick={() => onConfirm(untilDue())}>
-            Accetta · {isDelivery ? "consegna" : "ritiro"} alle {clockOf(scheduledFor, timeZone)}
-          </Button>
-        }
-      >
-        <div className="px-6 pb-4">
-          <div className="rounded-2xl bg-info-soft p-4 text-info">
-            <p className="text-display font-extrabold tabular-nums">{clockOf(scheduledFor, timeZone)}</p>
-            <p className="mt-1 text-body-sm font-semibold">
-              Pronto entro le {clockOf(dueAt, timeZone)}
-              {isDelivery ? " per partire in tempo" : ""}. Il cliente vede sempre questo orario.
-            </p>
-          </div>
-        </div>
-      </Dialog>
-    );
-  }
+  const choices = [...new Set([...options, suggested])].sort((x, y) => x - y);
+  const [openedAt] = useState(() => Date.now());
+  const readyAt = valid ? new Date(openedAt + value * 60_000).toISOString() : null;
+  const isDelivery = order?.fulfillmentType === "DELIVERY";
 
   return (
     <Dialog
       open={!!order}
       onOpenChange={(open) => !open && onClose()}
-      title={order ? `Accetta #${order.number}` : "Accetta ordine"}
+      title={
+        order
+          ? mode === "retime"
+            ? `Tempo per #${order.number}`
+            : `Accetta #${order.number}`
+          : "Accetta ordine"
+      }
       description={
-        order?.scheduledFor
-          ? "Ordine programmato: il tempo serve a pianificare la preparazione."
-          : "Tra quanti minuti sarà pronto?"
+        mode === "retime"
+          ? "Tra quanti minuti sarà pronto?"
+          : "Tra quanti minuti sarà pronto? Poi va subito in preparazione."
       }
       size="sm"
       footer={
         <Button size="lg" block disabled={!valid} loading={busy} onClick={() => onConfirm(value)}>
-          Accetta · pronto in {valid ? value : "–"} min
+          {mode === "retime" ? "Aggiorna" : "Accetta"} · pronto{" "}
+          {valid && readyAt ? `alle ${clockOf(readyAt, timeZone)}` : ""}
         </Button>
       }
     >
       <div className="space-y-5 px-6 pb-4">
+        {order?.scheduledFor ? (
+          <p className="rounded-2xl bg-info-soft px-4 py-3 text-body-sm font-semibold text-info">
+            Programmato: {isDelivery ? "consegna" : "ritiro"} alle {clockOf(order.scheduledFor, timeZone)}
+            {order.dueAt && mode === "accept"
+              ? ` · da preparare entro le ${clockOf(order.dueAt, timeZone)}`
+              : ""}
+          </p>
+        ) : null}
         <div className="grid grid-cols-3 gap-2">
-          {options.map((m) => (
+          {choices.map((m) => (
             <button
               key={m}
               type="button"
@@ -101,9 +103,9 @@ export function AcceptDialog({
                 setCustom("");
               }}
               aria-pressed={!custom && minutes === m}
-              aria-label={`${m} minuti`}
+              aria-label={`${m} minuti${m === suggested ? ", consigliato" : ""}`}
               className={cn(
-                "h-16 tap rounded-xl text-title font-extrabold tabular-nums ring-1 transition-colors",
+                "relative h-16 tap rounded-xl text-title font-extrabold tabular-nums ring-1 transition-colors",
                 !custom && minutes === m
                   ? "bg-ink-950 text-white ring-ink-950"
                   : "bg-surface ring-line hover:bg-surface-2",
@@ -111,6 +113,11 @@ export function AcceptDialog({
             >
               {m}
               <span className="ml-0.5 text-caption font-semibold">min</span>
+              {m === suggested ? (
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-brand px-1.5 py-0.5 text-micro font-bold text-white">
+                  consigliato
+                </span>
+              ) : null}
             </button>
           ))}
         </div>

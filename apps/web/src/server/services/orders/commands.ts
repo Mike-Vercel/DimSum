@@ -19,6 +19,8 @@ export interface CommandContext {
   /** Role of the signed-in person, recorded in the audit log for staff actions. */
   role?: Role;
   note?: string | null;
+  /** Do not notify the customer (a step chained to another one already notified). */
+  quiet?: boolean;
 }
 
 type Tx = Prisma.TransactionClient;
@@ -72,7 +74,7 @@ const ETA_COMMANDS = new Set<OrderCommand["type"]>([
  * Applies an order command: validated by the domain state machine inside a row-locked
  * transaction, recorded in the status history, then broadcast and notified after commit.
  */
-export async function runOrderCommand(orderId: string, command: OrderCommand, ctx: CommandContext) {
+async function executeCommand(orderId: string, command: OrderCommand, ctx: CommandContext) {
   const now = new Date();
   const previousRiderIds: string[] = [];
 
@@ -227,7 +229,8 @@ export async function runOrderCommand(orderId: string, command: OrderCommand, ct
         ).catch(() => undefined);
     }
     const type = NOTIFY[command.type];
-    if (type) await notifyCustomer(order.id, type, "reason" in command ? { reason: command.reason } : {});
+    if (type && !ctx.quiet)
+      await notifyCustomer(order.id, type, "reason" in command ? { reason: command.reason } : {});
     if (command.type === "ASSIGN_RIDER" && riderId) {
       const rider = await db.rider.findUnique({ where: { id: riderId }, select: { userId: true } });
       if (rider) await notifyRiderAssigned(order.id, rider.userId);
@@ -239,6 +242,24 @@ export async function runOrderCommand(orderId: string, command: OrderCommand, ct
     }
   });
 
+  return order;
+}
+
+export async function runOrderCommand(
+  orderId: string,
+  command: OrderCommand,
+  ctx: CommandContext,
+): ReturnType<typeof executeCommand> {
+  const order = await executeCommand(orderId, command, ctx);
+  // Accepting means starting: the order goes straight into preparation (one notification only).
+  if (command.type === "CONFIRM") {
+    const preparing = await executeCommand(
+      orderId,
+      { type: "START_PREPARING" },
+      { ...ctx, quiet: true, note: "Preparazione avviata all'accettazione" },
+    ).catch(() => null);
+    if (preparing) return preparing;
+  }
   return order;
 }
 

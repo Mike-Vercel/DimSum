@@ -101,12 +101,11 @@ function itemsOf(o: AdminOrderRow): KitchenItemDTO[] {
   }));
 }
 
-/** When the food must be ready: the scheduled slot (minus the ride) or acceptance + prep time. */
+/** When the food must be ready: acceptance + the chosen prep time, or the scheduled slot before that. */
 function dueAtOf(o: AdminOrderRow): Date | null {
-  const scheduled = scheduledReadyAt(o);
-  if (scheduled) return scheduled;
+  // Once accepted, the time the kitchen chose (and may change) is the timer.
   if (o.confirmedAt && o.prepMinutes) return new Date(o.confirmedAt.getTime() + o.prepMinutes * 60_000);
-  return null;
+  return scheduledReadyAt(o);
 }
 
 export function staffCommands(o: AdminOrderRow): StaffOrderCommand[] {
