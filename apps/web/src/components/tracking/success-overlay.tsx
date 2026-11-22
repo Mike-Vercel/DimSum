@@ -149,7 +149,7 @@ export function SuccessOverlay({
               Segui il tuo ordine
             </Button>
             <Button asChild size="lg" variant="outline" block className="text-white ring-white/25">
-              <Link href="/">Torna alla home</Link>
+              <Link href="/home">Torna alla home</Link>
             </Button>
             {isGuest ? (
               <div className="mt-4 rounded-2xl bg-white/5 p-4 text-center ring-1 ring-white/10">

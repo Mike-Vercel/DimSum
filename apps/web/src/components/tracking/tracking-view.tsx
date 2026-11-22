@@ -245,7 +245,7 @@ export function TrackingView({ initial }: { initial: OrderTrackingDTO }) {
               {subtitle ? <p className="mt-1 text-body text-fg-muted">{subtitle}</p> : null}
             </div>
             <Link
-              href="/"
+              href="/home"
               aria-label="Chiudi"
               className="grid size-10 shrink-0 tap place-items-center rounded-full bg-surface ring-1 ring-line"
             >

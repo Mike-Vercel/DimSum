@@ -12,7 +12,7 @@ export default function MascotPage() {
   return (
     <main id="contenuto" className="min-h-screen bg-[#faf7ef] text-[#24221f]">
       <header className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-5 md:px-10">
-        <Link href="/scopri" aria-label="DIMSUM, torna alla landing">
+        <Link href="/" aria-label="DIMSUM, torna alla landing">
           <Logo className="h-10 text-fg" />
         </Link>
         <Link
@@ -24,7 +24,7 @@ export default function MascotPage() {
       </header>
       <div className="mx-auto grid max-w-7xl items-center gap-9 px-5 pt-4 pb-14 lg:grid-cols-[.7fr_1fr] lg:gap-16 lg:px-10 lg:pt-8">
         <div>
-          <Link href="/scopri" className="text-sm font-semibold underline underline-offset-4">
+          <Link href="/" className="text-sm font-semibold underline underline-offset-4">
             Scopri DIMSUM
           </Link>
           <p className="mt-8 text-sm font-bold tracking-[.13em] text-[#b4212b] uppercase">Piacere, DIMSUM</p>

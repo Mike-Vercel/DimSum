@@ -141,6 +141,7 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
     muted,
     sound,
     now,
+    title: "Cucina · Gestionale DIMSUM",
   });
 
   // Sound: unlocked by the first tap anywhere (browsers require a gesture), resumed when the tablet

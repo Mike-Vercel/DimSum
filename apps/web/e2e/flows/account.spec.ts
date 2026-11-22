@@ -64,4 +64,14 @@ test("login dal checkout: carrello conservato, indirizzo salvato, storico ordini
   await page.getByRole("radio", { name: /Contanti alla consegna/ }).click();
   await page.getByRole("button", { name: /Conferma ordine/ }).click();
   await expect(page.getByRole("heading", { name: "Ordine confermato!" })).toBeVisible();
+
+  // The order emptied the cart: on this device and on the account, so it does not come back when
+  // the customer returns to the shop (or signs in elsewhere).
+  const remote = await page.request.get("/api/v1/me/cart");
+  expect((await remote.json()) as { lines: unknown[] }).toMatchObject({ lines: [] });
+  await page.goto("/cart");
+  await expect(page.getByText("Il carrello è vuoto")).toBeVisible();
+  await page.goto("/menu");
+  await page.goto("/cart");
+  await expect(page.getByText("Il carrello è vuoto")).toBeVisible();
 });

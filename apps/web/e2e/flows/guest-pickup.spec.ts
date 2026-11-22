@@ -52,6 +52,13 @@ test("ordine da ospite con ritiro, gestito dalla cucina in tempo reale", async (
       .first(),
   ).toBeVisible();
 
+  // Anywhere in the back office (not only in the kitchen) a waiting order raises the alarm banner.
+  const office = await openAs(browser, staff(), { next: "/admin/ordini" });
+  const banner = office.getByRole("alert").filter({ hasText: /nuov[oi] ordin/i });
+  await expect(banner).toBeVisible();
+  await expect(banner.getByRole("link")).toHaveAttribute("href", "/admin/cucina");
+  await office.context().close();
+
   // The kitchen tablet.
   const kitchen = await openAs(browser, staff(), { next: "/admin/cucina" });
   // The ticket the cook sees (the board renders one layout per screen size).

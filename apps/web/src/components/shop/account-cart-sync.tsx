@@ -78,19 +78,26 @@ export function AccountCartSync() {
   useEffect(() => {
     if (!userId) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
+    const save = () => {
+      timer = undefined;
+      const s = useCart.getState();
+      void api.cart
+        .saveAccountCart({ lines: cartToInput(s.lines), couponCode: s.couponCode })
+        .catch(() => undefined);
+    };
     const unsubscribe = useCart.subscribe((state, previous) => {
       if (!ready.current || state.updatedAt === previous.updatedAt) return;
       clearTimeout(timer);
-      timer = setTimeout(() => {
-        const s = useCart.getState();
-        void api.cart
-          .saveAccountCart({ lines: cartToInput(s.lines), couponCode: s.couponCode })
-          .catch(() => undefined);
-      }, 800);
+      timer = setTimeout(save, 800);
     });
     return () => {
       unsubscribe();
-      clearTimeout(timer);
+      // Leaving the shop (e.g. to the order page right after checkout): a pending change is sent
+      // now instead of being dropped.
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        save();
+      }
     };
   }, [userId]);
 

@@ -95,7 +95,14 @@ export function isActionable(o: KitchenOrderDTO, now: number): boolean {
  */
 export function useNewOrderAlerts(
   orders: KitchenOrderDTO[],
-  options: { enabled: boolean; sound: AlertSound; muted: boolean; now: number },
+  options: {
+    enabled: boolean;
+    sound: AlertSound;
+    muted: boolean;
+    now: number;
+    /** Tab title to restore; by default the page's own one. */
+    title?: string;
+  },
 ) {
   const waiting = orders.filter((o) => isActionable(o, options.now));
   const upcomingOrders = orders.filter((o) => o.status === "RECEIVED" && !isActionable(o, options.now));
@@ -146,13 +153,14 @@ export function useNewOrderAlerts(
     return () => clearInterval(t);
   }, [ringing, escalated, options.sound, freshAt]);
 
-  // Tab title: visible even when the board is in a background tab.
+  // Tab title: visible even when the page is in a background tab.
+  const title = options.title;
   useEffect(() => {
-    const base = "Cucina · Gestionale DIMSUM";
     if (!waiting.length) {
-      document.title = base;
+      if (title) document.title = title;
       return;
     }
+    const base = title ?? document.title;
     let on = false;
     const t = setInterval(() => {
       on = !on;
@@ -162,7 +170,7 @@ export function useNewOrderAlerts(
       clearInterval(t);
       document.title = base;
     };
-  }, [waiting.length]);
+  }, [waiting.length, title]);
 
   return { waiting: waiting.length, upcoming, escalated, flash };
 }

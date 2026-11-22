@@ -108,7 +108,7 @@ export default async function HomePage() {
                 Ordina ora
               </Link>
               <Link
-                href="/scopri"
+                href="/"
                 className="inline-flex h-12 tap items-center rounded-full bg-white px-6 font-bold text-ink-950"
               >
                 Scopri DIMSUM

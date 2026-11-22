@@ -20,7 +20,7 @@ const NAV = [
   { href: "/menu", label: "Menu" },
   { href: "/offerte", label: "Offerte" },
   { href: "/club", label: "Club" },
-  { href: "/scopri", label: "Scopri" },
+  { href: "/", label: "Scopri" },
 ] as const;
 
 function AccountButton({ className }: { className?: string }) {
@@ -140,7 +140,7 @@ export function ShopHeader() {
               compact && "h-0 opacity-0",
             )}
           >
-            <Link href="/" aria-label="DIMSUM, home" className="block h-full w-fit max-w-full">
+            <Link href="/home" aria-label="DIMSUM, home" className="block h-full w-fit max-w-full">
               <Logo className="h-11 text-fg" />
             </Link>
           </div>
@@ -161,7 +161,7 @@ export function ShopHeader() {
 
       {/* Tablet & desktop */}
       <div className="mx-auto hidden h-18 max-w-7xl items-center gap-3 px-6 lg:flex xl:gap-6 xl:px-8">
-        <Link href="/" aria-label="DIMSUM, home" className="shrink-0">
+        <Link href="/home" aria-label="DIMSUM, home" className="shrink-0">
           <Logo className="h-12 text-fg xl:h-14" />
         </Link>
         <nav aria-label="Principale" className="flex shrink-0 items-center gap-1">
@@ -171,7 +171,7 @@ export function ShopHeader() {
               href={n.href}
               className={cn(
                 "rounded-full px-3 py-2 text-body-sm font-semibold whitespace-nowrap transition-colors hover:bg-surface",
-                pathname.startsWith(n.href) ? "text-fg" : "text-fg-muted",
+                (n.href === "/" ? pathname === "/" : pathname.startsWith(n.href)) ? "text-fg" : "text-fg-muted",
               )}
             >
               {n.label}

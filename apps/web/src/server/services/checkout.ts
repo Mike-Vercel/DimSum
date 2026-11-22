@@ -378,6 +378,10 @@ export async function placeOrder(
             data: { phone: input.customer.phone },
           });
         }
+        // The order took the cart: the copy kept on the account is emptied too, or it would come
+        // back at the next sign-in / on the customer's other devices.
+        await tx.cartItem.deleteMany({ where: { cart: { userId: customer.userId } } });
+        await tx.cart.updateMany({ where: { userId: customer.userId }, data: { couponCode: null } });
       }
 
       if (input.marketingConsent) {

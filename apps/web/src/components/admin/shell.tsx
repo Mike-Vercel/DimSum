@@ -30,6 +30,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo, Seal } from "@/components/brand/logo";
 import { Avatar } from "@/components/ui/misc";
+import { GlobalOrderAlert } from "./order-alert";
 import { api } from "@/lib/api";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
@@ -328,6 +329,8 @@ export function AdminShell({ viewer, children }: { viewer: AdminViewer; children
       <main id="contenuto" className="min-w-0">
         {children}
       </main>
+      {/* The kitchen rings on its own; every other page gets the same alarm and a banner. */}
+      <GlobalOrderAlert active={can(viewer.role, "orders:manage") && !pathname.startsWith("/admin/cucina")} />
     </div>
   );
 }

@@ -78,6 +78,10 @@ const nextConfig: NextConfig = {
     // Inline the critical CSS of the static shell for faster first paint on mobile networks.
     inlineCss: true,
   },
+  async redirects() {
+    // The landing moved from /scopri to the home page.
+    return [{ source: "/scopri", destination: "/", permanent: true }];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

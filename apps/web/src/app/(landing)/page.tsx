@@ -4,24 +4,26 @@ import Link from "next/link";
 import { Bike, CreditCard, MapPin, ShoppingBag, Store } from "lucide-react";
 import { formatEuro } from "@dimsum/domain";
 import { Logo } from "@/components/brand/logo";
+import { MascotIntro } from "@/components/intro/mascot-intro";
 import { CookieNotice } from "@/components/shop/cookie-notice";
 import { FoodImage } from "@/components/shop/food-image";
 import { summarizeHours } from "@/lib/hours";
+import { jsonLdScript, restaurantJsonLd } from "@/server/seo";
 import { getCatalog } from "@/server/services/catalog";
 import { getRestaurantConfig, toRestaurantInfo } from "@/server/services/restaurant";
 import { DishOrbitCarousel, type OrbitDish } from "./dish-orbit";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "Scopri DIMSUM: ravioli, bao e noodles a Palermo",
+  title: { absolute: "DIMSUM · Ravioli, bao e noodles a Palermo — Ordina online" },
   description:
     "Un piccolo morso, un grande viaggio. Scopri DIMSUM a Palermo: ravioli, bao e noodles, a domicilio o da ritirare. Paghi in contanti o con POS alla consegna.",
-  alternates: { canonical: "/scopri" },
+  alternates: { canonical: "/" },
   openGraph: {
     title: "DIMSUM · Un piccolo morso, un grande viaggio.",
     description:
       "Asian street food a Palermo. Scegli dal menu e paga alla consegna, in contanti o con il POS che portiamo noi.",
-    url: "/scopri",
+    url: "/",
   },
 };
 
@@ -139,8 +141,14 @@ export default async function DiscoverPage() {
 
   return (
     <div className={styles.page}>
+      {/* The opening: the mascot pulls the page down like a blanket (once per visit). */}
+      <MascotIntro />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(restaurantJsonLd(config, catalog)) }}
+      />
       <header className={styles.header}>
-        <Link href="/" aria-label="DIMSUM, torna alla home">
+        <Link href="/" aria-label="DIMSUM, home">
           <Logo className="h-11 text-fg" />
         </Link>
         <nav aria-label="Navigazione landing" className={styles.nav}>
@@ -158,7 +166,7 @@ export default async function DiscoverPage() {
           <h1 id="hero-title" className="sr-only">
             DIMSUM, Asian street food a {config.address.city}: le nostre specialità
           </h1>
-          {orbitDishes.length > 1 ? <DishOrbitCarousel dishes={orbitDishes} /> : null}
+          {orbitDishes.length > 1 ? <DishOrbitCarousel dishes={orbitDishes} height="calc(100svh - var(--landing-header))" /> : null}
         </section>
         <div className={styles.ribbon} aria-hidden>
           <span>RAVIOLI</span>

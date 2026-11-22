@@ -62,7 +62,7 @@ export function DesktopHero({ images }: { images: (ImageDTO | null)[] }) {
               Ordina ora <ArrowRight className="size-5" />
             </Link>
             <Link
-              href="/scopri"
+              href="/"
               className="inline-flex h-14 tap items-center gap-2 rounded-2xl bg-white/10 px-6 font-semibold ring-1 ring-white/15 hover:bg-white/15"
             >
               Scopri DIMSUM

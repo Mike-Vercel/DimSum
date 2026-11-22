@@ -1,4 +1,5 @@
 .page {
+  --landing-header: 88px;
   --landing-red: #c6262e;
   --landing-paper: #faf7ef;
   color: #20201e;
@@ -14,8 +15,12 @@
   outline: 3px solid #2278a5;
   outline-offset: 6px;
 }
+/* Always on top while scrolling, solid (no blur). */
 .header {
-  min-height: 88px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: var(--landing-header);
   padding: 16px max(24px, calc((100vw - 1280px) / 2));
   display: flex;
   align-items: center;
@@ -232,7 +237,7 @@
   max-width: 1280px;
   margin: auto;
   padding: 100px 28px;
-  scroll-margin-top: 24px;
+  scroll-margin-top: calc(var(--landing-header) + 16px);
 }
 .section .eyebrow {
   color: var(--landing-red);
@@ -318,7 +323,7 @@
 .payment {
   background: #22221f;
   color: var(--landing-paper);
-  scroll-margin-top: 24px;
+  scroll-margin-top: calc(var(--landing-header) + 16px);
 }
 .paymentInner {
   max-width: 1280px;
@@ -549,8 +554,11 @@
   }
 }
 @media (max-width: 760px) {
+  .page {
+    --landing-header: 76px;
+  }
   .header {
-    min-height: 76px;
+    min-height: var(--landing-header);
     padding: 14px 20px;
     gap: 16px;
     justify-content: space-between;

@@ -84,7 +84,7 @@ export function ShopFooter({ restaurant }: { restaurant: RestaurantInfo }) {
           <ul className="space-y-2">
             {[
               ["/menu", "Menu"],
-              ["/scopri", "Scopri DIMSUM"],
+              ["/", "Scopri DIMSUM"],
               ["/offerte", "Offerte"],
               ["/club", "Dimsum Club"],
               ["/info", "Il locale"],

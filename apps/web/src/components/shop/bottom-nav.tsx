@@ -10,7 +10,7 @@ import { spring } from "@/lib/motion";
 import { resetScrollDirection, useScrollDirection } from "@/lib/scroll-direction";
 
 const ITEMS = [
-  { href: "/", label: "Home", icon: House, match: (p: string) => p === "/" },
+  { href: "/home", label: "Home", icon: House, match: (p: string) => p === "/home" },
   {
     href: "/menu",
     label: "Menu",

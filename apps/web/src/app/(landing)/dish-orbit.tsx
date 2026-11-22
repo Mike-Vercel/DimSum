@@ -1,20 +1,18 @@
 "use client";
 
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
 
 /*
  * Dish Orbit Carousel, the hero of /scopri. The plated dish sits on the left; changing dish swings
  * it out over the top on a wide orbit while the next plate swings in from the other side. The
  * two-weight title wipes out and back in (thin line from the right, heavy line from the left), the
  * card with the price badge cross-fades, and a band behind the scene turns and takes the dish's
- * colour. The page scroll drives it: the section pins and each stretch of scroll brings the next
- * dish; after the last one the page scrolls on. Arrows, thumbnails, the side pager, arrow keys and
- * swipes jump too. Phones get a one-screen stacked layout.
+ * colour. Dishes change sideways only — swipe or drag left/right, a sideways trackpad scroll, the
+ * arrows, thumbnails, side pager and arrow keys — while scrolling down always moves on to the next
+ * section of the page. Phones get a one-screen stacked layout.
  */
 
 export type OrbitDish = {
@@ -97,14 +95,13 @@ const ARC_SWEEP = [38, 146];
 const ORBIT_X = 299;
 const ORBIT_Y = -450;
 const ORBIT_R = 650;
-const SCROLL_PER_DISH = 0.7; // stage heights of scroll per dish
 const SWING = 50;
 const ITEM = 118;
 const VISIBLE = 4;
 
 const CSS =
   ".dsh-trk{position:relative;width:100%}" +
-  ".dsh-root{--bg:#faf7ef;--fg:#24221f;--muted:#766e64;--primary:#c6262e;position:sticky;top:0;overflow:hidden;width:100%;background:var(--bg);color:var(--fg);" +
+  ".dsh-root{--bg:#faf7ef;--fg:#24221f;--muted:#766e64;--primary:#c6262e;position:relative;overflow:hidden;width:100%;touch-action:pan-y;background:var(--bg);color:var(--fg);" +
   "font-family:var(--font-archivo),ui-sans-serif,system-ui,sans-serif;container-type:inline-size;-webkit-tap-highlight-color:transparent;outline:none}" +
   ".dsh-root *{box-sizing:border-box}" +
   ".dsh-root:focus-visible{box-shadow:inset 0 0 0 2px var(--primary)}" +
@@ -121,10 +118,8 @@ const CSS =
   ".dsh-dot[aria-current]{height:26px}" +
   ".dsh-plates{position:absolute;left:130px;top:82px;width:245px;height:245px;touch-action:pan-y}" +
   ".dsh-orbit{position:absolute;inset:0;transform-origin:69% -217%;visibility:hidden;will-change:transform}" +
-  // The photos are top-down cutouts (the dish already has its plate or basket): no frame, just a
-  // shadow that follows the shape.
-  ".dsh-plate{display:block;width:245px;height:245px;" +
-  "filter:drop-shadow(0 18px 20px rgba(60,30,10,.28)) drop-shadow(0 4px 6px rgba(0,0,0,.12))}" +
+  // The photos are top-down cutouts (the dish already has its plate or basket): no frame, no shadow.
+  ".dsh-plate{display:block;width:245px;height:245px}" +
   ".dsh-plate img{width:100%;height:100%;max-width:none;object-fit:contain;user-select:none;-webkit-user-drag:none}" +
   ".dsh-head{position:absolute;left:400px;top:96px;width:300px;height:150px}" +
   ".dsh-hd{position:absolute;inset:0;visibility:hidden}" +
@@ -166,14 +161,14 @@ const CSS =
   "px;height:122px;display:flex;justify-content:center;padding-top:3px}" +
   ".dsh-th .dsh-btn{width:84px;height:116px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:9px;transition:background .45s}" +
   ".dsh-th .dsh-btn[aria-current]{background:rgba(255,255,255,.75);box-shadow:0 10px 24px -16px rgba(0,0,0,.3)}" +
-  ".dsh-th img{width:56px;height:56px;max-width:none;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));transition:transform .45s}" +
+  ".dsh-th img{width:56px;height:56px;max-width:none;object-fit:contain;transition:transform .45s}" +
   ".dsh-th .dsh-btn[aria-current] img{transform:scale(1.06)}" +
   ".dsh-th span{font-size:10px;line-height:1.25;text-align:center;font-weight:600;color:color-mix(in oklab,var(--fg) 78%,transparent);max-width:80px}" +
   ".dsh-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}" +
   "@container (max-width:719px){" +
   ".dsh-canvas{position:relative;left:auto;top:auto;width:100%;height:100%;transform:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 16px calc(14px + env(safe-area-inset-bottom))}" +
   ".dsh-arc{width:200%;height:auto;left:-60%;top:-40px}" +
-  ".dsh-brand{position:relative;left:auto;top:auto;margin-bottom:10px;font-size:11px}" +
+  ".dsh-brand{display:none}" +
   ".dsh-pager{left:12px;top:50%;transform:translateY(-50%)}" +
   ".dsh-plates{position:relative;left:auto;top:auto;width:min(56vw,30svh);height:min(56vw,30svh);flex:none}" +
   ".dsh-plate{width:100%;height:100%}" +
@@ -213,8 +208,6 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
 
   const trackRef = useRef<HTMLDivElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const stRef = useRef<ScrollTrigger | null>(null);
-  const segRef = useRef(0);
   const indexRef = useRef(0);
   const orbits = useRef<(HTMLDivElement | null)[]>([]);
   const heads = useRef<(HTMLDivElement | null)[]>([]);
@@ -226,6 +219,7 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const reducedRef = useRef(false);
   const swipe = useRef<{ x: number; y: number } | null>(null);
+  const wheelAt = useRef(0);
 
   // Fit the 960 × 520 design canvas to the stage (desktop and tablet).
   useLayoutEffect(() => {
@@ -408,56 +402,10 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
     setIndex(next);
   };
 
-  // The page scroll drives the dish: the stage pins, one stretch of scroll per dish, with snapping.
-  // No loop: after the last dish the page scrolls on to the rest of the landing.
-  const steps = Math.max(0, n - 1);
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track || steps < 1) return;
-    const trigger = ScrollTrigger.create({
-      trigger: track,
-      start: "top top",
-      end: "bottom bottom",
-      snap: { snapTo: 1 / steps, duration: { min: 0.3, max: 0.8 }, delay: 0.08, ease: "power2.inOut" },
-      onUpdate: (self) => {
-        const seg = Math.round(self.progress * steps);
-        if (seg === segRef.current) return;
-        const dir = seg > segRef.current ? 1 : -1;
-        segRef.current = seg;
-        select(wrapIndex(seg, n), dir);
-      },
-    });
-    stRef.current = trigger;
-    // Content above the hero can change height after load (cookie notice, fonts, images): keep the
-    // pinned range measured on the real layout, or the wrong dish would show on arrival.
-    let pending = 0;
-    let lastHeight = document.body.scrollHeight;
-    const ro = new ResizeObserver(() => {
-      if (document.body.scrollHeight === lastHeight) return;
-      lastHeight = document.body.scrollHeight;
-      cancelAnimationFrame(pending);
-      pending = requestAnimationFrame(() => ScrollTrigger.refresh());
-    });
-    ro.observe(document.body);
-    return () => {
-      ro.disconnect();
-      cancelAnimationFrame(pending);
-      trigger.kill();
-      stRef.current = null;
-    };
-  }, [steps, n]);
-
-  // Buttons, keys and swipes jump to a dish and move the scroll to its stretch, so both stay in step.
   const go = (to: number, dir?: 1 | -1) => {
     if (n < 2) return;
     const next = wrapIndex(to, n);
     if (next === index) return;
-    const st = stRef.current;
-    const y = st ? st.scroll() : 0;
-    if (st && y >= st.start - 1 && y <= st.end + 1) {
-      segRef.current = next;
-      st.scroll(st.start + ((st.end - st.start) * next) / steps);
-    }
     select(next, dir ?? stepDirection(index, next, n));
   };
   const step = (d: 1 | -1) => go(index + d, d);
@@ -481,6 +429,19 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
     const dx = e.clientX - s.x;
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(e.clientY - s.y) * 1.4) step(dx < 0 ? 1 : -1);
   };
+  // Two-finger sideways scroll on a trackpad (or shift + wheel): one dish per gesture. Vertical
+  // wheel is left alone, so the page scrolls on.
+  const onWheel = (e: React.WheelEvent) => {
+    const dx = e.deltaX || (e.shiftKey ? e.deltaY : 0);
+    if (Math.abs(dx) < 18 || Math.abs(dx) < Math.abs(e.deltaY) * (e.shiftKey ? 0 : 1.2)) return;
+    const t = e.timeStamp;
+    if (t - wheelAt.current < 650) {
+      wheelAt.current = t;
+      return;
+    }
+    wheelAt.current = t;
+    step(dx > 0 ? 1 : -1);
+  };
 
   const start = stripStart(index, n, VISIBLE);
   const dish = dishes[index];
@@ -489,7 +450,7 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
     <div
       ref={trackRef}
       className="dsh-trk"
-      style={{ height: `calc(${height} * ${1 + steps * SCROLL_PER_DISH})` }}
+      style={{ height }}
     >
       <div
         ref={rootRef}
@@ -500,6 +461,10 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
         aria-label="Le specialità DIMSUM"
         tabIndex={0}
         onKeyDown={onKeyDown}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={() => (swipe.current = null)}
+        onWheel={onWheel}
       >
         <style>{CSS}</style>
         <div className="dsh-canvas">
@@ -528,9 +493,6 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
 
           <div
             className="dsh-plates"
-            onPointerDown={onPointerDown}
-            onPointerUp={onPointerUp}
-            onPointerCancel={() => (swipe.current = null)}
           >
             {dishes.map((d, i) => (
               <div
