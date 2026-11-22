@@ -10,7 +10,32 @@ import { logger } from "../../logger";
 import { publish } from "../../realtime/bus";
 
 const ticketInclude = {
-  order: { select: { id: true, publicId: true, displayNumber: true } },
+  order: {
+    select: {
+      id: true,
+      publicId: true,
+      displayNumber: true,
+      status: true,
+      fulfillmentType: true,
+      totalCents: true,
+      placedAt: true,
+      items: {
+        orderBy: { position: "asc" },
+        include: {
+          modifiers: true,
+          product: {
+            select: {
+              id: true,
+              slug: true,
+              description: true,
+              ingredients: true,
+              images: { orderBy: { position: "asc" }, take: 1, select: { url: true } },
+            },
+          },
+        },
+      },
+    },
+  },
   messages: { orderBy: { createdAt: "asc" }, include: { author: { select: { name: true } } } },
 } satisfies Prisma.SupportTicketInclude;
 
@@ -27,7 +52,42 @@ function toAdminTicket(t: TicketRow, withMessages: boolean): AdminSupportTicketD
     name: t.name,
     email: t.email,
     phone: t.phone,
-    order: t.order ? { id: t.order.id, publicId: t.order.publicId, number: t.order.displayNumber } : null,
+    customerId: t.userId,
+    order: t.order
+      ? {
+          id: t.order.id,
+          publicId: t.order.publicId,
+          number: t.order.displayNumber,
+          status: t.order.status,
+          fulfillmentType: t.order.fulfillmentType,
+          totalCents: t.order.totalCents,
+          placedAt: t.order.placedAt.toISOString(),
+          ...(withMessages
+            ? {
+                items: t.order.items.map((i) => ({
+                  id: i.id,
+                  name: i.name,
+                  nameZh: i.nameZh,
+                  posCode: i.posCode,
+                  variantName: i.variantName,
+                  quantity: i.quantity,
+                  notes: i.notes,
+                  modifiers: i.modifiers.map((m) => ({ name: m.name, quantity: m.quantity })),
+                  allergens: i.allergens,
+                  product: i.product
+                    ? {
+                        id: i.product.id,
+                        slug: i.product.slug,
+                        imageUrl: i.product.images[0]?.url ?? null,
+                        description: i.product.description,
+                        ingredients: i.product.ingredients,
+                      }
+                    : null,
+                })),
+              }
+            : {}),
+        }
+      : null,
     createdAt: t.createdAt.toISOString(),
     updatedAt: t.updatedAt.toISOString(),
     lastMessagePreview: (last?.body ?? "").slice(0, 160),

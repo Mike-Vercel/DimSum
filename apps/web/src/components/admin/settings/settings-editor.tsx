@@ -338,6 +338,7 @@ export function SettingsEditor({ initial }: { initial: AdminSettingsResponse }) 
                     onChange={(e) => set("newOrderSound", e.target.value)}
                     className="h-12 w-full rounded-md bg-surface px-3 ring-1 ring-line ring-inset"
                   >
+                    <option value="ringtone">Suoneria (consigliata)</option>
                     <option value="chime">Campanello</option>
                     <option value="bell">Campana</option>
                     <option value="gong">Gong</option>

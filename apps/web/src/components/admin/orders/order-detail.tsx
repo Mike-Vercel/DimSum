@@ -522,6 +522,7 @@ export function OrderDetail({
         order={dialog === "accept" ? order : null}
         options={[10, 15, 20, 25, 30, 45]}
         defaultMinutes={15}
+        timeZone={timeZone}
         busy={command.isPending}
         onClose={() => setDialog(null)}
         onConfirm={(m) => run({ command: "CONFIRM", prepMinutes: m })}

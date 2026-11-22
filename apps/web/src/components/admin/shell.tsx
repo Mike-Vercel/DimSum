@@ -27,12 +27,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Logo, Seal } from "@/components/brand/logo";
 import { Avatar } from "@/components/ui/misc";
 import { api } from "@/lib/api";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
+import { enablePush, pushState } from "@/lib/push";
 import { useRealtime } from "@/lib/realtime";
 
 export interface AdminViewer {
@@ -230,6 +231,11 @@ function AccountFooter({ viewer }: { viewer: AdminViewer }) {
 
 /** Staff area frame: dark sidebar on desktop, drawer on tablets and phones. */
 export function AdminShell({ viewer, children }: { viewer: AdminViewer; children: ReactNode }) {
+  // New-order alerts reach every staff device already allowed to notify (e.g. the owner's phone,
+  // allowed earlier as a customer), without asking again.
+  useEffect(() => {
+    if (pushState() === "granted") void enablePush({ topic: "staff" }).catch(() => undefined);
+  }, []);
   const pathname = usePathname();
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;

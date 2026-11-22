@@ -14,13 +14,50 @@ import { createTeamAccount, sendTeamInvite, setAccountDisabled } from "./people"
 const STALE_MS = 3 * 60_000;
 const ACTIVE_DELIVERY = ["ASSIGNED", "TO_RESTAURANT", "AT_RESTAURANT", "PICKED_UP", "ON_THE_WAY"] as const;
 
+/**
+ * The owner delivers in person when needed: a rider profile linked to the owner's account (the
+ * account keeps its role), so the owner can be chosen in "Assegna rider" like any rider.
+ */
+export async function ensureOwnerRider(): Promise<string | null> {
+  const owner = await db.user.findFirst({
+    where: { role: "SUPER_ADMIN", disabledAt: null, deletedAt: null },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, name: true, phone: true, rider: { select: { id: true } } },
+  });
+  if (!owner) return null;
+  if (owner.rider) return owner.rider.id;
+  const rider = await db.rider.create({
+    data: {
+      userId: owner.id,
+      displayName: owner.name.trim().split(/\s+/)[0] || "Titolare",
+      phone: owner.phone,
+      isActive: true,
+      availability: "AVAILABLE",
+    },
+    select: { id: true },
+  });
+  return rider.id;
+}
+
+/**
+ * Nobody else delivers (no active rider account): a delivery accepted by the kitchen goes to the
+ * owner straight away, without asking.
+ */
+export async function ownerRiderIfAlone(): Promise<string | null> {
+  const others = await db.rider.count({
+    where: { isActive: true, user: { role: "RIDER", disabledAt: null, deletedAt: null } },
+  });
+  if (others > 0) return null;
+  return ensureOwnerRider();
+}
+
 /** Riders with live state for dispatch: who is free, who is busy and where (only during deliveries). */
 export async function listRiders(now = new Date()): Promise<AdminRiderDTO[]> {
   const config = await getRestaurantConfig();
   const since = dayStart(now, config.timezone);
   const riders = await db.rider.findMany({
     include: {
-      user: { select: { email: true, disabledAt: true } },
+      user: { select: { email: true, disabledAt: true, role: true } },
       deliveries: {
         where: { OR: [{ status: { in: [...ACTIVE_DELIVERY] } }, { deliveredAt: { gte: since } }] },
         include: {
@@ -54,6 +91,7 @@ export async function listRiders(now = new Date()): Promise<AdminRiderDTO[]> {
       cashToReturnCents: delivered
         .filter((d) => d.order.paymentMethod === "CASH_ON_DELIVERY")
         .reduce((s, d) => s + (d.cashCollectedCents ?? d.order.totalCents), 0),
+      isOwner: r.user.role !== "RIDER",
       lastSeenAt: r.lastSeenAt?.toISOString() ?? null,
       location:
         r.lastLat !== null && r.lastLng !== null && r.lastLocationAt

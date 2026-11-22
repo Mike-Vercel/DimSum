@@ -8,7 +8,7 @@ import { toast } from "@/components/ui/toaster";
 import { ApiError, api } from "../api";
 import { haptics } from "../haptics";
 import { useRealtime } from "../realtime";
-import { playAlert, type AlertSound } from "./alert-sound";
+import { playAlert, ringInterval, type AlertSound } from "./alert-sound";
 
 export const kitchenKey = ["admin", "kitchen"] as const;
 
@@ -32,7 +32,9 @@ export function useKitchenBoard(initial?: KitchenBoardDTO) {
     queryKey: kitchenKey,
     queryFn: ({ signal }) => api.admin.kitchen(signal),
     ...(initial ? { initialData: initial, initialDataUpdatedAt: 0 } : {}),
-    refetchInterval: 20_000,
+    // Realtime events refresh it at once; polling every 4 s is the safety net (serverless realtime
+    // can drop), so a new order never shows up late.
+    refetchInterval: 4_000,
     refetchOnWindowFocus: true,
   });
   const pending = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -81,38 +83,55 @@ export function useOrderCommand() {
  * Sound + vibration + tab title while orders wait for acceptance. Repeats until someone acts;
  * faster once an order passes the escalation threshold.
  */
+/** Orders that can be accepted right now: ASAP orders, and scheduled ones once their window opens. */
+export function isActionable(o: KitchenOrderDTO, now: number): boolean {
+  return o.status === "RECEIVED" && (!o.acceptFrom || new Date(o.acceptFrom).getTime() <= now);
+}
+
+/**
+ * Glovo-style alarm: while an order is waiting to be accepted the ringtone keeps ringing (every
+ * ~2 s, faster once overdue), with vibration, a flashing screen and a blinking tab title. A new
+ * order — or a scheduled one whose acceptance window opens — starts it at once.
+ */
 export function useNewOrderAlerts(
   orders: KitchenOrderDTO[],
-  options: { enabled: boolean; sound: AlertSound; muted: boolean },
+  options: { enabled: boolean; sound: AlertSound; muted: boolean; now: number },
 ) {
-  const waiting = orders.filter((o) => o.status === "RECEIVED");
+  const waiting = orders.filter((o) => isActionable(o, options.now));
+  const upcoming = orders.filter((o) => o.status === "RECEIVED" && !isActionable(o, options.now)).length;
   const escalated = waiting.some((o) => o.escalated);
   const ids = waiting.map((o) => o.id).join(",");
   const known = useRef<Set<string> | null>(null);
   const [flash, setFlash] = useState(false);
+  const [freshAt, setFreshAt] = useState(0);
+  const ringing = waiting.length > 0 && options.enabled && !options.muted;
 
-  // A brand-new order: immediate alert, vibration and a visual flash.
+  // A brand-new actionable order: visual flash and an immediate restart of the ringtone.
   useEffect(() => {
     const current = new Set(ids ? ids.split(",") : []);
     if (known.current) {
       const fresh = [...current].filter((id) => !known.current!.has(id));
       if (fresh.length) {
-        if (options.enabled && !options.muted) playAlert(options.sound, 0.6);
-        if ("vibrate" in navigator) navigator.vibrate?.([200, 100, 200]);
+        setFreshAt(Date.now());
         setFlash(true);
         setTimeout(() => setFlash(false), 2400);
       }
     }
     known.current = current;
-  }, [ids, options.enabled, options.muted, options.sound]);
+  }, [ids]);
 
-  // Reminder loop while something is still waiting.
+  // The ringtone loop: rings now, then again and again until nothing is waiting.
   useEffect(() => {
-    if (!waiting.length || !options.enabled || options.muted) return;
-    const every = escalated ? 5_000 : 12_000;
-    const t = setInterval(() => playAlert(options.sound, escalated ? 0.75 : 0.45), every);
+    if (!ringing) return;
+    const ring = () => {
+      playAlert(options.sound, 0.9);
+      if ("vibrate" in navigator) navigator.vibrate?.([250, 120, 250, 120, 400]);
+    };
+    ring();
+    const every = ringInterval(options.sound) * 1000 * (escalated ? 0.75 : 1);
+    const t = setInterval(ring, every);
     return () => clearInterval(t);
-  }, [waiting.length, escalated, options.enabled, options.muted, options.sound]);
+  }, [ringing, escalated, options.sound, freshAt]);
 
   // Tab title: visible even when the board is in a background tab.
   useEffect(() => {
@@ -125,12 +144,12 @@ export function useNewOrderAlerts(
     const t = setInterval(() => {
       on = !on;
       document.title = on ? `(${waiting.length}) Nuovi ordini!` : base;
-    }, 1200);
+    }, 1000);
     return () => {
       clearInterval(t);
       document.title = base;
     };
   }, [waiting.length]);
 
-  return { waiting: waiting.length, escalated, flash };
+  return { waiting: waiting.length, upcoming, escalated, flash };
 }

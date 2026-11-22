@@ -1227,7 +1227,7 @@ model RestaurantSettings {
   phoneRequiredForPickup   Boolean @default(false)
 
   newOrderSoundEnabled Boolean @default(true)
-  newOrderSound        String  @default("chime")
+  newOrderSound        String  @default("ringtone")
   /// Partial EtaSettings overrides (kitchen capacity, dispatch times…).
   etaSettings          Json    @default("{}")
   /// LoyaltyConfig — the Dimsum Club stays disabled until launch.

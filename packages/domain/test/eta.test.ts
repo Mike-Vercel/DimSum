@@ -96,6 +96,26 @@ describe("computeEta", () => {
     expect(eta.pickupAt).toBeNull();
   });
 
+  it("keeps a scheduled order at its chosen time even when accepted early", () => {
+    // Placed while closed for 19:30, accepted at 18:30 with 15 minutes of preparation.
+    const eta = computeEta({
+      ...base,
+      scheduledFor: min(60),
+      milestones: { ...base.milestones, confirmedAt: now },
+      prepMinutes: 15,
+    })!;
+    expect(eta.arrivalAt.getTime()).toBeGreaterThanOrEqual(min(60).getTime() - 5 * 60_000);
+    expect(eta.windowStart.getTime()).toBeGreaterThanOrEqual(min(55).getTime());
+    const pickup = computeEta({
+      ...base,
+      fulfillmentType: "PICKUP",
+      scheduledFor: min(60),
+      milestones: { ...base.milestones, confirmedAt: now },
+      prepMinutes: 15,
+    })!;
+    expect(pickup.readyAt).toEqual(min(60));
+  });
+
   it("returns null for closed orders", () => {
     expect(computeEta({ ...base, milestones: { ...base.milestones, deliveredAt: now } })).toBeNull();
     expect(computeEta({ ...base, milestones: { ...base.milestones, cancelledAt: now } })).toBeNull();

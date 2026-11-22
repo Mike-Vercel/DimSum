@@ -1,7 +1,7 @@
 "use client";
 
 import { formatEuro } from "@dimsum/domain";
-import type { KitchenOrderDTO, StaffOrderCommand } from "@dimsum/types";
+import type { KitchenItemDTO, KitchenOrderDTO, StaffOrderCommand } from "@dimsum/types";
 import {
   Bike,
   CalendarClock,
@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { CollectionBadge } from "../ui";
+import { ItemThumb } from "./item-dialog";
 
 export type TicketAction =
   | { type: "accept" }
@@ -58,21 +59,46 @@ export function OrderTicket({
   timeZone,
   busy,
   onAction,
+  onOpenItem,
 }: {
   order: KitchenOrderDTO;
   now: number;
   timeZone: string;
   busy: boolean;
   onAction: (a: TicketAction) => void;
+  onOpenItem: (item: KitchenItemDTO) => void;
 }) {
   const has = (c: StaffOrderCommand) => order.commands.includes(c);
   const waited = order.receivedAt ? minutesBetween(order.receivedAt, now) : 0;
   const dueIn = order.dueAt ? Math.round((new Date(order.dueAt).getTime() - now) / 60_000) : null;
   const late = dueIn !== null && dueIn < 0 && !order.readyAt;
   const isDelivery = order.fulfillmentType === "DELIVERY";
+  // Scheduled orders open for acceptance 30 minutes before they must be ready.
+  const opensIn =
+    order.status === "RECEIVED" && order.acceptFrom
+      ? Math.ceil((new Date(order.acceptFrom).getTime() - now) / 60_000)
+      : null;
+  const locked = opensIn !== null && opensIn > 0;
 
   let primary: ReactNode = null;
-  if (order.status === "RECEIVED") {
+  if (order.status === "RECEIVED" && locked) {
+    primary = (
+      <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-2">
+        <Button size="lg" variant="secondary" disabled>
+          Accetta dalle {clock(order.acceptFrom!, timeZone)}
+        </Button>
+        <Button
+          size="lg"
+          variant="secondary"
+          className="px-3"
+          disabled={busy}
+          onClick={() => onAction({ type: "reject" })}
+        >
+          Rifiuta
+        </Button>
+      </div>
+    );
+  } else if (order.status === "RECEIVED") {
     primary = (
       <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-2">
         <Button size="lg" loading={busy} onClick={() => onAction({ type: "accept" })}>
@@ -144,19 +170,37 @@ export function OrderTicket({
     );
   }
 
+  const accent =
+    order.status === "RECEIVED"
+      ? locked
+        ? "bg-info"
+        : "bg-warning"
+      : order.column === "READY"
+        ? "bg-success"
+        : order.column === "OUT"
+          ? "bg-ink-900 dark:bg-white"
+          : "bg-brand";
+
   return (
     <article
       className={cn(
-        "relative rounded-2xl bg-surface p-4 shadow-xs ring-1 ring-line",
-        order.status === "RECEIVED" && "ring-2 ring-warning",
+        "relative overflow-hidden rounded-3xl bg-surface p-4 pt-5 shadow-sm ring-1 ring-line",
+        order.status === "RECEIVED" && !locked && "ring-2 ring-warning",
         order.escalated && "animate-alert-flash ring-2 ring-danger",
         late && "ring-2 ring-danger",
       )}
     >
+      <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1.5", accent)} />
       <header className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-title-lg font-extrabold tabular-nums">#{order.number}</h3>
+            <Link
+              href={`/admin/ordini/${order.id}`}
+              className="text-headline font-extrabold tabular-nums underline-offset-4 hover:underline"
+              title="Apri il dettaglio dell'ordine"
+            >
+              #{order.number}
+            </Link>
             <Badge tone={isDelivery ? "dark" : "info"} size="md">
               {isDelivery ? "Consegna" : "Ritiro"}
             </Badge>
@@ -224,34 +268,56 @@ export function OrderTicket({
       </header>
 
       {order.scheduledFor ? (
-        <p className="mt-3 flex items-center gap-2 rounded-lg bg-info-soft px-3 py-2 text-body-sm font-semibold text-info">
-          <CalendarClock className="size-4" /> Programmato per le {clock(order.scheduledFor, timeZone)}
+        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-xl bg-info-soft px-3 py-2 text-body-sm font-semibold text-info">
+          <CalendarClock className="size-4" /> {isDelivery ? "Consegna" : "Ritiro"} alle{" "}
+          {clock(order.scheduledFor, timeZone)}
+          {locked ? (
+            <span className="font-medium">
+              · si accetta dalle {clock(order.acceptFrom!, timeZone)} (tra {duration(opensIn!)})
+            </span>
+          ) : null}
         </p>
       ) : null}
 
-      <ul className="mt-3 space-y-2 border-t border-dashed border-line pt-3">
+      <ul className="mt-3 space-y-1.5 border-t border-dashed border-line pt-3">
         {order.items.map((item) => (
-          <li key={item.id} className="text-body">
-            <p className="font-semibold">
-              <span className="tabular-nums">{item.quantity}×</span> {item.name}
-              {item.variantName ? (
-                <span className="font-normal text-fg-muted"> · {item.variantName}</span>
-              ) : null}
-              {item.posCode ? (
-                <span className="ml-1.5 rounded bg-surface-2 px-1.5 py-0.5 align-middle text-micro font-bold text-fg-muted">
-                  {item.posCode}
+          <li key={item.id}>
+            <button
+              type="button"
+              onClick={() => onOpenItem(item)}
+              className="-mx-2 flex w-[calc(100%+1rem)] tap items-center gap-3 rounded-2xl px-2 py-1.5 text-left transition-colors hover:bg-surface-2"
+            >
+              <span className="relative">
+                <ItemThumb item={item} />
+                <span className="absolute -top-1.5 -right-1.5 grid h-6 min-w-6 place-items-center rounded-full bg-ink-950 px-1.5 text-caption font-extrabold text-white tabular-nums ring-2 ring-surface">
+                  {item.quantity}
                 </span>
-              ) : null}
-            </p>
-            {item.modifiers.length ? (
-              <p className="pl-6 text-body-sm text-fg-muted">
-                +{" "}
-                {item.modifiers.map((m) => `${m.quantity > 1 ? `${m.quantity}× ` : ""}${m.name}`).join(", ")}
-              </p>
-            ) : null}
-            {item.notes ? (
-              <p className="pl-6 text-body-sm font-semibold text-warning">“{item.notes}”</p>
-            ) : null}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-body leading-snug font-semibold">
+                  {item.name}
+                  {item.variantName ? (
+                    <span className="font-normal text-fg-muted"> · {item.variantName}</span>
+                  ) : null}
+                  {item.posCode ? (
+                    <span className="ml-1.5 rounded bg-surface-2 px-1.5 py-0.5 align-middle text-micro font-bold text-fg-muted">
+                      {item.posCode}
+                    </span>
+                  ) : null}
+                </span>
+                {item.modifiers.length ? (
+                  <span className="block text-body-sm text-fg-muted">
+                    +{" "}
+                    {item.modifiers
+                      .map((m) => `${m.quantity > 1 ? `${m.quantity}× ` : ""}${m.name}`)
+                      .join(", ")}
+                  </span>
+                ) : null}
+                {item.notes ? (
+                  <span className="block text-body-sm font-semibold text-warning">“{item.notes}”</span>
+                ) : null}
+              </span>
+            </button>
           </li>
         ))}
       </ul>

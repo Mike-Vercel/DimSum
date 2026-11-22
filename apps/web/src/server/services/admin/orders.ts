@@ -1,5 +1,12 @@
 import "server-only";
-import { availableCommands, isTerminal, kitchenColumn, type VatBreakdownRow } from "@dimsum/domain";
+import {
+  acceptableFrom,
+  availableCommands,
+  isTerminal,
+  kitchenColumn,
+  scheduledReadyAt,
+  type VatBreakdownRow,
+} from "@dimsum/domain";
 import type {
   AdminOrderDetailDTO,
   AdminOrderListItemDTO,
@@ -17,10 +24,24 @@ import { db, type Prisma } from "../../db";
 import { notFound } from "../../errors";
 import { addressLine, etaOf, stateOf } from "../orders/queries";
 import { computeServiceStatus, loadLiveLoad, loadRestaurantConfig } from "../restaurant";
-import { listRiders } from "./riders";
+import { ensureOwnerRider, listRiders } from "./riders";
 
 export const adminOrderInclude = {
-  items: { orderBy: { position: "asc" }, include: { modifiers: true } },
+  items: {
+    orderBy: { position: "asc" },
+    include: {
+      modifiers: true,
+      product: {
+        select: {
+          id: true,
+          slug: true,
+          description: true,
+          ingredients: true,
+          images: { orderBy: { position: "asc" }, take: 1, select: { url: true } },
+        },
+      },
+    },
+  },
   payments: { orderBy: { createdAt: "desc" } },
   delivery: { include: { rider: true } },
   deliveryZone: { select: { name: true } },
@@ -53,6 +74,18 @@ function collectionOf(o: AdminOrderRow): CollectionState {
   return o.paidAt ? "PAID" : "PENDING";
 }
 
+function productOf(i: AdminOrderRow["items"][number]): KitchenItemDTO["product"] {
+  return i.product
+    ? {
+        id: i.product.id,
+        slug: i.product.slug,
+        imageUrl: i.product.images[0]?.url ?? null,
+        description: i.product.description,
+        ingredients: i.product.ingredients,
+      }
+    : null;
+}
+
 function itemsOf(o: AdminOrderRow): KitchenItemDTO[] {
   return o.items.map((i) => ({
     id: i.id,
@@ -64,15 +97,14 @@ function itemsOf(o: AdminOrderRow): KitchenItemDTO[] {
     notes: i.notes,
     modifiers: i.modifiers.map((m) => ({ name: m.name, quantity: m.quantity })),
     allergens: i.allergens,
+    product: productOf(i),
   }));
 }
 
 /** When the food must be ready: the scheduled slot (minus the ride) or acceptance + prep time. */
 function dueAtOf(o: AdminOrderRow): Date | null {
-  if (o.isScheduled && o.scheduledFor) {
-    const ride = o.fulfillmentType === "DELIVERY" ? (o.routeDurationSeconds ?? 600) * 1000 : 0;
-    return new Date(o.scheduledFor.getTime() - ride);
-  }
+  const scheduled = scheduledReadyAt(o);
+  if (scheduled) return scheduled;
   if (o.confirmedAt && o.prepMinutes) return new Date(o.confirmedAt.getTime() + o.prepMinutes * 60_000);
   return null;
 }
@@ -87,6 +119,9 @@ export function toKitchenOrder(
   ctx: { escalationMinutes: number; now: Date },
 ): KitchenOrderDTO {
   const dueAt = dueAtOf(o);
+  const acceptFrom = acceptableFrom(o);
+  // A scheduled order starts "waiting" only when it can be accepted.
+  const waitingSince = o.receivedAt && acceptFrom && acceptFrom > o.receivedAt ? acceptFrom : o.receivedAt;
   return {
     id: o.id,
     publicId: o.publicId,
@@ -104,6 +139,7 @@ export function toKitchenOrder(
     scheduledFor: o.isScheduled ? (o.scheduledFor?.toISOString() ?? null) : null,
     prepMinutes: o.prepMinutes,
     dueAt: dueAt?.toISOString() ?? null,
+    acceptFrom: acceptFrom?.toISOString() ?? null,
     eta: etaOf(o, ctx.now),
     customerName: o.customerName,
     customerPhone: o.customerPhone,
@@ -116,8 +152,8 @@ export function toKitchenOrder(
     deliveryStatus: o.delivery?.status ?? null,
     escalated:
       o.status === "RECEIVED" &&
-      !!o.receivedAt &&
-      ctx.now.getTime() - o.receivedAt.getTime() > ctx.escalationMinutes * 60_000,
+      !!waitingSince &&
+      ctx.now.getTime() - waitingSince.getTime() > ctx.escalationMinutes * 60_000,
     commands: staffCommands(o),
   };
 }
@@ -153,7 +189,7 @@ export async function getKitchenBoard(now = new Date()): Promise<KitchenBoardDTO
       include: adminOrderInclude,
       orderBy: [{ receivedAt: "asc" }, { placedAt: "asc" }],
     }),
-    listRiders(now),
+    ensureOwnerRider().then(() => listRiders(now)),
   ]);
   return {
     orders: rows.map((o) =>
@@ -298,6 +334,7 @@ export async function getAdminOrder(orderId: string, now = new Date()): Promise<
       quantity: i.quantity,
       notes: i.notes,
       allergens: i.allergens,
+      product: productOf(i),
       unitPriceCents: i.unitPriceCents,
       lineTotalCents: i.lineTotalCents,
       vatRateBps: i.vatRateBps,

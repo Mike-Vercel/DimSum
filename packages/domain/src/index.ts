@@ -17,3 +17,4 @@ export * from "./allergens";
 export * from "./permissions";
 export * from "./availability";
 export * from "./support";
+export * from "./scheduling";

@@ -9,11 +9,21 @@ import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { cn } from "@/lib/cn";
 
-/** "Accetta": the kitchen promises a preparation time (10/15/20/25/30/45 or custom). */
+function clockOf(iso: string, timeZone: string) {
+  return new Intl.DateTimeFormat("it-IT", { hour: "2-digit", minute: "2-digit", timeZone }).format(
+    new Date(iso),
+  );
+}
+
+/**
+ * "Accetta": the kitchen promises a preparation time (10/15/20/25/30/45 or custom). A scheduled
+ * order keeps the customer's time: "18:30" means 18:30, so there is nothing to choose.
+ */
 export function AcceptDialog({
   order,
   options,
   defaultMinutes,
+  timeZone,
   busy,
   onClose,
   onConfirm,
@@ -21,6 +31,7 @@ export function AcceptDialog({
   order: KitchenOrderDTO | null;
   options: number[];
   defaultMinutes: number;
+  timeZone: string;
   busy: boolean;
   onClose: () => void;
   onConfirm: (minutes: number) => void;
@@ -29,6 +40,38 @@ export function AcceptDialog({
   const [custom, setCustom] = useState("");
   const value = custom ? Number(custom) : minutes;
   const valid = Number.isInteger(value) && value >= 1 && value <= 240;
+
+  if (order?.scheduledFor && order.dueAt) {
+    const scheduledFor = order.scheduledFor;
+    const dueAt = order.dueAt;
+    const untilDue = () =>
+      Math.min(240, Math.max(1, Math.ceil((new Date(dueAt).getTime() - Date.now()) / 60_000)));
+    const isDelivery = order.fulfillmentType === "DELIVERY";
+    return (
+      <Dialog
+        open
+        onOpenChange={(open) => !open && onClose()}
+        title={`Accetta #${order.number}`}
+        description={`Ordine programmato: ${isDelivery ? "consegna" : "ritiro"} alle ${clockOf(scheduledFor, timeZone)}, come scelto dal cliente.`}
+        size="sm"
+        footer={
+          <Button size="lg" block loading={busy} onClick={() => onConfirm(untilDue())}>
+            Accetta · {isDelivery ? "consegna" : "ritiro"} alle {clockOf(scheduledFor, timeZone)}
+          </Button>
+        }
+      >
+        <div className="px-6 pb-4">
+          <div className="rounded-2xl bg-info-soft p-4 text-info">
+            <p className="text-display font-extrabold tabular-nums">{clockOf(scheduledFor, timeZone)}</p>
+            <p className="mt-1 text-body-sm font-semibold">
+              Pronto entro le {clockOf(dueAt, timeZone)}
+              {isDelivery ? " per partire in tempo" : ""}. Il cliente vede sempre questo orario.
+            </p>
+          </div>
+        </div>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog
@@ -178,12 +221,13 @@ export function RiderPicker({
   onClose: () => void;
   onAssign: (riderId: string) => void;
 }) {
+  // Riders first by availability; the owner ("Consegno io") is always offered too.
   const sorted = riders
     .filter((r) => r.isActive)
     .toSorted(
       (a, b) =>
         ["AVAILABLE", "BUSY", "OFFLINE"].indexOf(a.availability) -
-        ["AVAILABLE", "BUSY", "OFFLINE"].indexOf(b.availability),
+          ["AVAILABLE", "BUSY", "OFFLINE"].indexOf(b.availability) || Number(a.isOwner) - Number(b.isOwner),
     );
   return (
     <Dialog
@@ -211,7 +255,14 @@ export function RiderPicker({
                 <Bike className="size-5" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block font-semibold">{r.name}</span>
+                <span className="block font-semibold">
+                  {r.isOwner ? `${r.name} · titolare` : r.name}
+                  {r.isOwner ? (
+                    <span className="ml-2 rounded-full bg-brand-soft px-2 py-0.5 text-micro font-bold text-brand-ink">
+                      Consegno io
+                    </span>
+                  ) : null}
+                </span>
                 <span className="flex items-center gap-1.5 text-caption text-fg-muted">
                   <CircleDot
                     className={cn(

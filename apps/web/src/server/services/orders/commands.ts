@@ -1,5 +1,5 @@
 import "server-only";
-import { applyCommand, type Actor, type OrderCommand } from "@dimsum/domain";
+import { acceptableFrom, applyCommand, isAcceptableNow, type Actor, type OrderCommand } from "@dimsum/domain";
 import type { NotificationType, OrderStatus, Role } from "@dimsum/types";
 import { audit } from "../../audit";
 import { runAfter } from "../../background";
@@ -78,6 +78,18 @@ export async function runOrderCommand(orderId: string, command: OrderCommand, ct
 
   const result = await db.$transaction(async (tx) => {
     const order = await lockOrder(tx, orderId);
+    // Scheduled orders can be accepted only from 30 minutes before they must be ready.
+    if (command.type === "CONFIRM" && !isAcceptableNow(order, now)) {
+      const from = acceptableFrom(order)!;
+      const time = new Intl.DateTimeFormat("it-IT", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Rome",
+      }).format(from);
+      throw new AppError("INVALID_TRANSITION", `Ordine programmato: potrai accettarlo dalle ${time}.`, {
+        details: { code: "SCHEDULED_TOO_EARLY", acceptFrom: from.toISOString() },
+      });
+    }
     const transition = applyCommand(stateOf(order), command, ctx.actor, now);
     if (!transition.ok)
       throw new AppError("INVALID_TRANSITION", transition.message, { details: { code: transition.error } });
@@ -203,6 +215,17 @@ export async function runOrderCommand(orderId: string, command: OrderCommand, ct
   runAfter(async () => {
     if (ETA_COMMANDS.has(command.type)) await refreshOrderEta(order.id, { force: true });
     if (command.type === "RECEIVE") await afterReceived(order.id);
+    if (command.type === "CONFIRM" && order.fulfillmentType === "DELIVERY" && !riderId) {
+      // No rider accounts at all: the owner delivers, assigned automatically.
+      const { ownerRiderIfAlone } = await import("../admin/riders");
+      const owner = await ownerRiderIfAlone();
+      if (owner)
+        await runOrderCommand(
+          order.id,
+          { type: "ASSIGN_RIDER", riderId: owner },
+          { actor: "system", userId: null, note: "Nessun rider: consegna il titolare" },
+        ).catch(() => undefined);
+    }
     const type = NOTIFY[command.type];
     if (type) await notifyCustomer(order.id, type, "reason" in command ? { reason: command.reason } : {});
     if (command.type === "ASSIGN_RIDER" && riderId) {
@@ -221,8 +244,15 @@ export async function runOrderCommand(orderId: string, command: OrderCommand, ct
 
 async function afterReceived(orderId: string) {
   await publishCreated(orderId);
-  await notifyStaff(orderId, "NEW_ORDER");
   await notifyCustomer(orderId, "ORDER_RECEIVED");
+  // Scheduled orders alert the kitchen (and may be auto-accepted) only when their acceptance window
+  // opens, 30 minutes before they must be ready: see openScheduledOrders (operations).
+  const timing = await db.order.findUnique({
+    where: { id: orderId },
+    select: { isScheduled: true, scheduledFor: true, fulfillmentType: true, routeDurationSeconds: true },
+  });
+  if (timing && !isAcceptableNow(timing, new Date())) return;
+  await notifyStaff(orderId, "NEW_ORDER");
   const config = await getRestaurantConfig();
   if (config.autoAcceptOrders) {
     await runOrderCommand(

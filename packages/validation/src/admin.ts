@@ -221,7 +221,7 @@ export const settingsInput = z.object({
   phoneRequiredForDelivery: z.boolean(),
   phoneRequiredForPickup: z.boolean(),
   newOrderSoundEnabled: z.boolean(),
-  newOrderSound: z.enum(["chime", "bell", "gong"]),
+  newOrderSound: z.enum(["ringtone", "chime", "bell", "gong"]),
 });
 export type SettingsInput = z.infer<typeof settingsInput>;
 

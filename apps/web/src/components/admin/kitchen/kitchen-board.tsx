@@ -1,7 +1,7 @@
 "use client";
 
-import type { KitchenBoardDTO, KitchenColumnKey, KitchenOrderDTO } from "@dimsum/types";
-import { BellRing, Maximize, Minimize, Volume2, VolumeX, WifiOff } from "lucide-react";
+import type { KitchenBoardDTO, KitchenColumnKey, KitchenItemDTO, KitchenOrderDTO } from "@dimsum/types";
+import { BellRing, CalendarClock, Maximize, Minimize, Volume2, VolumeX, WifiOff } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toaster";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/cn";
 import { enablePush, pushState } from "@/lib/push";
 import { PauseControl } from "../pause-control";
 import { AcceptDialog, ReasonDialog, RiderPicker } from "./dialogs";
+import { ItemDialog } from "./item-dialog";
 import { OrderTicket, type TicketAction } from "./order-ticket";
 
 const COLUMNS: { key: KitchenColumnKey; title: string; empty: string }[] = [
@@ -41,11 +42,11 @@ function readMuted(): boolean {
   }
 }
 
-/** Ticking clock (15 s) for waiting times and countdowns. */
+/** Ticking clock (5 s) for waiting times, countdowns and scheduled orders' acceptance windows. */
 function useTick(): number {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 15_000);
+    const t = setInterval(() => setNow(Date.now()), 5_000);
     return () => clearInterval(t);
   }, []);
   return now;
@@ -60,6 +61,15 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
   const [accepting, setAccepting] = useState<KitchenOrderDTO | null>(null);
   const [reason, setReason] = useState<{ order: KitchenOrderDTO; mode: "reject" | "cancel" } | null>(null);
   const [assigning, setAssigning] = useState<KitchenOrderDTO | null>(null);
+  const [openItem, setOpenItem] = useState<KitchenItemDTO | null>(null);
+  // The activation prompt goes away after one tap, even where the device refuses audio; automated
+  // browsers (tests) never see it.
+  const [promptDismissed, setPromptDismissed] = useState(false);
+  const automated = useSyncExternalStore(
+    noop,
+    () => navigator.webdriver === true,
+    () => true,
+  );
   const [soundOn, setSoundOn] = useState(false);
   const storedMuted = useSyncExternalStore(noop, readMuted, () => false);
   const [mutedOverride, setMuted] = useState<boolean | null>(null);
@@ -75,11 +85,44 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
   );
 
   useWakeLock(true);
+  const sound = data.settings.newOrderSound as AlertSound;
   const alerts = useNewOrderAlerts(data.orders, {
     enabled: soundOn && data.settings.newOrderSoundEnabled,
     muted,
-    sound: data.settings.newOrderSound as AlertSound,
+    sound,
+    now,
   });
+
+  // Sound: unlocked by the first tap anywhere (browsers require a gesture), resumed when the tablet
+  // wakes up. Until it is unlocked a full-screen prompt asks for that one tap.
+  useEffect(() => {
+    const tryUnlock = async () => setSoundOn(await unlockAudio());
+    const onGesture = () => void tryUnlock();
+    const onVisible = () => document.visibilityState === "visible" && void tryUnlock();
+    for (const t of ["pointerdown", "keydown", "touchend"])
+      window.addEventListener(t, onGesture, { passive: true });
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      for (const t of ["pointerdown", "keydown", "touchend"]) window.removeEventListener(t, onGesture);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, []);
+
+  // Push: a device already allowed (e.g. the owner's phone, allowed earlier as a customer) is
+  // re-registered for the staff alerts without asking again.
+  useEffect(() => {
+    if (pushState() === "granted") void enablePush({ topic: "staff" }).catch(() => undefined);
+  }, []);
+
+  const activate = async () => {
+    setPromptDismissed(true);
+    const ok = await unlockAudio();
+    setSoundOn(ok);
+    if (ok) playAlert(sound, 0.6);
+    else toast.error("Il browser non permette l'audio su questo dispositivo.");
+    if (pushState() !== "denied" && pushState() !== "unsupported")
+      void enablePush({ topic: "staff" }).catch(() => undefined);
+  };
 
   useEffect(() => {
     const onChange = () => setFullscreen(!!document.fullscreenElement);
@@ -149,6 +192,7 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
             timeZone={timeZone}
             busy={busyId === o.id}
             onAction={(a) => run(o, a)}
+            onOpenItem={setOpenItem}
           />
         ))}
       </section>
@@ -166,16 +210,8 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
         ) : null}
         <PauseControl status={data.status} />
         {!soundOn ? (
-          <Button
-            size="sm"
-            onClick={async () => {
-              const ok = await unlockAudio();
-              setSoundOn(ok);
-              if (ok) playAlert(data.settings.newOrderSound as AlertSound, 0.4);
-              else toast.error("Il browser non permette l'audio su questo dispositivo.");
-            }}
-          >
-            <Volume2 className="size-4" /> Attiva suoni
+          <Button size="sm" onClick={() => void activate()}>
+            <Volume2 className="size-4" /> Attiva suoneria
           </Button>
         ) : (
           <Button
@@ -222,6 +258,14 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
           {fullscreen ? <Minimize className="size-4.5" /> : <Maximize className="size-4.5" />}
         </Button>
       </div>
+
+      {alerts.upcoming > 0 ? (
+        <div className="flex items-center justify-center gap-2 bg-info-soft px-4 py-2 text-body-sm font-semibold text-info">
+          <CalendarClock className="size-4.5" />
+          {alerts.upcoming === 1 ? "1 ordine programmato" : `${alerts.upcoming} ordini programmati`} · si
+          accettano 30 minuti prima, la suoneria parte da sola
+        </div>
+      ) : null}
 
       {alerts.waiting > 0 ? (
         <div
@@ -299,11 +343,30 @@ export function KitchenBoard({ initial, timeZone }: { initial: KitchenBoardDTO; 
         </div>
       ) : null}
 
+      {!soundOn && !promptDismissed && !automated && data.settings.newOrderSoundEnabled ? (
+        <button
+          type="button"
+          onClick={() => void activate()}
+          className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-5 bg-ink-950/92 px-6 text-center text-white backdrop-blur-sm"
+        >
+          <span className="grid size-24 animate-pulse place-items-center rounded-full bg-brand shadow-cta">
+            <BellRing className="size-11" />
+          </span>
+          <span className="text-headline font-extrabold">Tocca per attivare la suoneria</span>
+          <span className="max-w-md text-body text-white/70">
+            Il browser blocca i suoni finché non tocchi lo schermo. Un tocco attiva la suoneria dei nuovi
+            ordini e le notifiche su questo dispositivo.
+          </span>
+        </button>
+      ) : null}
+
+      <ItemDialog item={openItem} onClose={() => setOpenItem(null)} />
       <AcceptDialog
         key={`accept-${accepting?.id ?? "none"}`}
         order={accepting}
         options={data.settings.prepTimeOptions}
         defaultMinutes={data.settings.defaultPrepMinutes}
+        timeZone={timeZone}
         busy={command.isPending}
         onClose={() => setAccepting(null)}
         onConfirm={(prepMinutes) =>

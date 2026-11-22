@@ -1,9 +1,9 @@
 "use client";
 
-import { SUPPORT_CATEGORY_LABELS, SUPPORT_STATUS_LABELS } from "@dimsum/domain";
-import type { AdminSupportTicketDTO, SupportStatus } from "@dimsum/types";
+import { formatEuro, SUPPORT_CATEGORY_LABELS, SUPPORT_STATUS_LABELS } from "@dimsum/domain";
+import type { AdminSupportTicketDTO, KitchenItemDTO, SupportStatus } from "@dimsum/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Inbox, Mail, Phone, Send } from "lucide-react";
+import { ArrowLeft, ChevronRight, Inbox, Mail, Phone, ReceiptText, Send, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,6 +16,7 @@ import { ApiError, api } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import { formatOrderDate } from "@/lib/dates";
 import { useRealtime } from "@/lib/realtime";
+import { ItemDialog, ItemThumb } from "../kitchen/item-dialog";
 import { AdminPage } from "../ui";
 
 const STATUS_TONE: Record<SupportStatus, "warning" | "info" | "success" | "neutral"> = {
@@ -34,6 +35,7 @@ function Thread({ id, timeZone }: { id: string; timeZone: string }) {
   });
   const [body, setBody] = useState("");
   const [resolve, setResolve] = useState(false);
+  const [openItem, setOpenItem] = useState<KitchenItemDTO | null>(null);
   const reply = useMutation({
     mutationFn: () =>
       api.admin.support.reply(id, { body: body.trim(), status: resolve ? "RESOLVED" : "IN_PROGRESS" }),
@@ -69,24 +71,35 @@ function Thread({ id, timeZone }: { id: string; timeZone: string }) {
             {SUPPORT_STATUS_LABELS[t.status]}
           </Badge>
         </div>
-        <p className="flex flex-wrap gap-x-4 gap-y-1 text-body-sm text-fg-muted">
-          <span>
-            {t.reference} · {SUPPORT_CATEGORY_LABELS[t.category]}
-          </span>
-          <a href={`mailto:${t.email}`} className="inline-flex items-center gap-1 hover:text-fg">
-            <Mail className="size-3.5" /> {t.name} · {t.email}
-          </a>
-          {t.phone ? (
-            <a href={`tel:${t.phone}`} className="inline-flex items-center gap-1 hover:text-fg">
-              <Phone className="size-3.5" /> {t.phone}
-            </a>
-          ) : null}
-          {t.order ? (
-            <Link href={`/admin/ordini/${t.order.id}`} className="font-semibold text-brand-ink">
-              Ordine #{t.order.number}
-            </Link>
-          ) : null}
+        <p className="text-body-sm text-fg-muted">
+          {t.reference} · {SUPPORT_CATEGORY_LABELS[t.category]} · {formatOrderDate(t.createdAt, timeZone)}
         </p>
+        {/* Everything about the request is one tap away: customer, call, e-mail, order. */}
+        <div className="flex flex-wrap gap-2">
+          {t.customerId ? (
+            <Button asChild size="sm" variant="secondary">
+              <Link href={`/admin/clienti/${t.customerId}`}>
+                <UserRound className="size-4" /> {t.name}
+              </Link>
+            </Button>
+          ) : (
+            <span className="inline-flex h-9 items-center gap-1.5 rounded-full bg-surface-2 px-3 text-body-sm font-semibold">
+              <UserRound className="size-4" /> {t.name} (ospite)
+            </span>
+          )}
+          {t.phone ? (
+            <Button asChild size="sm" variant="secondary">
+              <a href={`tel:${t.phone}`}>
+                <Phone className="size-4" /> {t.phone}
+              </a>
+            </Button>
+          ) : null}
+          <Button asChild size="sm" variant="secondary">
+            <a href={`mailto:${t.email}?subject=${encodeURIComponent(`${t.reference} · ${t.subject}`)}`}>
+              <Mail className="size-4" /> {t.email}
+            </a>
+          </Button>
+        </div>
         <div className="flex flex-wrap gap-2">
           {(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"] as SupportStatus[]).map((s) => (
             <Chip
@@ -100,6 +113,59 @@ function Thread({ id, timeZone }: { id: string; timeZone: string }) {
           ))}
         </div>
       </header>
+      {t.order ? (
+        <section className="border-b border-line p-5">
+          <Link
+            href={`/admin/ordini/${t.order.id}`}
+            className="flex items-center gap-3 rounded-2xl bg-surface-2 p-3.5 transition-colors hover:bg-surface-3"
+          >
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-ink-950 text-white">
+              <ReceiptText className="size-5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-bold">Ordine #{t.order.number}</span>
+              <span className="block text-body-sm text-fg-muted">
+                {[
+                  t.order.fulfillmentType === "DELIVERY"
+                    ? "Consegna"
+                    : t.order.fulfillmentType
+                      ? "Ritiro"
+                      : null,
+                  t.order.totalCents !== undefined ? formatEuro(t.order.totalCents) : null,
+                  t.order.placedAt ? formatOrderDate(t.order.placedAt, timeZone) : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </span>
+            </span>
+            <ChevronRight className="size-5 text-fg-subtle" />
+          </Link>
+          {t.order.items?.length ? (
+            <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
+              {t.order.items.map((item) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenItem(item)}
+                    className="flex w-full items-center gap-3 rounded-2xl p-1.5 text-left transition-colors hover:bg-surface-2"
+                  >
+                    <ItemThumb item={item} className="size-12" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-body-sm font-semibold">
+                        {item.quantity}× {item.name}
+                      </span>
+                      {item.notes ? (
+                        <span className="block truncate text-caption text-warning">“{item.notes}”</span>
+                      ) : null}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </section>
+      ) : null}
+      <ItemDialog item={openItem} onClose={() => setOpenItem(null)} />
       <ol className="flex-1 space-y-3 overflow-y-auto p-5">
         {t.messages?.map((m) => (
           <li

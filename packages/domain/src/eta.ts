@@ -117,7 +117,8 @@ export function computeEta(input: EtaInput): EtaResult | null {
   let confidence: EtaResult["confidence"] = m.confirmedAt ? "medium" : "low";
 
   if (input.fulfillmentType === "PICKUP") {
-    if (input.scheduledFor && !m.confirmedAt) readyAt = max(readyAt, input.scheduledFor);
+    // Scheduled: the customer comes at the chosen time, however early the kitchen accepts it.
+    if (input.scheduledFor) readyAt = max(readyAt, input.scheduledFor);
     arrivalAt = readyAt;
     if (m.readyAt) confidence = "high";
   } else if (m.pickedUpAt) {
@@ -149,7 +150,8 @@ export function computeEta(input: EtaInput): EtaResult | null {
     }
     pickupAt = plus(max(readyAt, riderAtRestaurant), s.handoffMinutes);
     arrivalAt = plus(pickupAt, (travelMinutes ?? 12) + s.dropoffMinutes + input.zoneAdjustmentMinutes);
-    if (input.scheduledFor && !m.confirmedAt) arrivalAt = max(arrivalAt, input.scheduledFor);
+    // Scheduled: delivered at the chosen time ("18:30" means 18:30), even when accepted early.
+    if (input.scheduledFor) arrivalAt = max(arrivalAt, input.scheduledFor);
     if (travelMinutes === null) confidence = "low";
   }
 

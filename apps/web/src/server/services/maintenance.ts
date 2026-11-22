@@ -4,17 +4,32 @@ import { db } from "../db";
 import { purgeGeoCache } from "../maps";
 import { logger } from "../logger";
 import { publish } from "../realtime/bus";
+import { acceptableFrom } from "@dimsum/domain";
 import { notifyStaff } from "./notifications";
 import { SETTINGS_TAG, loadRestaurantConfig } from "./restaurant";
 
 /** Orders nobody accepted in time: flagged once and pushed to every staff device. */
 export async function escalateWaitingOrders(now = new Date()): Promise<number> {
   const config = await loadRestaurantConfig();
-  const limit = new Date(now.getTime() - config.acceptanceEscalationMinutes * 60_000);
-  const waiting = await db.order.findMany({
+  const limitMs = config.acceptanceEscalationMinutes * 60_000;
+  const limit = new Date(now.getTime() - limitMs);
+  const candidates = await db.order.findMany({
     where: { status: "RECEIVED", escalatedAt: null, receivedAt: { lt: limit } },
-    select: { id: true, publicId: true, status: true },
+    select: {
+      id: true,
+      publicId: true,
+      status: true,
+      isScheduled: true,
+      scheduledFor: true,
+      fulfillmentType: true,
+      routeDurationSeconds: true,
+    },
     take: 50,
+  });
+  // A scheduled order is "waiting" only since its acceptance window opened.
+  const waiting = candidates.filter((o) => {
+    const from = acceptableFrom(o);
+    return !from || now.getTime() - from.getTime() > limitMs;
   });
   for (const o of waiting) {
     const claimed = await db.order.updateMany({
@@ -32,6 +47,57 @@ export async function escalateWaitingOrders(now = new Date()): Promise<number> {
     });
   }
   return waiting.length;
+}
+
+/**
+ * Scheduled orders whose acceptance window just opened (30 minutes before they must be ready):
+ * the kitchen is alerted now — ring and push — and, with automatic acceptance, they are accepted.
+ * Each order is alerted once: the staff notification row is the marker.
+ */
+export async function openScheduledOrders(now = new Date()): Promise<number> {
+  const soon = new Date(now.getTime() + 4 * 3_600_000);
+  const scheduled = await db.order.findMany({
+    where: { status: "RECEIVED", isScheduled: true, scheduledFor: { lte: soon } },
+    select: {
+      id: true,
+      publicId: true,
+      status: true,
+      isScheduled: true,
+      scheduledFor: true,
+      fulfillmentType: true,
+      routeDurationSeconds: true,
+    },
+    take: 50,
+  });
+  let opened = 0;
+  for (const o of scheduled) {
+    const from = acceptableFrom(o);
+    if (from && from > now) continue;
+    const alerted = await db.notification.findFirst({
+      where: { orderId: o.id, audience: "STAFF", type: "NEW_ORDER" },
+      select: { id: true },
+    });
+    if (alerted) continue;
+    opened++;
+    await notifyStaff(o.id, "NEW_ORDER");
+    await publish(["kitchen"], {
+      type: "order.updated",
+      orderId: o.id,
+      publicId: o.publicId,
+      status: o.status,
+      updatedAt: now.toISOString(),
+    });
+    const config = await loadRestaurantConfig();
+    if (config.autoAcceptOrders) {
+      const { runOrderCommand } = await import("./orders/commands");
+      await runOrderCommand(
+        o.id,
+        { type: "CONFIRM", prepMinutes: config.defaultPrepMinutes },
+        { actor: "system", userId: null, note: "Accettazione automatica" },
+      ).catch((error: unknown) => logger.error("auto-accept failed", { error, orderId: o.id }));
+    }
+  }
+  return opened;
 }
 
 /** "Blocca ordini per 30 minuti": reopen automatically when the time is up. */

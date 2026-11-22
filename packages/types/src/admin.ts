@@ -60,6 +60,14 @@ export interface KitchenItemDTO {
   notes: string | null;
   modifiers: { name: string; quantity: number }[];
   allergens: Allergen[];
+  /** Current catalog data of the product (null if it was deleted after the order). */
+  product: {
+    id: string;
+    slug: string;
+    imageUrl: string | null;
+    description: string | null;
+    ingredients: string[];
+  } | null;
 }
 
 export interface KitchenOrderDTO {
@@ -80,6 +88,8 @@ export interface KitchenOrderDTO {
   prepMinutes: number | null;
   /** When the food should be ready (acceptance + prep time, or the scheduled slot). */
   dueAt: ISODateString | null;
+  /** Scheduled orders: from when they can be accepted (30 min before they must be ready). */
+  acceptFrom: ISODateString | null;
   eta: EtaDTO | null;
   customerName: string;
   customerPhone: string | null;
@@ -389,6 +399,8 @@ export interface AdminRiderDTO {
   cashToReturnCents: Cents;
   lastSeenAt: ISODateString | null;
   location: (GeoPoint & { at: ISODateString; stale: boolean }) | null;
+  /** The owner delivering in person (not a rider account). */
+  isOwner: boolean;
 }
 
 export interface AdminCustomerListItemDTO {
@@ -458,7 +470,19 @@ export interface AdminSupportTicketDTO {
   name: string;
   email: string;
   phone: string | null;
-  order: { id: string; publicId: string; number: string } | null;
+  /** Account of the customer, when the request came from a signed-in customer. */
+  customerId: string | null;
+  order: {
+    id: string;
+    publicId: string;
+    number: string;
+    status?: OrderStatus;
+    fulfillmentType?: FulfillmentType;
+    totalCents?: Cents;
+    placedAt?: ISODateString;
+    /** Detail view only: the ordered products, with their photos. */
+    items?: KitchenItemDTO[];
+  } | null;
   createdAt: ISODateString;
   updatedAt: ISODateString;
   lastMessagePreview: string;
