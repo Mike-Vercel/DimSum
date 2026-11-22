@@ -80,12 +80,16 @@ function orbitDishesFrom(catalog: Awaited<ReturnType<typeof getCatalog>>): Orbit
     if (!product?.image) return [];
     // "Ravioli al vapore con maiale e sedano" → thin "Ravioli al vapore", heavy "maiale e sedano".
     const lower = product.name.toLowerCase();
-    const rest = lower.startsWith(category.name.toLowerCase())
-      ? product.name
-          .slice(category.name.length)
-          .trim()
-          .replace(/^(con|di|al|alla|allo|ai|alle)\s+/i, "")
+    const catWords = category.name.toLowerCase().split(/\s+/);
+    let rest = lower.startsWith(category.name.toLowerCase())
+      ? product.name.slice(category.name.length).trim()
       : product.name;
+    // Words already in the thin line are not repeated in the heavy one:
+    // "Noodles in brodo" + "Noodles freschi con costine di maiale in brodo" → "freschi con costine di maiale".
+    const tail = catWords.slice(1).join(" ");
+    if (rest.toLowerCase().startsWith(catWords[0]! + " ")) rest = rest.slice(catWords[0]!.length).trim();
+    if (tail && rest.toLowerCase().endsWith(" " + tail)) rest = rest.slice(0, -tail.length).trim();
+    rest = rest.replace(/^(con|di|al|alla|allo|ai|alle)\s+/i, "");
     const description =
       product.description ??
       (product.ingredients.length ? product.ingredients.join(", ") + "." : (category.description ?? ""));

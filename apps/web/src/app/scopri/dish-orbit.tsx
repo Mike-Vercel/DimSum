@@ -124,7 +124,7 @@ const CSS =
   ".dsh-plate{display:block;width:245px;height:245px;border-radius:50%;overflow:hidden;background:#fff;" +
   "box-shadow:0 0 0 7px #fff,0 0 0 8px rgba(0,0,0,.05),0 26px 40px -14px rgba(60,30,10,.35),0 6px 12px rgba(0,0,0,.08)}" +
   ".dsh-plate img{width:100%;height:100%;max-width:none;object-fit:cover;user-select:none;-webkit-user-drag:none}" +
-  ".dsh-head{position:absolute;left:400px;top:96px;width:320px;height:150px}" +
+  ".dsh-head{position:absolute;left:400px;top:96px;width:300px;height:150px}" +
   ".dsh-hd{position:absolute;inset:0;visibility:hidden}" +
   ".dsh-eye{font-size:12.5px;font-weight:600;letter-spacing:.01em;margin:0 0 4px 2px;color:var(--primary)}" +
   ".dsh-t1,.dsh-t2{display:block;white-space:nowrap;line-height:1;text-transform:uppercase;margin:0}" +
@@ -177,7 +177,7 @@ const CSS =
   ".dsh-plate{width:100%;height:100%;box-shadow:0 0 0 5px #fff,0 0 0 6px rgba(0,0,0,.05),0 18px 30px -12px rgba(60,30,10,.35)}" +
   ".dsh-head{position:relative;left:auto;top:auto;width:100%;height:118px;margin-top:16px;flex:none}" +
   ".dsh-hd{text-align:center;transform:scale(.8);transform-origin:50% 0}" +
-  ".dsh-acts{position:relative;left:auto;top:auto;margin-top:0;gap:28px;flex:none}" +
+  ".dsh-acts{position:relative;left:auto;top:auto;margin-top:6px;gap:28px;flex:none}" +
   ".dsh-card{position:relative;left:auto;top:auto;width:100%;max-width:420px;margin-top:12px;padding:14px 16px 16px;flex:none}" +
   ".dsh-tabs{margin-bottom:12px}" +
   ".dsh-desc,.dsh-ing{min-height:0}" +
@@ -236,6 +236,60 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  // Titles are measured, never estimated: each line shrinks until it fits the title column (so it
+  // can never run under the card), and a line that would get too small wraps onto two lines.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const fitTitles = () => {
+      for (const head of heads.current) {
+        const avail = head?.clientWidth ?? 0;
+        if (!head || !avail) continue;
+        head.querySelectorAll<HTMLElement>("[data-fit]").forEach((line) => {
+          const max = Number(line.dataset.fit);
+          const min = Number(line.dataset.min ?? 18);
+          line.style.whiteSpace = "nowrap";
+          line.style.lineHeight = "";
+          line.style.fontSize = `${max}px`;
+          const width = line.scrollWidth;
+          let size = width > avail ? Math.floor(max * (avail / width) * 0.96) : max;
+          if (size < min) {
+            // Too small on one line: two (or, for very long names, three) lines at a readable size.
+            for (const n of [2, 3]) {
+              size = Math.max(16, Math.min(max, Math.floor(max * ((n * avail) / width) * 0.82)));
+              if (size >= min * 0.8) break;
+            }
+            line.style.whiteSpace = "normal";
+            line.style.lineHeight = "1.02";
+          }
+          line.style.fontSize = `${size}px`;
+          // A single long word could still overflow: shrink until the box holds it.
+          while (line.scrollWidth > avail + 1 && size > 14) {
+            size -= 1;
+            line.style.fontSize = `${size}px`;
+          }
+        });
+        // Height too: the title never spills onto the buttons below (measured as drawn, so the
+        // phone layout's scale-down counts).
+        const lines = [...head.querySelectorAll<HTMLElement>("[data-fit]")].reverse();
+        const bottom = () =>
+          (lines[0]?.getBoundingClientRect().bottom ?? 0) - head.getBoundingClientRect().top;
+        const room = head.parentElement!.getBoundingClientRect().height;
+        for (let guard = 0; guard < 60 && bottom() > room - 4; guard++) {
+          for (const line of lines) {
+            const size = parseFloat(line.style.fontSize) - 1;
+            if (size >= 14) line.style.fontSize = `${size}px`;
+          }
+        }
+      }
+    };
+    fitTitles();
+    void document.fonts?.ready.then(fitTitles);
+    const ro = new ResizeObserver(fitTitles);
+    ro.observe(root);
+    return () => ro.disconnect();
+  }, [dishes]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -515,13 +569,17 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
                 <h2 style={{ margin: 0, font: "inherit" }}>
                   <span
                     className="dsh-t1"
-                    style={{ fontSize: fitSize(d.title.length, 44, 320, 0.58) + "px" }}
+                    data-fit={44}
+                    data-min={26}
+                    style={{ fontSize: fitSize(d.title.length, 44, 300, 0.62) + "px" }}
                   >
                     {d.title}
                   </span>
                   <span
                     className="dsh-t2"
-                    style={{ fontSize: fitSize(d.subtitle.length, 58, 320, 0.7) + "px" }}
+                    data-fit={58}
+                    data-min={32}
+                    style={{ fontSize: fitSize(d.subtitle.length, 58, 300, 0.75) + "px" }}
                   >
                     {d.subtitle}
                   </span>
