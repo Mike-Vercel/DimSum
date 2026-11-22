@@ -6,6 +6,8 @@ export type IntroScene = {
   /** Draws a frame and returns where the hands are on screen (CSS px): the hem is held there. */
   render: (f: IntroState) => { x: number; y: number; span: number };
   resize: (width: number, height: number, mascotPx: number) => void;
+  /** Compiles the shaders (in parallel where supported) and uploads the meshes. */
+  prepare: () => Promise<void>;
   dispose: () => void;
 };
 
@@ -67,9 +69,19 @@ export function createIntroScene(canvas: HTMLCanvasElement): IntroScene | null {
     return { x: width / 2 + hands.x, y: height / 2 - hands.y, span: 1.05 * scale };
   }
 
+  async function prepare() {
+    try {
+      await renderer!.compileAsync(scene, camera);
+    } catch {
+      /* compiled on the first frame instead */
+    }
+    renderer!.render(scene, camera);
+  }
+
   return {
     render,
     resize,
+    prepare,
     dispose() {
       rig.dispose();
       renderer!.dispose();

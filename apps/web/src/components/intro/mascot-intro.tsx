@@ -15,7 +15,14 @@ import {
 } from "./timeline";
 
 /** Longest wait for the 3D engine before the 2D version plays instead. */
-const LOAD_BUDGET_MS = 2200;
+const LOAD_BUDGET_MS = 3000;
+/** Longest step of the animation clock per frame: a slow frame slows the animation, never skips it. */
+const MAX_FRAME_S = 1 / 30;
+
+// Start downloading the 3D engine as soon as this chunk runs, before hydration completes.
+if (typeof document !== "undefined" && document.documentElement.dataset.intro === "play") {
+  void import("./intro-scene").catch(() => {});
+}
 
 function finish(root: HTMLElement | null) {
   try {
@@ -28,7 +35,10 @@ function finish(root: HTMLElement | null) {
   }
   root.style.transition = "opacity 240ms ease-out";
   root.style.opacity = "0";
-  window.setTimeout(() => delete html.dataset.intro, 250);
+  window.setTimeout(() => {
+    delete html.dataset.intro;
+    delete html.dataset.introRun;
+  }, 250);
 }
 
 /**
@@ -69,7 +79,9 @@ export function MascotIntro() {
     let cancelled = false;
     let raf = 0;
     let scene: IntroScene | null = null;
-    let start = 0;
+    let started = false;
+    let clock = 0;
+    let last = 0;
     let layout: IntroLayout = {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -104,8 +116,11 @@ export function MascotIntro() {
 
     const frame = (now: number) => {
       if (cancelled) return;
-      if (!start) start = now;
-      const t = freeze ?? (now - start) / 1000;
+      // The clock only moves while frames are drawn, capped per frame: on a busy phone the
+      // animation slows down for a moment instead of jumping ahead, so it is always seen whole.
+      if (last) clock += Math.min((now - last) / 1000, MAX_FRAME_S);
+      last = now;
+      const t = freeze ?? clock;
       const s = introAt(t, layout, blinkAt(t));
 
       // Where the hem is held: the 3D hands, or the 2D mascot's hands in the fallback.
@@ -148,7 +163,6 @@ export function MascotIntro() {
       hemShineRef.current?.setAttribute("d", hemPath(hem, -4));
       hemStitchRef.current?.setAttribute("d", hemPath(hem, 4));
 
-      if (brandRef.current) brandRef.current.style.opacity = String(s.brandOpacity);
       if (skipButtonRef.current)
         skipButtonRef.current.style.opacity = String(
           Math.max(0, Math.min(1, (layout.height * 0.82 - hold.y) / 120)),
@@ -162,7 +176,14 @@ export function MascotIntro() {
     };
 
     const play = () => {
-      if (cancelled) return;
+      if (cancelled || started) return;
+      started = true;
+      // The gate script's safety net may have already removed the curtain (very slow device).
+      if (html.dataset.intro !== "play") {
+        end();
+        return;
+      }
+      html.dataset.introRun = "1";
       measure();
       root.dataset.mode = scene ? "3d" : "2d";
       if (flatRef.current) flatRef.current.style.height = `${layout.mascot}px`;
@@ -170,15 +191,20 @@ export function MascotIntro() {
     };
 
     const fallback = window.setTimeout(() => {
-      if (!scene && !start) play();
+      if (!scene) play();
     }, LOAD_BUDGET_MS);
 
     import("./intro-scene")
-      .then(({ createIntroScene }) => {
-        if (cancelled || start) return;
+      .then(async ({ createIntroScene }) => {
+        if (cancelled || started) return;
+        window.clearTimeout(fallback);
         const canvas = canvasRef.current;
         scene = canvas ? createIntroScene(canvas) : null;
-        window.clearTimeout(fallback);
+        if (scene) {
+          measure();
+          // Compile the shaders and upload the meshes before the clock starts: no first-frame stall.
+          await scene.prepare();
+        }
         play();
       })
       .catch(() => {
@@ -216,7 +242,7 @@ export function MascotIntro() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70dvh] bg-[radial-gradient(60%_55%_at_50%_75%,rgba(216,42,30,0.3),transparent_70%)]" />
         <div
           ref={brandRef}
-          className="absolute inset-x-0 bottom-[calc(var(--safe-bottom)+14dvh)] flex flex-col items-center px-6 text-center text-white opacity-0"
+          className="absolute inset-x-0 bottom-[calc(var(--safe-bottom)+14dvh)] flex flex-col items-center px-6 text-center text-white"
         >
           <Logo withTagline className="h-14 text-white sm:h-16" />
           <p className="mt-5 text-body-sm font-medium text-white/60">Ravioli, bao e noodles fatti a mano</p>
