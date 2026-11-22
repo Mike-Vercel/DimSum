@@ -20,7 +20,7 @@ const BLOCKER_ERRORS: [CheckoutBlocker, AppError["code"], string][] = [
   [
     "RESTAURANT_CLOSED",
     "RESTAURANT_CLOSED",
-    "Al momento siamo chiusi: programma l'ordine per un orario di apertura.",
+    "Siamo chiusi in questo momento: scegli giorno e orario con «Programma» e lo prepariamo per allora.",
   ],
   ["FULFILLMENT_UNAVAILABLE", "RESTAURANT_CLOSED", "Questa modalità al momento non è disponibile."],
   ["SLOT_UNAVAILABLE", "SLOT_UNAVAILABLE", "L'orario scelto non è più disponibile: scegline un altro."],

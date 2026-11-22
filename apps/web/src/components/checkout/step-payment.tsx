@@ -18,7 +18,11 @@ import { useSession } from "@/lib/auth-client";
 import { cartToInput, useCart } from "@/lib/stores/cart";
 import { useCheckoutDraft } from "@/lib/stores/checkout";
 import { useOrderPrefs } from "@/lib/stores/order-prefs";
+import { useServiceStatus } from "@/lib/service-status";
+import { asapUnavailable, ClosedNotice } from "./closed-notice";
 import { OrderLines } from "./order-lines";
+import { SchedulePicker } from "./schedule-picker";
+import { TipMascot, tipMood } from "./tip-mascot";
 
 export function StepPayment({
   quote,
@@ -39,6 +43,16 @@ export function StepPayment({
   const fulfillment = useOrderPrefs((s) => s.fulfillment);
   const address = useOrderPrefs((s) => s.address);
   const schedule = useOrderPrefs((s) => s.schedule);
+  const setSchedule = useOrderPrefs((s) => s.setSchedule);
+  const { data: status } = useServiceStatus();
+  // Back on the checkout after closing time (it remembers the step): "as soon as possible" from
+  // before no longer works, so the day and time are chosen here instead of failing at "Conferma".
+  const needsSlot =
+    !!status &&
+    !status.isPaused &&
+    status.schedulingEnabled &&
+    asapUnavailable(status, fulfillment) &&
+    !(schedule.mode === "scheduled" && schedule.slotStart);
   const draft = useCheckoutDraft();
   const [customTip, setCustomTip] = useState(false);
   const [placing, setPlacing] = useState(false);
@@ -199,48 +213,13 @@ export function StepPayment({
           ) : null}
         </section>
       ) : null}
-      {fulfillment === "DELIVERY" && restaurant.checkout.tipsEnabled ? (
-        <section aria-labelledby="mancia" className="space-y-3">
-          <div>
-            <h2 id="mancia" className="text-title-sm font-bold">
-              Mancia al rider
-            </h2>
-            <p className="text-body-sm text-fg-muted">
-              Va interamente al rider che ti consegna l&apos;ordine.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {tipOptions.map((cents) => (
-              <Chip
-                key={cents}
-                selected={!customTip && draft.tipCents === cents}
-                onClick={() => {
-                  setCustomTip(false);
-                  draft.set("tipCents", cents);
-                }}
-              >
-                {cents === 0 ? "Nessuna" : formatEuro(cents, { compact: true })}
-              </Chip>
-            ))}
-            <Chip selected={customTip} onClick={() => setCustomTip(true)}>
-              Personalizzata
-            </Chip>
-          </div>
-          {customTip ? (
-            <label className="flex max-w-48 items-center gap-2">
-              <span className="text-body font-semibold">€</span>
-              <Input
-                inputMode="decimal"
-                aria-label="Mancia personalizzata in euro"
-                defaultValue={draft.tipCents ? (draft.tipCents / 100).toFixed(2).replace(".", ",") : ""}
-                onChange={(e) => {
-                  const v = Math.round(Number(e.target.value.replace(",", ".")) * 100);
-                  draft.set("tipCents", Number.isFinite(v) ? Math.min(5000, Math.max(0, v)) : 0);
-                }}
-                placeholder="0,00"
-              />
-            </label>
-          ) : null}
+      {needsSlot && status ? (
+        <section aria-labelledby="quando-pagamento" className="space-y-3">
+          <h2 id="quando-pagamento" className="text-title-sm font-bold">
+            Quando vuoi {fulfillment === "DELIVERY" ? "ricevere" : "ritirare"} l&apos;ordine?
+          </h2>
+          <ClosedNotice status={status} fulfillment={fulfillment} timeZone={restaurant.timezone} />
+          <SchedulePicker fulfillment={fulfillment} value={schedule} onChange={setSchedule} />
         </section>
       ) : null}
 
@@ -283,6 +262,52 @@ export function StepPayment({
           consegna o al ritiro, in contanti o con POS. Non ti chiediamo i dati della carta sul sito.
         </p>
       </section>
+
+      {fulfillment === "DELIVERY" && restaurant.checkout.tipsEnabled ? (
+        <section aria-labelledby="mancia" className="space-y-3">
+          <div>
+            <h2 id="mancia" className="text-title-sm font-bold">
+              Mancia al rider
+            </h2>
+            <p className="text-body-sm text-fg-muted">
+              Facoltativa: va interamente al rider che ti consegna l&apos;ordine.
+            </p>
+          </div>
+          <TipMascot mood={tipMood(draft.tipCents, tipOptions)} className="rounded-2xl bg-surface-2 px-3 py-2.5" />
+          <div className="flex flex-wrap gap-2">
+            {tipOptions.map((cents) => (
+              <Chip
+                key={cents}
+                selected={!customTip && draft.tipCents === cents}
+                onClick={() => {
+                  setCustomTip(false);
+                  draft.set("tipCents", cents);
+                }}
+              >
+                {cents === 0 ? "Nessuna" : formatEuro(cents, { compact: true })}
+              </Chip>
+            ))}
+            <Chip selected={customTip} onClick={() => setCustomTip(true)}>
+              Personalizzata
+            </Chip>
+          </div>
+          {customTip ? (
+            <label className="flex max-w-48 items-center gap-2">
+              <span className="text-body font-semibold">€</span>
+              <Input
+                inputMode="decimal"
+                aria-label="Mancia personalizzata in euro"
+                defaultValue={draft.tipCents ? (draft.tipCents / 100).toFixed(2).replace(".", ",") : ""}
+                onChange={(e) => {
+                  const v = Math.round(Number(e.target.value.replace(",", ".")) * 100);
+                  draft.set("tipCents", Number.isFinite(v) ? Math.min(5000, Math.max(0, v)) : 0);
+                }}
+                placeholder="0,00"
+              />
+            </label>
+          ) : null}
+        </section>
+      ) : null}
 
       <section aria-labelledby="note-cucina" className="space-y-2">
         <h2 id="note-cucina" className="text-title-sm font-bold">
@@ -346,7 +371,7 @@ export function StepPayment({
           block
           className="h-14"
           loading={placing}
-          disabled={!quote || settling || !cashAllowed || (hasAlcohol && !draft.ageConfirmed)}
+          disabled={!quote || settling || !cashAllowed || needsSlot || (hasAlcohol && !draft.ageConfirmed)}
           onClick={() => void place()}
         >
           Conferma ordine <span aria-hidden>•</span> <span className="tabular-nums">{formatEuro(total)}</span>

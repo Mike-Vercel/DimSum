@@ -92,6 +92,11 @@ export default async function PrivacyPage() {
             solo in forma cifrata non reversibile.
           </li>
         </ul>
+        <p>
+          I dati dell&apos;ordine (nome, recapiti e, per la consegna, l&apos;indirizzo) sono necessari: senza non
+          possiamo preparare e consegnare l&apos;ordine. L&apos;account, il consenso alle offerte e le notifiche
+          sono facoltativi e puoi ordinare anche senza.
+        </p>
       </LegalSection>
 
       <LegalSection title="3. Perché li trattiamo e su quale base">
@@ -127,6 +132,16 @@ export default async function PrivacyPage() {
               <td>Esecuzione del contratto o misure precontrattuali (art. 6.1.b)</td>
             </tr>
             <tr>
+              <td>
+                E-mail di ringraziamento pochi minuti dopo la consegna, con l&apos;invito facoltativo a lasciare
+                una recensione
+              </td>
+              <td>
+                Legittimo interesse (art. 6.1.f): puoi opporti in ogni momento rispondendo all&apos;e-mail o
+                scrivendoci
+              </td>
+            </tr>
+            <tr>
               <td>Offerte e novità via e-mail o notifica</td>
               <td>Consenso, facoltativo e revocabile (art. 6.1.a)</td>
             </tr>
@@ -159,10 +174,18 @@ export default async function PrivacyPage() {
             <li>Apple Distribution International Ltd., se scegli di accedere con Apple;</li>
           ) : null}
           <li>
+            i servizi di notifica del tuo browser o sistema operativo (ad esempio Google, Apple o Mozilla), solo se
+            attivi le notifiche push;
+          </li>
+          <li>
             i rider che effettuano la consegna, limitatamente a nome, telefono e indirizzo dell&apos;ordine
             affidato.
           </li>
         </ul>
+        <p>
+          Se scegli di lasciare una recensione, la scrivi direttamente su Google: da quel momento si applica
+          l&apos;informativa di Google e noi vediamo solo ciò che pubblichi.
+        </p>
         <p>
           Alcuni fornitori possono trattare dati fuori dallo Spazio economico europeo: in tal caso il
           trasferimento avviene sulla base di decisioni di adeguatezza della Commissione europea o di clausole
@@ -212,6 +235,23 @@ export default async function PrivacyPage() {
         <p>
           Il servizio è rivolto a maggiori di 14 anni. L&apos;acquisto di bevande alcoliche è riservato ai
           maggiorenni.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="9. Sicurezza">
+        <p>
+          Il sito funziona solo su connessione cifrata (HTTPS). Le password sono conservate in forma cifrata
+          non reversibile, l&apos;accesso ai dati in gestione è limitato per ruolo (cucina, rider,
+          amministrazione) e le operazioni sugli ordini sono registrate. Nessun sistema è infallibile: se
+          dovessimo rilevare una violazione che ti riguarda, ti avviseremo come previsto dalla legge.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="10. Modifiche a questa informativa">
+        <p>
+          Possiamo aggiornare questa informativa quando cambiano il servizio o la normativa. La versione in
+          vigore è sempre su questa pagina, con la data di aggiornamento in alto; se le modifiche sono
+          rilevanti te lo segnaliamo sul sito o via e-mail.
         </p>
       </LegalSection>
     </LegalDocument>

@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 const COOKIES: [string, string, string][] = [
   [
     "dimsum.session_token",
-    "Mantiene l'accesso al tuo account (anche dopo aver chiuso il browser).",
-    "60 giorni",
+    "Mantiene l'accesso al tuo account (anche dopo aver chiuso il browser o l'app).",
+    "1 anno, rinnovato quando usi il sito",
   ],
   ["dimsum.session_data", "Copia firmata della sessione per rispondere più velocemente.", "5 minuti"],
   [
@@ -34,6 +34,15 @@ const STORAGE: [string, string][] = [
   ["dimsum.order-prefs", "Consegna o ritiro, indirizzo e orario scelti."],
   ["dimsum.checkout", "I dati inseriti al checkout, per non doverli riscrivere."],
   ["dimsum.cookie-notice", "Ricorda che hai già letto l'avviso sui cookie."],
+  [
+    "dimsum.kitchen.muted, dimsum.kitchen.open",
+    "Solo per il personale: suono attivo o silenziato e ordini aperti sullo schermo della cucina.",
+  ],
+];
+
+const SESSION: [string, string][] = [
+  ["dimsum-intro", "Ricorda che hai già visto l'animazione di apertura, così non si ripete a ogni pagina."],
+  ["dimsum-nav", "Le pagine visitate in questa sessione, per far funzionare la freccia «indietro»."],
 ];
 
 export default function CookiePage() {
@@ -92,6 +101,34 @@ export default function CookiePage() {
         <p>
           Quando esci dall&apos;account cancelliamo da questo dispositivo carrello, indirizzo e dati del
           checkout.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Memoria di sessione">
+        <p>Questi dati durano solo finché la scheda o l&apos;app restano aperte:</p>
+        <table>
+          <tbody>
+            {SESSION.map(([name, purpose]) => (
+              <tr key={name}>
+                <td>
+                  <code>{name}</code>
+                </td>
+                <td>{purpose}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </LegalSection>
+
+      <LegalSection title="App e funzionamento offline">
+        <p>
+          Se installi DIMSUM sulla schermata Home, il browser conserva una copia dei file dell&apos;app
+          (immagini, grafica, codice) per aprirla più in fretta e mostrarti una pagina di cortesia quando sei
+          senza connessione. Sono file tecnici: non contengono dati personali.
+        </p>
+        <p>
+          Caratteri tipografici e immagini sono serviti dai nostri server: aprire il sito non comporta
+          richieste a servizi di terze parti come Google Fonts.
         </p>
       </LegalSection>
 

@@ -110,6 +110,9 @@ export function ShopFooter({ restaurant }: { restaurant: RestaurantInfo }) {
         </p>
         <p>Prezzi IVA inclusa · Contanti o POS alla consegna e al ritiro</p>
       </div>
+      <p className="mx-auto mt-6 max-w-7xl px-5 text-center text-caption text-fg-subtle lg:px-8">
+        Creato da <strong className="font-bold text-fg">Impatto Agency</strong>
+      </p>
     </footer>
   );
 }

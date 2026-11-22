@@ -12,6 +12,7 @@ import { jsonLdScript, restaurantJsonLd } from "@/server/seo";
 import { getCatalog } from "@/server/services/catalog";
 import { getRestaurantConfig, toRestaurantInfo } from "@/server/services/restaurant";
 import { DishOrbitCarousel, type OrbitDish } from "./dish-orbit";
+import { FaqList } from "./faq";
 import { LandingMotion } from "./landing-motion";
 import styles from "./page.module.css";
 
@@ -312,7 +313,7 @@ export default async function DiscoverPage() {
           </div>
         </section>
 
-        <section className={`${styles.section} ${styles.faq}`} aria-labelledby="faq-title">
+        <section id="faq" className={`${styles.section} ${styles.faq}`} aria-labelledby="faq-title">
           <div data-stagger>
             <p className={styles.eyebrow}>Prima del primo morso</p>
             <h2 id="faq-title">
@@ -321,39 +322,59 @@ export default async function DiscoverPage() {
               gli ultimi dubbi
             </h2>
           </div>
-          <div className={styles.questions} data-stagger>
-            <details>
-              <summary>Come posso pagare?</summary>
-              <p>
-                In contanti oppure con carta tramite POS quando ricevi l’ordine. Il rider porta il POS a
-                domicilio. Se scegli il ritiro, paghi direttamente al locale. Non devi inserire i dati della
-                carta sul sito.
-              </p>
-            </details>
-            <details>
-              <summary>Consegnate al mio indirizzo?</summary>
-              <p>
-                Inserisci il tuo indirizzo nel sito per verificare la copertura e le condizioni della consegna
-                prima di confermare l’ordine. Puoi anche consultare le{" "}
-                <Link href="/info#zone">zone di consegna</Link>.
-              </p>
-            </details>
-            <details>
-              <summary>Posso ritirare il mio ordine?</summary>
-              <p>
-                Certo. Scegli “Ritiro” durante l’ordine e passa al locale nell’orario confermato. Gli orari
-                per gli ordini sono disponibili nella pagina <Link href="/info">Il locale</Link>.
-              </p>
-            </details>
-            <details>
-              <summary>Dove trovo ingredienti e allergeni?</summary>
-              <p>
-                Apri la scheda di un piatto nel <Link href="/menu">menu</Link> per consultarli. In caso di
-                allergie o esigenze specifiche, contatta il locale prima di ordinare: in cucina possono
-                verificarsi contaminazioni crociate.
-              </p>
-            </details>
-          </div>
+          <FaqList
+            className={styles.questions}
+            items={[
+              {
+                question: "Come posso pagare?",
+                answer: (
+                  <p>
+                    In contanti oppure con carta tramite POS quando ricevi l’ordine. Il rider porta il POS a
+                    domicilio. Se scegli il ritiro, paghi direttamente al locale. Non devi inserire i dati
+                    della carta sul sito.
+                  </p>
+                ),
+              },
+              {
+                question: "Consegnate al mio indirizzo?",
+                answer: (
+                  <p>
+                    Inserisci il tuo indirizzo nel sito per verificare la copertura e le condizioni della
+                    consegna prima di confermare l’ordine. Puoi anche consultare le{" "}
+                    <Link href="/info#zone">zone di consegna</Link>.
+                  </p>
+                ),
+              },
+              {
+                question: "Posso ritirare il mio ordine?",
+                answer: (
+                  <p>
+                    Certo. Scegli “Ritiro” durante l’ordine e passa al locale nell’orario confermato. Gli
+                    orari per gli ordini sono disponibili nella pagina <Link href="/info">Il locale</Link>.
+                  </p>
+                ),
+              },
+              {
+                question: "Posso programmare l’ordine per più tardi?",
+                answer: (
+                  <p>
+                    Sì: al checkout scegli “Programma” e l’orario che preferisci. Lo prepariamo per
+                    quell’ora, anche quando il locale è ancora chiuso al momento dell’ordine.
+                  </p>
+                ),
+              },
+              {
+                question: "Dove trovo ingredienti e allergeni?",
+                answer: (
+                  <p>
+                    Apri la scheda di un piatto nel <Link href="/menu">menu</Link> per consultarli. In caso di
+                    allergie o esigenze specifiche, contatta il locale prima di ordinare: in cucina possono
+                    verificarsi contaminazioni crociate.
+                  </p>
+                ),
+              },
+            ]}
+          />
         </section>
 
         <section className={styles.finalCta} aria-labelledby="final-title" data-stagger>
@@ -370,25 +391,86 @@ export default async function DiscoverPage() {
         </section>
       </main>
       <footer className={styles.footer} data-reveal="up">
-        <div className={styles.footerTop}>
-          <Link href="/" aria-label="DIMSUM, home">
-            <Logo className="h-12 text-white" />
-          </Link>
-          <nav aria-label="Link utili">
-            <Link href="/">Home</Link>
+        <div className={styles.footerGrid}>
+          <div className={styles.footerBrand}>
+            <Link href="/" aria-label="DIMSUM, home">
+              <Logo className="h-12 text-white" />
+            </Link>
+            <p>
+              Ravioli, bao e noodles a {config.address.city}. A casa tua o da ritirare al locale: paghi quando
+              arriva, in contanti o con il POS.
+            </p>
+            <div className={styles.footerPay} aria-label="Pagamenti accettati">
+              <span>
+                <CreditCard size={16} aria-hidden /> Carta con POS
+              </span>
+              <span>€ Contanti</span>
+            </div>
+            {config.instagramUrl || config.facebookUrl ? (
+              <div className={styles.footerSocial}>
+                {config.instagramUrl ? (
+                  <a href={config.instagramUrl} target="_blank" rel="noopener noreferrer">
+                    Instagram
+                  </a>
+                ) : null}
+                {config.facebookUrl ? (
+                  <a href={config.facebookUrl} target="_blank" rel="noopener noreferrer">
+                    Facebook
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
+          <nav aria-label="Ordina" className={styles.footerCol}>
+            <h3>Ordina</h3>
             <Link href="/menu">Menu</Link>
-            <Link href="/info">Il locale</Link>
+            <Link href="/offerte">Offerte</Link>
+            <Link href="/club">Dimsum Club</Link>
+            <Link href="/account">Il mio account</Link>
+            <Link href="/account/ordini">I miei ordini</Link>
+          </nav>
+
+          <nav aria-label="Aiuto" className={styles.footerCol}>
+            <h3>Aiuto</h3>
             <Link href="/supporto">Assistenza</Link>
+            <Link href="/info#zone">Zone di consegna</Link>
+            <a href="#faq">Domande frequenti</a>
+            <Link href="/mascotte">La mascotte in 3D</Link>
+          </nav>
+
+          <div className={styles.footerCol}>
+            <h3>Il locale</h3>
+            <a href={maps} target="_blank" rel="noopener noreferrer">
+              {config.address.formatted}
+            </a>
+            {config.phone ? <a href={`tel:${config.phone}`}>{config.phone}</a> : null}
+            <dl className={styles.footerHours}>
+              {summarizeHours(info.venueHours).map((row) => (
+                <div key={row.days}>
+                  <dt>{row.days}</dt>
+                  <dd>{row.ranges}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+
+        <div className={styles.footerBottom}>
+          <p className={styles.footerLegal}>
+            © {config.name}
+            {info.legal.companyName ? ` · ${info.legal.companyName}` : ""}
+            {info.legal.vatNumber ? ` · P.IVA ${info.legal.vatNumber}` : ""}
+          </p>
+          <p className={styles.credit}>
+            Creato da <strong>Impatto Agency</strong>
+          </p>
+          <nav aria-label="Note legali" className={styles.footerLinks}>
             <Link href="/privacy">Privacy</Link>
             <Link href="/cookie">Cookie</Link>
             <Link href="/termini">Termini</Link>
           </nav>
         </div>
-        <p>
-          © {config.name}
-          {info.legal.companyName ? ` · ${info.legal.companyName}` : ""}
-          {info.legal.vatNumber ? ` · P.IVA ${info.legal.vatNumber}` : ""}
-        </p>
       </footer>
     </div>
   );

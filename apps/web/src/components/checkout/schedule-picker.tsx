@@ -9,6 +9,13 @@ import { api } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import type { Schedule } from "@/lib/stores/order-prefs";
 
+/** "lun 23 nov" for a "YYYY-MM-DD" day (noon UTC: the same calendar day in any time zone). */
+function shortDate(key: string): string {
+  return new Intl.DateTimeFormat("it-IT", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(
+    new Date(`${key}T12:00:00Z`),
+  );
+}
+
 /** Day chips + time slots for scheduled orders ("Programma"). Slots come from the server rules. */
 export function SchedulePicker({
   fulfillment,
@@ -50,7 +57,7 @@ export function SchedulePicker({
             onClick={() => setDay(d.date)}
             className="capitalize"
           >
-            {d.label}
+            {d.label === shortDate(d.date) || /\d/.test(d.label) ? d.label : `${d.label} · ${shortDate(d.date)}`}
           </Chip>
         ))}
       </div>
@@ -68,7 +75,7 @@ export function SchedulePicker({
                 onChange({
                   mode: "scheduled",
                   slotStart: s.start,
-                  slotLabel: `${days.find((d) => d.date === activeDay)?.label ?? ""} ${s.label}`,
+                  slotLabel: `${days.find((d) => d.date === activeDay)?.label ?? ""} ${activeDay ? shortDate(activeDay) : ""}, ${s.label}`,
                 })
               }
               className={cn(

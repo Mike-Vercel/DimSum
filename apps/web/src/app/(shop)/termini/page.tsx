@@ -56,7 +56,8 @@ export default async function TermsPage() {
         </p>
         <p>
           Puoi ordinare come ospite oppure con un account. Gli ordini programmati vengono preparati per
-          l&apos;orario scelto, compatibilmente con gli orari di servizio.
+          l&apos;orario scelto, compatibilmente con gli orari di servizio: la cucina li conferma a partire da
+          30 minuti prima. Quando il locale è chiuso puoi ordinare solo programmando un orario di apertura.
         </p>
       </LegalSection>
 
@@ -123,7 +124,29 @@ export default async function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="10. Legge applicabile e controversie">
+      <LegalSection title="10. Foto e descrizioni">
+        <p>
+          Le foto dei piatti sono indicative: presentazione, porzioni e decorazioni possono variare. Fanno fede
+          nome, descrizione, ingredienti e prezzo indicati nella scheda del prodotto.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="11. Recensioni">
+        <p>
+          Dopo la consegna possiamo inviarti un&apos;e-mail per chiederti un parere. Lasciare una recensione è
+          del tutto facoltativo e non comporta sconti né vantaggi: le recensioni sono pubblicate su Google
+          secondo le sue regole.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="12. Modifiche alle condizioni">
+        <p>
+          Possiamo aggiornare queste condizioni; a ogni ordine si applica la versione pubblicata nel momento in
+          cui lo invii.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="13. Legge applicabile e controversie">
         <p>
           Si applica la legge italiana. Per i consumatori è competente il foro del luogo di residenza o
           domicilio. Puoi anche ricorrere agli organismi di risoluzione alternativa delle controversie

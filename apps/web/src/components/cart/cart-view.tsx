@@ -6,10 +6,14 @@ import { ArrowLeft, ArrowRight, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useBack } from "@/lib/nav-history";
+import { asapUnavailable, ClosedNotice } from "@/components/checkout/closed-notice";
 import { FulfillmentSwitch } from "@/components/shop/fulfillment-switch";
+import { useRestaurant } from "@/components/shop/restaurant-context";
 import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui/feedback";
 import { useCartQuote } from "@/lib/cart-quote";
+import { useServiceStatus } from "@/lib/service-status";
+import { useOrderPrefs } from "@/lib/stores/order-prefs";
 import { useOffline } from "@/lib/connectivity";
 import { selectEstimatedSubtotal, useCart } from "@/lib/stores/cart";
 import { useHydrated } from "@/lib/stores/hydration";
@@ -64,6 +68,14 @@ export function CartView() {
   const estimate = useCart(selectEstimatedSubtotal);
   const { data: quote, isError, refetch, settling } = useCartQuote();
   const gate = useCheckoutGate(quote);
+  const restaurant = useRestaurant();
+  const { data: status } = useServiceStatus();
+  const fulfillment = useOrderPrefs((s) => s.fulfillment);
+  const scheduled = useOrderPrefs((s) => s.schedule.mode === "scheduled");
+  // Closed (not paused): say so here, before the checkout, with when we reopen. With scheduling on
+  // the button leads straight to choosing day and time; without it, ordering waits for the opening.
+  const closed = !!status && !status.isPaused && asapUnavailable(status, fulfillment);
+  const canSchedule = closed && status.schedulingEnabled;
 
   if (!hydrated) {
     return (
@@ -96,14 +108,22 @@ export function CartView() {
     <Button
       size="xl"
       block
-      disabled={!gate.canProceed || settling || offline}
-      onClick={() => router.push("/checkout")}
+      disabled={!gate.canProceed || settling || offline || (closed && !canSchedule)}
+      onClick={() => router.push(canSchedule && !scheduled ? "/checkout?programma=1" : "/checkout")}
       className="h-14"
     >
       {offline ? (
         "Sei offline"
       ) : gate.reason ? (
         gate.reason
+      ) : closed && !canSchedule ? (
+        "Siamo chiusi"
+      ) : canSchedule ? (
+        <>
+          Programma l&apos;ordine <span aria-hidden>•</span>{" "}
+          <span className="tabular-nums">{formatEuro(total)}</span>
+          <ArrowRight className="size-5" />
+        </>
       ) : (
         <>
           Vai al checkout <span aria-hidden>•</span> <span className="tabular-nums">{formatEuro(total)}</span>
@@ -130,6 +150,9 @@ export function CartView() {
       <div className="mt-3 grid grid-cols-1 gap-8 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
         <div className="space-y-6">
           <FulfillmentSwitch className="max-w-sm" />
+          {closed && status ? (
+            <ClosedNotice status={status} fulfillment={fulfillment} timeZone={restaurant.timezone} />
+          ) : null}
           <CartIssues quote={quote} />
           <CartLines quote={quote} />
           <CartSuggestions />
