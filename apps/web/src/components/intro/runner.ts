@@ -1,16 +1,22 @@
 /**
  * The opening animation, as a tiny self-contained script inlined in the HTML right after the
  * overlay markup. It starts while the page is still being parsed, before React or any bundle has
- * loaded, so there is no loading screen: the first frame the visitor sees is already moving.
+ * loaded, so there is no loading screen.
  *
- * The mascot is the real 3D model, pre-rendered (same rig, lights and camera) into a sprite sheet
- * of its walk cycle seen from behind; the sheet also records where the hands are in every frame,
- * so the page (a blanket, drawn in SVG + clip-path) is held exactly in its hands.
+ * Story: a white blanket covers the page. The DIMSUM mascot walks in from the right, stops, turns
+ * to look at us, blinks and waves, turns around, walks up, jumps to grab the blanket's top edge,
+ * gives it two hard tugs and then pulls it all the way down, stepping backwards, revealing the page.
+ *
+ * The mascot is the real 3D model pre-rendered (same rig, lights and camera) into a sprite sheet:
+ * side walk, turns, front look and wave, back walk. Every frame records where the hands are, so the
+ * blanket's edge stays exactly in its hands.
  *
  * `run` must stay self-contained (no imports, no outer variables, no spread/classes/async): it is
  * serialised with Function.prototype.toString().
  */
-import walk from "./walk-sprite.json";
+import sheet from "./walk-sprite.json";
+
+export const INTRO_SPRITE = "/brand/intro-mascot.webp";
 
 export type RunnerConfig = {
   sprite: string;
@@ -21,6 +27,8 @@ export type RunnerConfig = {
   n: number;
   feet: number;
   span: number;
+  mascot: number;
+  seq: Record<string, number[]>;
   hands: number[][];
 };
 
@@ -38,20 +46,21 @@ function run(c: RunnerConfig) {
     return root!.querySelector('[data-k="' + k + '"]') as HTMLElement | null;
   };
   var curtain = q("curtain");
+  var print = q("print");
   var mascot = q("mascot");
+  var contact = q("contact");
   var skip = q("skip");
   var clip = q("clip");
   var shade = q("shade");
   var light = q("light");
-  var band = q("band");
+  var lift = q("lift");
   var hemShadow = q("hem-shadow");
   var hem = q("hem");
   var shine = q("shine");
   var stitch = q("stitch");
   var svg = root.querySelector("svg");
 
-  var DURATION = 3.1;
-  var CADENCE = 2.6; // steps per second
+  var END = 5.6;
   var MAX_DT = 1 / 30; // a slow frame slows the animation down, it never skips ahead
   var SAMPLES = 56;
 
@@ -69,14 +78,29 @@ function run(c: RunnerConfig) {
   var span = function (t: number, a: number, b: number) {
     return clamp01((t - a) / (b - a));
   };
+  var lerp = function (a: number, b: number, x: number) {
+    return a + (b - a) * x;
+  };
   var easeOut = function (x: number) {
     return 1 - (1 - x) * (1 - x) * (1 - x);
   };
-  var easeInOutSine = function (x: number) {
-    return -(Math.cos(Math.PI * x) - 1) / 2;
+  var easeIn = function (x: number) {
+    return x * x * x;
+  };
+  var easeInOut = function (x: number) {
+    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
   };
   var f1 = function (v: number) {
     return v.toFixed(1);
+  };
+  var seqFrame = function (name: string, i: number) {
+    var s = c.seq[name]!;
+    var n = s[1]!;
+    return s[0]! + (((Math.floor(i) % n) + n) % n);
+  };
+  var seqStep = function (name: string, x: number) {
+    var s = c.seq[name]!;
+    return s[0]! + Math.min(s[1]! - 1, Math.floor(clamp01(x) * s[1]!));
   };
 
   var stopped = false;
@@ -121,34 +145,113 @@ function run(c: RunnerConfig) {
       lastH = H;
       if (svg) svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     }
-    // The clock only runs while frames are drawn; it waits for the mascot frames before the
-    // mascot enters (a fraction of a second at most), so it never appears half-way through.
-    if (last && (ready || clock < 0.12)) clock += Math.min((now - last) / 1000, MAX_DT);
+    // The clock only runs while frames are drawn, and waits for the mascot frames (a moment at
+    // most) before the mascot steps in, so it never appears half-way through.
+    if (last && (ready || clock < 0.05)) clock += Math.min((now - last) / 1000, MAX_DT);
     last = now;
     var t = clock;
 
-    // Choreography: enters from above the top edge, then walks down to the bottom and off.
-    var size = Math.round(Math.min(380, Math.max(180, Math.min(H * 0.34, W * 0.58))));
-    var k = size / (c.h * 0.8627); // the frame's mascot is 440 px tall inside a 510 px frame
-    var start = size * 1.02 + H * 0.04;
-    var maxLag = Math.min(H * 0.15, size * 0.42);
-    var lag = maxLag * easeOut(span(t, 0.1, 0.9)) * (1 - 0.25 * span(t, 2.4, DURATION));
-    var end = H + Math.max(size, maxLag) + 80;
-    var enter = easeOut(span(t, 0, 0.55));
-    var u = span(t, 0.45, DURATION);
-    var travel = 0.55 * u + 0.45 * easeInOutSine(u);
-    var phase = Math.PI * CADENCE * t;
-    var walkAmount = easeOut(span(t, 0.3, 0.75));
-    var surge = 7 * (0.5 - 0.5 * Math.cos(2 * phase)) * walkAmount;
-    var feet = -size * 0.1 + (start + size * 0.1) * enter + (end - start) * travel + surge;
+    var S = Math.round(Math.min(340, Math.max(170, Math.min(H * 0.3, W * 0.5))));
+    var k = S / c.mascot;
+    var ground = H * 0.7;
+    var topY = Math.max(64, H * 0.11); // where the blanket's edge is grabbed
+    var stride = S * 0.62; // screen distance of one full walk cycle (two steps)
+    var back0 = c.seq.back![0]!;
+    var backN = c.seq.back![1]!;
+    // Hands height above the feet in a back frame, for a given scale.
+    var handRise = function (fi: number, scale: number) {
+      return (c.feet - c.hands[fi]![1]!) * k * scale;
+    };
 
-    // Mascot: the walk-cycle frame for this phase, its feet on `feet`.
-    var n = c.n;
-    var i = Math.floor((phase / (2 * Math.PI)) * n) % n;
-    var fw = c.w * k;
-    var fh = c.h * k;
-    var left = W / 2 - fw / 2;
-    var top = feet - c.feet * k;
+    var fi = seqFrame("side", 0); // sprite frame
+    var cx = W / 2; // mascot centre x
+    var feet = ground; // mascot feet y
+    var sc = 1; // perspective scale (smaller when further up)
+    var squash = 1;
+    var tilt = 0;
+    var edge = 0; // blanket edge at the hands (0 = still at the top of the screen)
+    var held = false;
+    var lag = 0;
+    var phase = 0;
+    var upSc = 0.84;
+    var topFeet = topY + handRise(back0, upSc);
+
+    if (t < 1.3) {
+      // 1. Walks in from the right, side view, slowing down to stop in the middle.
+      var startX = W + S * 0.7;
+      var u = span(t, 0, 1.3);
+      cx = lerp(startX, W / 2, 1 - (1 - u) * (1 - u));
+      fi = seqFrame("side", ((startX - cx) / stride) * c.seq.side![1]!);
+    } else if (t < 1.5) {
+      // 2. Turns to face us.
+      fi = seqStep("turnFront", span(t, 1.3, 1.5));
+    } else if (t < 2.55) {
+      // 3. Looks at us, blinks, waves, a little hop of joy.
+      var f0 = c.seq.front![0]!;
+      if (t < 1.78) fi = f0;
+      else if (t < 1.88) fi = f0 + 1;
+      else if (t < 1.98) fi = f0;
+      else if (t < 2.36) fi = f0 + 3 + (Math.floor((t - 1.98) / 0.075) % 4);
+      else if (t < 2.44) {
+        fi = f0 + 7;
+        squash = 0.94;
+      } else {
+        fi = f0 + 2;
+        feet = ground - Math.sin(span(t, 2.44, 2.55) * Math.PI) * S * 0.07;
+      }
+    } else if (t < 2.85) {
+      // 4. Turns around.
+      fi = seqStep("turnBack", span(t, 2.55, 2.85));
+    } else if (t < 3.55) {
+      // 5. Walks up towards the top edge (away from us: a little smaller).
+      var w = easeInOut(span(t, 2.85, 3.55));
+      feet = lerp(ground, topFeet + S * 0.08, w);
+      sc = lerp(1, upSc, w);
+      fi = seqFrame("back", ((ground - feet) / (stride * 0.9)) * backN);
+    } else if (t < 3.82) {
+      // 6. Jumps, grabs the edge and yanks it down to its hands.
+      sc = upSc;
+      fi = back0;
+      var j = span(t, 3.55, 3.82);
+      feet = topFeet + S * 0.08 - Math.sin(j * Math.PI) * S * 0.22;
+      squash = j < 0.15 ? 0.92 : 1.05;
+      if (j > 0.45) {
+        held = true;
+        edge = (feet - handRise(fi, sc)) * easeOut(span(j, 0.45, 1));
+      }
+    } else if (t < 4.42) {
+      // 7. Two hard tugs, leaning back with all its strength.
+      sc = upSc;
+      fi = back0;
+      held = true;
+      var tug = (t - 3.82) / 0.3; // 0..2
+      var n = Math.floor(tug);
+      var tp = tug - n;
+      var pull = tp < 0.35 ? easeOut(tp / 0.35) : 1 - 0.35 * easeInOut((tp - 0.35) / 0.65);
+      feet = topFeet + S * 0.08 + S * 0.11 * (n + pull);
+      squash = tp < 0.35 ? lerp(1, 0.9, tp / 0.35) : lerp(0.9, 1, (tp - 0.35) / 0.65);
+      tilt = (n % 2 ? -1 : 1) * 0.04 * Math.sin(tp * Math.PI);
+      lag = S * 0.07 * (n + pull);
+    } else {
+      // 8. Pulls it all the way down, stepping backwards towards us.
+      held = true;
+      var v = span(t, 4.42, END - 0.1);
+      var startFeet = topFeet + S * 0.08 + S * 0.11 * 1.65;
+      feet = lerp(startFeet, H + S * 1.25 + 60, 0.35 * v + 0.65 * easeIn(v));
+      sc = lerp(upSc, 1.06, v);
+      phase = (feet - startFeet) / (stride * 0.75);
+      fi = seqFrame("back", -phase * backN);
+      squash = 1 - 0.03 * Math.abs(Math.sin(phase * Math.PI));
+      lag = Math.min(H * 0.16, S * 0.45) * (0.5 + 0.5 * easeOut(span(v, 0, 0.35))) * (1 - 0.3 * v);
+    }
+    if (held && t >= 3.82) edge = feet - handRise(fi, sc);
+
+    // Mascot: one sprite frame, feet on `feet`, centred on `cx`.
+    var kk = k * sc;
+    var fw = c.w * kk;
+    var fh = c.h * kk;
+    var left = cx - fw / 2;
+    var top = feet - c.feet * kk;
     if (mascot) {
       if (ready && !mascot.style.backgroundImage) {
         mascot.style.backgroundImage = "url(" + c.sprite + ")";
@@ -156,90 +259,117 @@ function run(c: RunnerConfig) {
       }
       mascot.style.width = f1(fw) + "px";
       mascot.style.height = f1(fh) + "px";
-      mascot.style.backgroundSize = f1(c.cols * fw) + "px " + f1(Math.ceil(n / c.cols) * fh) + "px";
+      mascot.style.backgroundSize = f1(c.cols * fw) + "px " + f1(Math.ceil(c.n / c.cols) * fh) + "px";
       mascot.style.backgroundPosition =
-        f1(-(i % c.cols) * fw) + "px " + f1(-Math.floor(i / c.cols) * fh) + "px";
-      mascot.style.transform = "translate3d(" + f1(left) + "px," + f1(top) + "px,0)";
+        f1(-(fi % c.cols) * fw) + "px " + f1(-Math.floor(fi / c.cols) * fh) + "px";
+      mascot.style.transformOrigin = f1(fw / 2) + "px " + f1(c.feet * kk) + "px";
+      mascot.style.transform =
+        "translate3d(" +
+        f1(left) +
+        "px," +
+        f1(top) +
+        "px,0) rotate(" +
+        tilt.toFixed(3) +
+        "rad) scaleY(" +
+        squash.toFixed(3) +
+        ")";
     }
-    var hand = c.hands[i] || [c.w / 2, c.feet * 0.66];
-    var cx = left + hand[0]! * k;
-    var edge = top + hand[1]! * k;
-    var hold = c.span * k;
+    if (contact) {
+      // Soft contact shadow on the blanket while it stands on it.
+      var grounded = held
+        ? 0
+        : clamp01(1 - (ground - feet) / (S * 0.25)) * (t < 2.85 ? 1 : 1 - span(t, 2.85, 3.3));
+      contact.style.width = f1(S * 0.62 * sc) + "px";
+      contact.style.transform =
+        "translate3d(" + f1(cx - S * 0.31 * sc) + "px," + f1(feet - S * 0.05 * sc) + "px,0)";
+      contact.style.opacity = String(0.9 * grounded);
+    }
 
-    // The blanket's hem: held between the hands, sides trailing behind, rippling with each step.
+    // The blanket's top edge: at the top until grabbed, then held in the hands. While tugging the
+    // sides stay pinned higher (it sags only where it is held); in the full pull they trail behind.
+    var hold = c.span * kk;
     var pts: number[][] = [];
     var reach = Math.max(1, Math.max(cx, W - cx) - hold);
     for (var s = 0; s <= SAMPLES; s++) {
       var x = (W * s) / SAMPLES;
       var dd = clamp01((Math.abs(x - cx) - hold) / reach);
       var drape = dd * dd * (3 - 2 * dd);
-      var wave = Math.sin(dd * 9 - phase * 1.4) * 6 * dd * walkAmount;
-      pts.push([x, edge - lag * drape + wave]);
+      var y = 0;
+      if (edge > 0) {
+        if (t < 4.42) y = edge * (1 - 0.9 * drape) + Math.sin(dd * 7) * 2 * dd;
+        else y = edge - lag * drape + Math.sin(dd * 9 - phase * 4.4) * 5 * dd;
+      }
+      pts.push([x, y]);
     }
     var poly = "polygon(";
-    for (var j = 0; j < pts.length; j++)
-      poly += f1(pts[j]![0]!) + "px " + f1(Math.max(-10, pts[j]![1]!)) + "px,";
+    for (var jj = 0; jj < pts.length; jj++)
+      poly += f1(pts[jj]![0]!) + "px " + f1(Math.max(-10, pts[jj]![1]!)) + "px,";
     poly += W + "px " + (H + 10) + "px,0px " + (H + 10) + "px)";
     if (curtain) curtain.style.clipPath = poly;
+    // What is printed on the blanket travels with it.
+    if (print) print.style.transform = "translate3d(0," + f1(Math.max(0, edge - lag * 0.5)) + "px,0)";
 
+    var visible = edge > 1;
     var line = hemPath(pts, 0);
-    if (clip) clip.setAttribute("d", line + "L" + W + " -20L0 -20Z");
-    if (band) band.setAttribute("d", line);
-    if (hem) hem.setAttribute("d", line);
-    if (hemShadow) hemShadow.setAttribute("d", hemPath(pts, 9));
-    if (shine) shine.setAttribute("d", hemPath(pts, -4));
-    if (stitch) stitch.setAttribute("d", hemPath(pts, 4));
+    if (clip) clip.setAttribute("d", line + "L" + W + " " + (H + 20) + "L0 " + (H + 20) + "Z");
+    if (hem) hem.setAttribute("d", visible ? line : "");
+    if (hemShadow) hemShadow.setAttribute("d", visible ? hemPath(pts, -5) : "");
+    if (lift) lift.setAttribute("d", visible ? hemPath(pts, 14) : "");
+    if (shine) shine.setAttribute("d", visible ? hemPath(pts, -3) : "");
+    if (stitch) stitch.setAttribute("d", visible ? hemPath(pts, 7) : "");
 
-    // Folds fanning out from the hands.
+    // Tension folds in the blanket, fanning down and out from the hands.
     var sh = "";
     var li = "";
-    var len = Math.max(140, lag * 2.2);
-    for (var side = -1; side <= 1; side += 2) {
-      for (var f = 0; f < 7; f++) {
-        var st = cx + side * (hold * (0.2 + 0.8 * (f / 7)));
-        var a = (0.15 + 0.95 * (f / 6)) * side;
-        var ex = st + Math.sin(a) * len * 1.3;
-        var ey = edge - Math.cos(a) * len - (f % 2) * 30;
-        var half = 7 + f * 2.2;
-        var sy = edge - lag * 0.02 - 2;
-        var path =
-          "M" +
-          f1(st - half) +
-          " " +
-          f1(sy) +
-          "Q" +
-          f1((st + ex) / 2) +
-          " " +
-          f1((sy + ey) / 2 - 10) +
-          " " +
-          f1(ex) +
-          " " +
-          f1(ey) +
-          "Q" +
-          f1((st + ex) / 2 + half) +
-          " " +
-          f1((sy + ey) / 2) +
-          " " +
-          f1(st + half) +
-          " " +
-          f1(sy) +
-          "Z";
-        if (f % 2 === 0) sh += path;
-        else li += path;
+    if (visible) {
+      var len = Math.max(150, S * 0.9);
+      for (var side = -1; side <= 1; side += 2) {
+        for (var f = 0; f < 6; f++) {
+          var st = cx + side * hold * (0.15 + 0.85 * (f / 6));
+          var a = (0.25 + 0.9 * (f / 5)) * side;
+          var ex = st + Math.sin(a) * len * 1.25;
+          var ey = edge + Math.cos(a) * len * (0.9 + 0.1 * (f % 2));
+          var half = 6 + f * 2.4;
+          var sy = edge + 6;
+          var path =
+            "M" +
+            f1(st - half) +
+            " " +
+            f1(sy) +
+            "Q" +
+            f1((st + ex) / 2) +
+            " " +
+            f1((sy + ey) / 2 + 8) +
+            " " +
+            f1(ex) +
+            " " +
+            f1(ey) +
+            "Q" +
+            f1((st + ex) / 2 + half) +
+            " " +
+            f1((sy + ey) / 2) +
+            " " +
+            f1(st + half) +
+            " " +
+            f1(sy) +
+            "Z";
+          if (f % 2 === 0) sh += path;
+          else li += path;
+        }
       }
     }
-    var tension = Math.min(1, lag / 90);
+    var tension = visible ? Math.min(1, 0.5 + lag / 60) : 0;
     if (shade) {
       shade.setAttribute("d", sh);
-      shade.setAttribute("opacity", String(0.22 * tension));
+      shade.setAttribute("opacity", String(0.2 * tension));
     }
     if (light) {
       light.setAttribute("d", li);
-      light.setAttribute("opacity", String(0.14 * tension));
+      light.setAttribute("opacity", String(0.7 * tension));
     }
-    if (skip) skip.style.opacity = String(clamp01((H * 0.82 - edge) / 120));
+    if (skip) skip.style.opacity = String(t < 4.42 ? 1 : clamp01((H * 0.82 - edge) / 120));
 
-    if (t >= DURATION) {
+    if (t >= END) {
       finish();
       return;
     }
@@ -250,8 +380,6 @@ function run(c: RunnerConfig) {
 /* eslint-enable no-var */
 
 export function introRunnerScript(key: string): string {
-  const config: RunnerConfig = { sprite: "/brand/intro-walk.webp", key, ...walk };
+  const config: RunnerConfig = { sprite: INTRO_SPRITE, key, ...sheet };
   return `(${run.toString()})(${JSON.stringify(config)});`;
 }
-
-export const INTRO_SPRITE = "/brand/intro-walk.webp";

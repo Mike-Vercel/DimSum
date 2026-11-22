@@ -27,6 +27,8 @@ export type MascotPose = {
   /** Walk cycle phase (radians) and amount 0..1: legs step, body bobs and sways. */
   walk: number;
   walkAmount: number;
+  /** Lean of the whole body (radians, x axis): negative = leaning back, e.g. pulling hard. */
+  lean: number;
   /** Seconds, for procedural secondary motion. */
   time: number;
 };
@@ -43,6 +45,7 @@ export const REST_POSE: MascotPose = {
   drag: 0,
   walk: 0,
   walkAmount: 0,
+  lean: 0,
   time: 0,
 };
 
@@ -108,7 +111,7 @@ export function createMascotRig(): MascotRig {
     body.scale.set(1 / Math.sqrt(p.stretch), p.stretch, 1 / Math.sqrt(p.stretch));
     body.position.y = 0.08 * bob;
     body.rotation.z = p.swing + 0.045 * step;
-    body.rotation.x = p.swing * 0.15 + 0.07 * p.walkAmount;
+    body.rotation.x = p.swing * 0.15 + 0.07 * p.walkAmount * (1 - Math.min(1, Math.abs(p.lean) * 6)) + p.lean;
     body.rotation.y = 0.06 * step;
 
     for (const [side, sign] of [
@@ -119,8 +122,10 @@ export function createMascotRig(): MascotRig {
       const waving = side === "right" ? p.wave : 0;
       const grip = p.grip * (1 - waving);
       const drag = p.drag * (1 - grip);
+      // Free arms swing opposite to the legs while walking.
+      const armSwing = -0.5 * sign * step * (1 - grip) * (1 - drag) * (1 - waving);
       s.rotation.set(
-        -0.95 * grip - 2.3 * waving + drag * (0.62 + 0.05 * sign * step),
+        -0.95 * grip - 2.3 * waving + drag * (0.62 + 0.05 * sign * step) + armSwing,
         -sign * 1.05 * grip,
         sign * (0.08 * Math.sin(t * 2.1 + sign) * (1 - grip) * (1 - drag) + 0.25 * grip + 0.1 * drag) +
           (waving ? -sign * (0.6 + 0.35 * Math.sin(t * 14)) * waving : 0),

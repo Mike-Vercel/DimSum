@@ -397,3 +397,21 @@ html[data-intro="play"] .dimsum-intro {
 html[data-intro="play"] body {
   overflow: hidden;
 }
+/* The intro's white blanket: soft cotton with a faint weave and gentle vertical folds. */
+.dimsum-blanket {
+  background-color: #fbf9f5;
+  background-image:
+    radial-gradient(120% 60% at 50% 0%, rgba(255, 255, 255, 0.9), transparent 60%),
+    linear-gradient(
+      90deg,
+      rgba(120, 100, 80, 0.05),
+      transparent 18%,
+      rgba(120, 100, 80, 0.04) 34%,
+      transparent 52%,
+      rgba(120, 100, 80, 0.05) 70%,
+      transparent 86%,
+      rgba(120, 100, 80, 0.05)
+    ),
+    repeating-linear-gradient(0deg, rgba(120, 100, 80, 0.025) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(120, 100, 80, 0.02) 0 1px, transparent 1px 4px);
+}
