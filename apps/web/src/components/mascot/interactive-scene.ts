@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { blinkAt } from "@/components/intro/timeline";
-import { addMascotLights, createMascotRig, createRenderer, REST_POSE } from "./rig";
+import { addMascotLights, blinkAt, createMascotRig, createRenderer, REST_POSE } from "./rig";
 
 export type InteractiveScene = {
   canvas: HTMLCanvasElement;

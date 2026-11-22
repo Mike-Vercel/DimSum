@@ -19,6 +19,7 @@ export default async function ShopLayout({ children }: LayoutProps<"/">) {
   return (
     <RestaurantProvider value={restaurant}>
       <CatalogProvider initialCatalog={catalog}>
+        <MascotIntro />
         <AccountCartSync />
         <OfflineBanner />
         <ShopHeader />
@@ -31,7 +32,6 @@ export default async function ShopLayout({ children }: LayoutProps<"/">) {
         </DesktopOnlyOnAppRoutes>
         <CartBar />
         <BottomNav />
-        <MascotIntro />
       </CatalogProvider>
     </RestaurantProvider>
   );

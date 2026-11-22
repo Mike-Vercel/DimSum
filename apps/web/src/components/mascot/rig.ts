@@ -161,7 +161,12 @@ export function createMascotRig(): MascotRig {
   return { object, height: 4.05, gripY, gripPoint, pose, handsWorld, dispose: model.dispose };
 }
 
-export { blinkAt } from "@/components/intro/timeline";
+/** Natural blink: eyes closed for ~120 ms every 3.4 s. */
+export function blinkAt(time: number): number {
+  const period = 3.4;
+  const phase = (time + 1.3) % period;
+  return phase < 0.12 ? Math.sin((phase / 0.12) * Math.PI) : 0;
+}
 
 /** Studio lighting shared by the intro and the interactive mascot. */
 export function addMascotLights(scene: THREE.Scene) {
