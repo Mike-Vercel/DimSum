@@ -270,7 +270,7 @@ export function ProductEditor({
       title={current ? `Modifica · ${current.name}` : "Nuovo prodotto"}
       size="xl"
       footer={
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
           {current ? (
             confirmDelete ? (
               <span className="flex items-center gap-2 text-body-sm">
@@ -288,18 +288,23 @@ export function ProductEditor({
                 </Button>
               </span>
             ) : (
-              <Button variant="ghost" className="text-danger" onClick={() => setConfirmDelete(true)}>
-                <Trash2 className="size-4" /> Rimuovi
+              <Button
+                variant="ghost"
+                className="shrink-0 px-3 text-danger"
+                aria-label="Rimuovi dal menu"
+                onClick={() => setConfirmDelete(true)}
+              >
+                <Trash2 className="size-4" /> <span className="hidden sm:inline">Rimuovi</span>
               </Button>
             )
           ) : (
             <span />
           )}
-          <div className="flex gap-2">
-            <Button variant="ghost" onClick={onClose}>
+          <div className="flex min-w-0 flex-1 justify-end gap-2">
+            <Button variant="ghost" className="hidden sm:inline-flex" onClick={onClose}>
               Chiudi
             </Button>
-            <Button loading={save.isPending} onClick={submit}>
+            <Button className="flex-1 sm:flex-none" loading={save.isPending} onClick={submit}>
               {current ? "Salva modifiche" : "Crea prodotto"}
             </Button>
           </div>

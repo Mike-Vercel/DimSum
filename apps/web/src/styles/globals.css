@@ -97,6 +97,7 @@
   --animate-shimmer: shimmer 1.6s linear infinite;
   --animate-pulse-ring: pulse-ring 1.8s var(--ease-out-quint) infinite;
   --animate-fade-in: fade-in 0.24s var(--ease-out-quint) both;
+  --animate-sheet-up: sheet-up 0.34s var(--ease-out-quint) both;
   --animate-alert: alert-flash 1s steps(2, jump-none) infinite;
 
   @keyframes shimmer {
@@ -122,6 +123,14 @@
     }
     to {
       opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
       transform: none;
     }
   }

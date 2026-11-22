@@ -1,14 +1,14 @@
 "use client";
 
 import type { LoyaltySummaryDTO, MeDTO, OrderSummaryDTO } from "@dimsum/types";
-import { Bike, ChefHat, LogOut, MailWarning, Sparkles } from "lucide-react";
+import { Bike, ChefHat, ChevronRight, LogOut, MailWarning, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Seal } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { InlineAlert } from "@/components/ui/feedback";
-import { Avatar, ListRow } from "@/components/ui/misc";
+import { Avatar } from "@/components/ui/misc";
 import { toast } from "@/components/ui/toaster";
 import { authClient } from "@/lib/auth-client";
 import { signOutAndForget } from "@/lib/sign-out";
@@ -116,18 +116,22 @@ export function AccountHome({
       ) : null}
 
       {staff || me.role === "RIDER" ? (
-        <div className="overflow-hidden rounded-2xl bg-ink-950 text-white">
-          <ListRow
-            href={staff ? "/admin" : "/rider"}
-            icon={staff ? <ChefHat className="size-4.5" /> : <Bike className="size-4.5" />}
-            label={<span className="text-white">{staff ? "Apri il gestionale" : "Apri l'app rider"}</span>}
-            description={
-              <span className="text-white/60">
-                {staff ? "Ordini, cucina, menu e impostazioni" : "Le tue consegne di oggi"}
-              </span>
-            }
-          />
-        </div>
+        // Dark card: its own hover (a light ListRow hover would hide the white text).
+        <Link
+          href={staff ? "/admin" : "/rider"}
+          className="group tap flex items-center gap-3.5 rounded-2xl bg-ink-950 px-4 py-3.5 text-white shadow-sm ring-1 ring-white/5 transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-px hover:bg-ink-800 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+        >
+          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-white transition-colors group-hover:bg-brand">
+            {staff ? <ChefHat className="size-4.5" /> : <Bike className="size-4.5" />}
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold">{staff ? "Apri il gestionale" : "Apri l'app rider"}</span>
+            <span className="block truncate text-caption text-white/60">
+              {staff ? "Ordini, cucina, menu e impostazioni" : "Le tue consegne di oggi"}
+            </span>
+          </span>
+          <ChevronRight className="size-5 text-white/50 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-white" />
+        </Link>
       ) : null}
 
       {activeOrders.length ? (

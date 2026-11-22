@@ -33,12 +33,16 @@ export function Dialog({
         <RadixDialog.Overlay className="fixed inset-0 z-50 bg-overlay backdrop-blur-[2px] data-[state=open]:animate-fade-in" />
         <RadixDialog.Content
           className={cn(
-            "fixed top-1/2 left-1/2 z-50 flex max-h-[min(88dvh,860px)] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl bg-canvas shadow-lg outline-none data-[state=open]:animate-fade-in",
+            // Phones: a sheet from the bottom, full width and nearly full height (more room to work,
+            // thumbs near the buttons). From sm up: the centred card.
+            "fixed inset-x-0 bottom-0 z-50 flex max-h-[94dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-canvas shadow-lg outline-none data-[state=open]:animate-sheet-up",
+            "sm:inset-x-auto sm:top-1/2 sm:bottom-auto sm:left-1/2 sm:max-h-[min(88dvh,860px)] sm:w-[calc(100%-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:data-[state=open]:animate-fade-in",
             width,
             className,
           )}
         >
-          <div className={cn("flex items-start gap-4 px-6 pt-6 pb-2", hideHeader && "sr-only")}>
+          <span aria-hidden className="mx-auto mt-2.5 h-1 w-10 shrink-0 rounded-full bg-fg/15 sm:hidden" />
+          <div className={cn("flex items-start gap-4 px-5 pt-4 pb-2 sm:px-6 sm:pt-6", hideHeader && "sr-only")}>
             <div className="min-w-0 flex-1">
               <RadixDialog.Title className="text-title font-bold">{title}</RadixDialog.Title>
               {description ? (
@@ -58,7 +62,11 @@ export function Dialog({
             <RadixDialog.Description className="sr-only">{title}</RadixDialog.Description>
           ) : null}
           <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
-          {footer ? <div className="border-t border-line px-6 py-4">{footer}</div> : null}
+          {footer ? (
+            <div className="border-t border-line px-5 pt-3.5 pb-[calc(0.875rem+var(--safe-bottom))] sm:px-6 sm:py-4">
+              {footer}
+            </div>
+          ) : null}
         </RadixDialog.Content>
       </RadixDialog.Portal>
     </RadixDialog.Root>

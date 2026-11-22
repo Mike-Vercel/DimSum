@@ -33,10 +33,12 @@ function AvailabilitySwitch({
   value,
   busy,
   onChange,
+  className,
 }: {
   value: Availability;
   busy: boolean;
   onChange: (v: Availability) => void;
+  className?: string;
 }) {
   const options: { v: Availability; label: string }[] = [
     { v: "on", label: "Disponibile" },
@@ -47,7 +49,7 @@ function AvailabilitySwitch({
     <div
       role="radiogroup"
       aria-label="Disponibilità"
-      className={cn("inline-flex rounded-full bg-surface-3 p-1", busy && "opacity-60")}
+      className={cn("flex rounded-full bg-surface-3 p-1 sm:inline-flex", busy && "opacity-60", className)}
     >
       {options.map((o) => (
         <button
@@ -58,7 +60,7 @@ function AvailabilitySwitch({
           disabled={busy}
           onClick={() => value !== o.v && onChange(o.v)}
           className={cn(
-            "rounded-full px-3 py-1.5 text-caption font-semibold whitespace-nowrap transition-colors",
+            "min-h-9 flex-1 rounded-full px-3 py-1.5 text-caption font-semibold whitespace-nowrap transition-colors sm:min-h-0 sm:flex-none",
             value === o.v
               ? o.v === "on"
                 ? "bg-success text-white"
@@ -480,20 +482,21 @@ export function MenuManager({
       }
       actions={
         canEdit ? (
-          <>
-            <Button variant="secondary" onClick={() => setGroupsOpen(true)}>
+          <div className="grid w-full grid-cols-[1fr_1fr_1.2fr] gap-2 sm:flex sm:w-auto">
+            <Button variant="secondary" className="px-3" onClick={() => setGroupsOpen(true)}>
               <SlidersHorizontal className="size-4" /> Opzioni
             </Button>
             <Button
               variant="secondary"
+              className="px-3"
               onClick={() => setCategoryEditor({ category: null, version: Date.now() })}
             >
               <Plus className="size-4" /> Categoria
             </Button>
-            <Button onClick={() => setEditing({ product: null, version: Date.now() })}>
+            <Button className="px-3" onClick={() => setEditing({ product: null, version: Date.now() })}>
               <Plus className="size-4" /> Prodotto
             </Button>
-          </>
+          </div>
         ) : null
       }
     >
@@ -585,7 +588,10 @@ export function MenuManager({
                 <li
                   key={p.id}
                   className={cn(
-                    "flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3",
+                    "grid items-center gap-x-3 gap-y-2.5 px-4 py-3 sm:flex sm:gap-x-4",
+                    reordering
+                      ? "grid-cols-[auto_auto_minmax(0,1fr)_auto]"
+                      : "grid-cols-[auto_minmax(0,1fr)_auto]",
                     value !== "on" && "bg-danger-soft/30",
                   )}
                 >
@@ -628,7 +634,7 @@ export function MenuManager({
                     ) : null}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="flex flex-wrap items-center gap-1.5 font-semibold">
+                    <p className="flex flex-wrap items-center gap-1.5 leading-snug font-semibold">
                       {p.posCode ? (
                         <span className="rounded bg-surface-2 px-1.5 text-micro font-bold text-fg-muted">
                           {p.posCode}
@@ -653,21 +659,25 @@ export function MenuManager({
                         : ""}
                     </p>
                   </div>
-                  <AvailabilitySwitch
-                    value={value}
-                    busy={availability.isPending && availability.variables?.productId === p.id}
-                    onChange={(v) => availability.mutate({ productId: p.id, value: v })}
-                  />
                   {canEdit ? (
                     <Button
                       size="icon"
                       variant="ghost"
+                      className="sm:order-last"
                       aria-label={`Modifica ${p.name}`}
                       onClick={() => setEditing({ product: p, version: Date.now() })}
                     >
                       <Pencil className="size-4.5" />
                     </Button>
-                  ) : null}
+                  ) : (
+                    <span className="sm:hidden" />
+                  )}
+                  <AvailabilitySwitch
+                    className="col-span-full"
+                    value={value}
+                    busy={availability.isPending && availability.variables?.productId === p.id}
+                    onChange={(v) => availability.mutate({ productId: p.id, value: v })}
+                  />
                 </li>
               );
             })}
