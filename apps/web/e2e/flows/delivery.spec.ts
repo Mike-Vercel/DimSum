@@ -82,3 +82,48 @@ for (const method of ["Contanti alla consegna", "Carta con POS alla consegna"] a
     await kitchen.context().close();
   });
 }
+
+/**
+ * The owner delivers in person ("Consegno io"): no hand-over to press. As soon as the order is ready
+ * and assigned to the owner it is picked up and on the way; the kitchen only marks it delivered.
+ */
+test("il titolare consegna di persona: niente \"Consegnato al rider\"", async ({ page, browser }) => {
+  await rememberDeliveryAddress(page);
+  await page.goto("/menu");
+  await addFromMenu(page, DISHES.ravioli, 6);
+  await page.goto("/checkout");
+  await page.getByRole("button", { name: "Continua", exact: true }).click();
+  await page.getByRole("button", { name: /Continua come ospite/ }).click();
+  await page.getByLabel("Nome e cognome").fill("Anna Titolare");
+  await page.getByLabel(/E-mail/).fill(`anna.${Date.now()}@example.com`);
+  await page.getByLabel(/Telefono/).fill("+39 333 444 5555");
+  await page.getByRole("button", { name: "Continua", exact: true }).click();
+  await page.getByRole("radio", { name: /Contanti alla consegna/ }).click();
+  await page.getByRole("button", { name: /Conferma ordine/ }).click();
+  await expect(page.getByRole("heading", { name: "Ordine confermato!" })).toBeVisible();
+  const number = orderNumberFrom(
+    await page
+      .getByText(/^#[A-Z]+\d+$/)
+      .first()
+      .innerText(),
+  );
+  await page.getByRole("button", { name: "Segui il tuo ordine" }).click();
+
+  const kitchen = await openAs(browser, staff(), { next: "/admin/cucina" });
+  const ticket = kitchen.locator("article", { hasText: `#${number}` }).filter({ visible: true });
+  await ticket.getByRole("button", { name: "Accetta" }).click();
+  await kitchen.getByRole("button", { name: "20 minuti" }).click();
+  await kitchen.getByRole("button", { name: /^Accetta · pronto alle/ }).click();
+  await ticket.getByRole("button", { name: "Pronto" }).click();
+  await ticket.getByRole("button", { name: /Assegna rider/ }).click();
+  await kitchen.getByRole("button", { name: /Consegno io/ }).click();
+
+  // Straight out for delivery: the next (and only) step is "delivered".
+  await expect(ticket.getByRole("button", { name: "Segna come consegnato" })).toBeVisible();
+  await expect(ticket.getByRole("button", { name: "Consegnato al rider" })).toHaveCount(0);
+  await expect(page.getByText(/In consegna|in viaggio/).first()).toBeVisible();
+
+  await ticket.getByRole("button", { name: "Segna come consegnato" }).click();
+  await expect(page.getByText(/Consegnato|Buon appetito/).first()).toBeVisible();
+  await kitchen.context().close();
+});

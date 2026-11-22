@@ -135,8 +135,19 @@ const CSS =
   "background:color-mix(in oklab,#fff 78%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);" +
   "box-shadow:0 1px 0 rgba(0,0,0,.04) inset,0 18px 40px -24px rgba(0,0,0,.3)}" +
   ".dsh-tabs{display:flex;justify-content:space-between;padding:0 6px;font-size:12px;margin-bottom:18px}" +
-  ".dsh-tab{color:var(--muted);font-weight:500;padding:3px 0}" +
-  ".dsh-tab[aria-selected=true]{color:var(--fg);font-weight:700;box-shadow:0 2px 0 var(--primary)}" +
+  // Tabs: the red underline passes from one tab to the other (each grows from the side facing
+  // the other), and the panel below slides in; ingredients pop in one after another.
+  ".dsh-tab{position:relative;color:var(--muted);font-weight:500;padding:3px 0;transition:color .3s}" +
+  ".dsh-tab::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;background:var(--primary);transform:scaleX(0);transition:transform .38s cubic-bezier(.65,0,.35,1)}" +
+  ".dsh-tab:first-child::after{transform-origin:100% 50%}" +
+  ".dsh-tab:last-child::after{transform-origin:0 50%}" +
+  ".dsh-tab[aria-selected=true]{color:var(--fg);font-weight:700}" +
+  ".dsh-tab[aria-selected=true]::after{transform:scaleX(1)}" +
+  ".dsh-tab:hover{color:var(--fg)}" +
+  "@keyframes dsh-pane{from{opacity:0;transform:translateY(10px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}" +
+  "@keyframes dsh-chip{from{opacity:0;transform:translateY(8px) scale(.85)}to{opacity:1;transform:none}}" +
+  ".dsh-pane{animation:dsh-pane .45s cubic-bezier(.2,.7,.2,1) both}" +
+  ".dsh-pane .dsh-ing li{animation:dsh-chip .4s cubic-bezier(.3,1.4,.5,1) both;animation-delay:calc(var(--i,0) * 45ms + 80ms)}" +
   ".dsh-bodies{display:grid}" +
   ".dsh-body{grid-area:1/1;visibility:hidden}" +
   ".dsh-rate{display:flex;align-items:center;gap:10px;margin:0 0 12px}" +
@@ -182,7 +193,7 @@ const CSS =
   ".dsh-strip{display:none}" +
   "}" +
   "@container (max-width:719px) and (max-height:700px){.dsh-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.dsh-head{height:104px;margin-top:10px}}" +
-  "@media (prefers-reduced-motion:reduce){.dsh-track,.dsh-dot,.dsh-dot i,.dsh-th .dsh-btn,.dsh-th img{transition:none}}";
+  "@media (prefers-reduced-motion:reduce){.dsh-track,.dsh-dot,.dsh-dot i,.dsh-th .dsh-btn,.dsh-th img,.dsh-tab::after{transition:none}.dsh-pane,.dsh-pane .dsh-ing li{animation:none}}";
 
 const HIDE_1 = "inset(0% 0% 0% 100%)";
 const HIDE_2 = "inset(0% 100% 0% 0%)";
@@ -595,15 +606,20 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
                     {d.nameZh ? <span className="dsh-zh">{d.nameZh}</span> : null}
                   </div>
                   <p className="dsh-name">{d.name}</p>
-                  {tab === "descrizione" || !d.ingredients.length ? (
-                    <p className="dsh-desc">{d.description}</p>
-                  ) : (
-                    <ul className="dsh-ing">
-                      {d.ingredients.map((x) => (
-                        <li key={x}>{x}</li>
-                      ))}
-                    </ul>
-                  )}
+                  {/* Keyed by tab: switching remounts the panel, which plays its entrance. */}
+                  <div key={tab} className="dsh-pane">
+                    {tab === "descrizione" || !d.ingredients.length ? (
+                      <p className="dsh-desc">{d.description}</p>
+                    ) : (
+                      <ul className="dsh-ing">
+                        {d.ingredients.map((x, k) => (
+                          <li key={x} style={{ "--i": k } as React.CSSProperties}>
+                            {x}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                   <Link className="dsh-cta" href={d.href} tabIndex={i === index ? 0 : -1}>
                     Ordina ora
                   </Link>

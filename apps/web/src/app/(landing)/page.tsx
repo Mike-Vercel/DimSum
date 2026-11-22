@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Bricolage_Grotesque } from "next/font/google";
 import Link from "next/link";
 import { Bike, CreditCard, MapPin, ShoppingBag, Store } from "lucide-react";
 import { formatEuro } from "@dimsum/domain";
@@ -11,6 +12,7 @@ import { jsonLdScript, restaurantJsonLd } from "@/server/seo";
 import { getCatalog } from "@/server/services/catalog";
 import { getRestaurantConfig, toRestaurantInfo } from "@/server/services/restaurant";
 import { DishOrbitCarousel, type OrbitDish } from "./dish-orbit";
+import { LandingMotion } from "./landing-motion";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -26,20 +28,28 @@ export const metadata: Metadata = {
   },
 };
 
+/** Section titles: a display face with more character than the body font. */
+const display = Bricolage_Grotesque({
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz"],
+  variable: "--font-landing-display",
+  display: "swap",
+});
+
 const SPECIALS = [
   {
     slug: "ravioli-al-vapore",
-    title: "Un morso tira l’altro.",
+    title: "Un morso tira l’altro",
     text: "Tutto il piacere dei ravioli al vapore. Scegli il tuo ripieno preferito.",
   },
   {
     slug: "bao-al-vapore",
-    title: "Soffice fuori. Wow dentro.",
+    title: "Soffice fuori, wow dentro",
     text: "Piccoli panini al vapore, ripieni da scoprire. Fai spazio ai bao.",
   },
   {
     slug: "noodles-in-brodo",
-    title: "Il tuo momento noodles.",
+    title: "Il tuo momento noodles",
     text: "Una ciotola fumante e le tue bacchette. Il comfort food che cercavi.",
   },
 ];
@@ -139,14 +149,15 @@ export default async function DiscoverPage() {
   const maps = `https://www.google.com/maps/dir/?api=1&destination=${config.location.lat},${config.location.lng}`;
 
   return (
-    <div className={styles.page}>
+    <div id="landing" className={`${styles.page} ${display.variable}`}>
+      <LandingMotion rootId="landing" headerId="landing-header" fromId="specialita" />
       {/* The opening: the mascot pulls the page down like a blanket (once per visit). */}
       <MascotIntro />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdScript(restaurantJsonLd(config, catalog)) }}
       />
-      <header className={styles.header}>
+      <header id="landing-header" className={styles.header}>
         <Link href="/" aria-label="DIMSUM, home">
           <Logo className="h-11 text-fg" />
         </Link>
@@ -170,17 +181,17 @@ export default async function DiscoverPage() {
         <section id="specialita" className={styles.section} aria-labelledby="specialita-title">
           <div className={styles.sectionHeading}>
             <div>
-              <h2 id="specialita-title">
+              <h2 id="specialita-title" data-reveal="title">
                 Tre buoni motivi
                 <br />
-                per avere fame.
+                per avere <span className={styles.accent}>fame</span>
               </h2>
             </div>
-            <Link href="/menu" className={styles.outlineButton}>
+            <Link href="/menu" className={styles.outlineButton} data-reveal="up">
               Tutto il menu
             </Link>
           </div>
-          <div className={styles.foodGrid}>
+          <div className={styles.foodGrid} data-stagger>
             {specials.map(({ category, slug, title, text, price }, index) => (
               <Link href={`/menu#${slug}`} className={styles.foodCard} key={slug}>
                 <div className={styles.foodVisual}>
@@ -199,19 +210,19 @@ export default async function DiscoverPage() {
               </Link>
             ))}
           </div>
-          <p className={styles.priceNote}>
+          <p className={styles.priceNote} data-reveal="up">
             Prezzi IVA inclusa. Nel menu trovi piatti, ingredienti e informazioni sugli allergeni.
           </p>
         </section>
 
         <section id="come-funziona" className={styles.payment} aria-labelledby="payment-title">
           <div className={styles.paymentInner}>
-            <div className={styles.paymentCopy}>
+            <div className={styles.paymentCopy} data-stagger>
               <p className={styles.eyebrow}>Tu pensa solo alla fame</p>
               <h2 id="payment-title">
                 Il POS?
                 <br />
-                <span>Lo portiamo noi.</span>
+                <span>Lo portiamo noi</span>
               </h2>
               <p>
                 Ordina online, paga quando ricevi il tuo ordine. Contanti o carta: il rider arriva con il POS,
@@ -227,12 +238,12 @@ export default async function DiscoverPage() {
                 Anche al ritiro paghi al locale, in contanti o con POS. Nessun pagamento online.
               </p>
             </div>
-            <ol className={styles.steps}>
+            <ol className={styles.steps} data-stagger>
               <li>
                 <span>01</span>
                 <div>
                   <ShoppingBag aria-hidden />
-                  <h3>Scegli quello che ti va.</h3>
+                  <h3>Scegli quello che ti va</h3>
                   <p>Apri il menu, scopri i piatti e componi il tuo ordine.</p>
                 </div>
               </li>
@@ -248,7 +259,7 @@ export default async function DiscoverPage() {
                 <span>03</span>
                 <div>
                   <CreditCard aria-hidden />
-                  <h3>Arriva il gusto. Poi paghi.</h3>
+                  <h3>Arriva il gusto, poi paghi</h3>
                   <p>Contanti o carta con POS, alla consegna o al ritiro. Semplice.</p>
                 </div>
               </li>
@@ -261,12 +272,12 @@ export default async function DiscoverPage() {
           className={`${styles.section} ${styles.location}`}
           aria-labelledby="location-title"
         >
-          <div>
+          <div data-stagger>
             <p className={styles.eyebrow}>Ci vediamo a Palermo</p>
             <h2 id="location-title">
               L’Asia è più
               <br />
-              vicina di quanto pensi.
+              vicina di quanto pensi
             </h2>
             <p className={styles.locationIntro}>
               Passa da DIMSUM, scegli il ritiro o lascia che il tuo prossimo piatto preferito arrivi a casa.
@@ -275,7 +286,7 @@ export default async function DiscoverPage() {
               <MapPin size={20} aria-hidden /> Come raggiungerci
             </a>
           </div>
-          <div className={styles.addressCard}>
+          <div className={styles.addressCard} data-reveal="right">
             <Store size={30} aria-hidden />
             <h3>{config.name}</h3>
             <p>{config.address.formatted}</p>
@@ -302,15 +313,15 @@ export default async function DiscoverPage() {
         </section>
 
         <section className={`${styles.section} ${styles.faq}`} aria-labelledby="faq-title">
-          <div>
+          <div data-stagger>
             <p className={styles.eyebrow}>Prima del primo morso</p>
             <h2 id="faq-title">
               Ti togliamo
               <br />
-              gli ultimi dubbi.
+              gli ultimi dubbi
             </h2>
           </div>
-          <div className={styles.questions}>
+          <div className={styles.questions} data-stagger>
             <details>
               <summary>Come posso pagare?</summary>
               <p>
@@ -345,12 +356,12 @@ export default async function DiscoverPage() {
           </div>
         </section>
 
-        <section className={styles.finalCta} aria-labelledby="final-title">
+        <section className={styles.finalCta} aria-labelledby="final-title" data-stagger>
           <p className={styles.eyebrow}>Le bacchette sono pronte</p>
           <h2 id="final-title">
             La prossima fermata?
             <br />
-            Il tuo primo morso.
+            Il tuo primo morso
           </h2>
           <Link href="/menu" className={styles.lightButton}>
             Scegli cosa mangiare <ShoppingBag size={20} aria-hidden />
@@ -358,7 +369,7 @@ export default async function DiscoverPage() {
           <p>Consegna a domicilio · Ritiro al locale · Contanti o POS</p>
         </section>
       </main>
-      <footer className={styles.footer}>
+      <footer className={styles.footer} data-reveal="up">
         <div className={styles.footerTop}>
           <Link href="/" aria-label="DIMSUM, home">
             <Logo className="h-12 text-white" />

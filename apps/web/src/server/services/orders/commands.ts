@@ -260,7 +260,36 @@ export async function runOrderCommand(
     ).catch(() => null);
     if (preparing) return preparing;
   }
+  // Delivered by someone of the restaurant (the owner choosing "Consegno io"): there is no hand-over
+  // to press, so once the order is ready and theirs it leaves at once — picked up and on the way.
+  if ((command.type === "ASSIGN_RIDER" || command.type === "MARK_READY") && ctx.actor === "staff") {
+    const leaving = await leaveWithInHouseRider(orderId, ctx).catch(() => null);
+    if (leaving) return leaving;
+  }
   return order;
+}
+
+async function leaveWithInHouseRider(orderId: string, ctx: CommandContext) {
+  const current = await db.order.findUnique({
+    where: { id: orderId },
+    select: {
+      fulfillmentType: true,
+      readyAt: true,
+      pickedUpAt: true,
+      delivery: { select: { rider: { select: { user: { select: { role: true } } } } } },
+    },
+  });
+  const role = current?.delivery?.rider?.user.role;
+  if (current?.fulfillmentType !== "DELIVERY" || !current.readyAt || current.pickedUpAt) return null;
+  if (!role || role === "RIDER" || role === "CUSTOMER") return null;
+  const note = "Consegna il personale del locale: nessun passaggio al rider";
+  const picked = await executeCommand(orderId, { type: "PICK_UP" }, { ...ctx, note });
+  const onTheWay = await executeCommand(
+    orderId,
+    { type: "START_DELIVERY" },
+    { ...ctx, quiet: true, note },
+  ).catch(() => null);
+  return onTheWay ?? picked;
 }
 
 async function afterReceived(orderId: string) {

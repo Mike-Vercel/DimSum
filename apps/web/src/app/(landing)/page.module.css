@@ -17,11 +17,14 @@
   outline: 3px solid #2278a5;
   outline-offset: 6px;
 }
-/* Always on top while scrolling, solid (no blur). */
+/* On top while scrolling (solid, no blur); from the second section on it slides away going down
+   and comes back going up (landing-motion.tsx). */
 .header {
   position: sticky;
   top: 0;
   z-index: 40;
+  transition: transform 0.38s cubic-bezier(0.3, 0.7, 0.2, 1);
+  will-change: transform;
   min-height: var(--landing-header);
   padding: calc(16px + var(--landing-safe-top)) max(24px, calc((100vw - 1280px) / 2)) 16px;
   display: flex;
@@ -32,6 +35,9 @@
 }
 .header > a:first-child {
   min-width: 0;
+}
+.header[data-hidden="true"] {
+  transform: translate3d(0, -100%, 0);
 }
 .nav {
   display: flex;
@@ -227,10 +233,71 @@
   color: var(--landing-red);
 }
 .page h2 {
-  font-size: clamp(36px, 4vw, 56px);
-  font-weight: 850;
-  letter-spacing: -0.05em;
-  line-height: 1.07;
+  font-family: var(--font-landing-display), var(--font-display);
+  font-size: clamp(40px, 4.6vw, 64px);
+  font-weight: 800;
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+/* The key word of a title: brand red with a brush-stroke underline that draws itself in. */
+.accent {
+  position: relative;
+  display: inline-block;
+  color: var(--landing-red);
+  font-style: italic;
+  padding-right: 0.06em;
+}
+.accent::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.06em;
+  height: 0.16em;
+  border-radius: 99px;
+  background: currentColor;
+  opacity: 0.22;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.45s;
+}
+.page:not([data-motion]) .accent::after,
+.page [data-in] .accent::after {
+  transform: scaleX(1);
+}
+
+/* Scroll reveals (start state only once the motion script runs, see landing-motion.tsx). */
+.page[data-motion] [data-reveal],
+.page[data-motion] [data-stagger] > * {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--reveal-i, 0) * 90ms);
+}
+/* No clip-path here: a fully clipped element is never seen as intersecting, so it would never
+   reveal. */
+.page[data-motion] [data-reveal="title"] {
+  transform: translate3d(0, 56px, 0) skewY(3deg);
+  transform-origin: 0 100%;
+  transition-duration: 0.8s, 1s;
+}
+.page[data-motion] [data-reveal="right"] {
+  transform: translate3d(48px, 0, 0);
+}
+.page[data-motion] [data-reveal="left"] {
+  transform: translate3d(-48px, 0, 0);
+}
+.page[data-motion] [data-reveal="zoom"] {
+  transform: scale(0.94);
+}
+.page[data-motion] [data-reveal][data-in],
+.page[data-motion] [data-stagger] > [data-in] {
+  opacity: 1;
+  transform: none;
 }
 .sectionHeading {
   display: flex;
@@ -707,6 +774,12 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
+  }
+  .accent::after {
+    transition: none;
+  }
   .page *,
   .page *::after {
     transition: none !important;
