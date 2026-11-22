@@ -1,4 +1,4 @@
-import { addFromMenu, DISHES, expect, rememberDeliveryAddress, test } from "../helpers";
+import { addFromMenu, DISHES, expect, latestOtp, rememberDeliveryAddress, test } from "../helpers";
 
 /**
  * Account journey (the Google button follows the same redirect path, see README):
@@ -9,13 +9,23 @@ test("login dal checkout: carrello conservato, indirizzo salvato, storico ordini
   const email = `cliente.${Date.now()}@example.com`;
   const password = "Ravioli-al-vapore-2026";
 
+  // Sign-up with the e-mail code: e-mail → 6-digit code → name, surname, password → address (skipped).
   await page.goto("/registrati");
-  await page.getByLabel("Nome e cognome").fill("Sara Cliente");
+  await page.getByRole("button", { name: /Continua con e-mail/ }).click();
   await page.getByLabel("E-mail", { exact: true }).fill(email);
-  await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("checkbox").first().click();
-  await page.getByRole("button", { name: "Crea account" }).click();
-  await page.waitForURL("**/account");
+  await page.getByRole("button", { name: "Inviami il codice" }).click();
+  await expect(page.getByText("Controlla l'e-mail")).toBeVisible();
+  await page.getByLabel("Codice").fill(await latestOtp(email));
+  await expect(page.getByText("Come ti chiami?")).toBeVisible();
+  await page.getByLabel("Nome", { exact: true }).fill("Sara");
+  await page.getByLabel("Cognome").fill("Cliente");
+  await page.getByLabel("Password", { exact: true }).fill(password);
+  await page.getByRole("button", { name: "Continua", exact: true }).click();
+  await expect(page.getByText("Dove ti portiamo il cibo?")).toBeVisible();
+  await page.getByRole("button", { name: "Salta per ora" }).click();
+  await page.waitForURL("**/menu");
+  await page.goto("/account");
   await expect(page.getByRole("heading", { name: /Ciao, Sara/ })).toBeVisible();
   await page.getByRole("button", { name: "Esci" }).click();
   await page.waitForURL((u) => u.pathname === "/");

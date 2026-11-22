@@ -175,11 +175,24 @@ export function refundEmail(brand: BrandContext, o: OrderEmailData): RenderedEma
   );
 }
 
+/** The 6-digit code to sign up or sign in with the e-mail (no password needed). */
+export function otpCodeEmail(brand: BrandContext, data: { code: string; minutes: number }): RenderedEmail {
+  const body = html`${h1("Il tuo codice DIMSUM")}
+  ${p("Inseriscilo sul sito per continuare:")}
+  <p style="margin:18px 0 22px;font-size:34px;font-weight:800;letter-spacing:10px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#1c1c1a">${data.code}</p>
+  ${p(`Vale ${data.minutes} minuti. Se non sei stato tu a chiederlo, ignora questa e-mail: senza il codice nessuno può entrare.`, { muted: true, size: 14 })}`;
+  return finalize(
+    "otp_code",
+    `${data.code} è il tuo codice DIMSUM`,
+    layout(brand, { preheader: `Codice: ${data.code}`, title: "Il tuo codice", body }),
+  );
+}
+
 export function welcomeEmail(
   brand: BrandContext,
   data: { firstName: string; menuUrl: string },
 ): RenderedEmail {
-  const body = html`${h1(`Benvenuto da ${brand.restaurantName}, ${data.firstName}!`)}
+  const body = html`${h1(data.firstName ? `Benvenuto da ${brand.restaurantName}, ${data.firstName}!` : `Benvenuto da ${brand.restaurantName}!`)}
   ${p("Il tuo account è pronto. Da ora puoi salvare i tuoi indirizzi, ritrovare gli ordini precedenti, riordinare in un tap e ricevere le offerte riservate (solo se ce lo consenti).")}
   ${button("Ordina ora", data.menuUrl)}`;
   return finalize(

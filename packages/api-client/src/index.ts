@@ -260,6 +260,9 @@ export function createApiClient(options: ApiClientOptions) {
           `/me/orders/${orderId}/reorder`,
           {},
         ),
+      /** Sign-up with an e-mail code, last step: name and password (the phone is asked at checkout). */
+      completeSignup: (input: { firstName: string; lastName: string; password: string }) =>
+        request<{ ok: true }>("POST", "/me/signup", input),
       addresses: {
         list: () => request<{ addresses: SavedAddressDTO[] }>("GET", "/me/addresses"),
         create: (input: z.input<typeof savedAddressInput>) =>

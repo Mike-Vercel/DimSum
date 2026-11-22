@@ -139,3 +139,27 @@ export function orderNumberFrom(text: string): string {
   if (!match?.[1]) throw new Error(`order number not found in "${text}"`);
   return match[1];
 }
+
+/**
+ * The 6-digit sign-up code just e-mailed to `email`. The test server uses the development outbox,
+ * which keeps every message's text in the test database.
+ */
+export async function latestOtp(email: string): Promise<string> {
+  const { Client } = await import("pg");
+  const client = new Client({ connectionString: process.env.TEST_DATABASE_URL });
+  await client.connect();
+  try {
+    for (let i = 0; i < 30; i++) {
+      const res = await client.query<{ text: string | null }>(
+        `SELECT text FROM email_logs WHERE "to" = $1 AND template = 'otp_code' ORDER BY "createdAt" DESC LIMIT 1`,
+        [email],
+      );
+      const code = res.rows[0]?.text?.match(/\b(\d{6})\b/)?.[1];
+      if (code) return code;
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+  } finally {
+    await client.end();
+  }
+  throw new Error(`no sign-up code e-mailed to ${email}`);
+}

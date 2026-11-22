@@ -21,10 +21,12 @@ export function SocialButtons({
   google,
   apple,
   callbackURL,
+  googleLabel = "Continua con Google",
 }: {
   google: ProviderButton;
   apple: boolean;
   callbackURL: string;
+  googleLabel?: string;
 }) {
   const [pending, setPending] = useState<"google" | "apple" | null>(null);
   if (google === "off" && !apple) return null;
@@ -55,7 +57,7 @@ export function SocialButtons({
           disabled={pending !== null}
           onClick={() => (google === "setup" ? explainGoogleSetup() : void start("google"))}
         >
-          <GoogleIcon className="size-5" /> Continua con Google
+          <GoogleIcon className="size-5" /> {googleLabel}
         </Button>
       ) : null}
       {apple ? (

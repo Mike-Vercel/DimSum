@@ -4,10 +4,11 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
-import { bearer } from "better-auth/plugins";
+import { bearer, emailOTP } from "better-auth/plugins";
 import { getDb } from "../db";
 import {
   brandContext,
+  otpCodeEmail,
   passwordResetEmail,
   sendEmail,
   teamInviteEmail,
@@ -18,6 +19,8 @@ import { appUrl, env, features } from "../env";
 import { logger } from "../logger";
 import { ensureCustomerRecords, linkGuestOrders } from "../services/customers";
 import { awardSignupBonus } from "../services/loyalty";
+
+const OTP_MINUTES = 10;
 
 const ROLE_LABELS: Record<string, string> = {
   RIDER: "rider",
@@ -138,6 +141,8 @@ function createAuth() {
         "/forget-password": { window: 900, max: 3 },
         "/send-verification-email": { window: 900, max: 3 },
         "/change-password": { window: 300, max: 5 },
+        "/email-otp/send-verification-otp": { window: 300, max: 5 },
+        "/sign-in/email-otp": { window: 300, max: 10 },
       },
     },
 
@@ -213,13 +218,16 @@ function createAuth() {
                 await linkGuestOrders(user.id, user.email);
                 await awardSignupBonus(user.id);
               }
-              await sendEmail({
-                to: user.email,
-                email: welcomeEmail(await brandContext(), {
-                  firstName: firstNameOf(user.name),
-                  menuUrl: appUrl("/menu"),
-                }),
-              });
+              // Signed up with an e-mail code: no name yet, the welcome follows the profile step.
+              if (user.name.trim()) {
+                await sendEmail({
+                  to: user.email,
+                  email: welcomeEmail(await brandContext(), {
+                    firstName: firstNameOf(user.name),
+                    menuUrl: appUrl("/menu"),
+                  }),
+                });
+              }
             } catch (error) {
               logger.error("post sign-up hook failed", { error, userId: user.id });
             }
@@ -228,7 +236,21 @@ function createAuth() {
       },
     },
 
-    plugins: [bearer(), nextCookies()],
+    plugins: [
+      bearer(),
+      // Sign up / sign in with a 6-digit code by e-mail: the code proves the address, so the account
+      // is created already verified; name, password and address follow (see completeSignup).
+      emailOTP({
+        otpLength: 6,
+        expiresIn: OTP_MINUTES * 60,
+        allowedAttempts: 5,
+        storeOTP: "hashed",
+        sendVerificationOTP: async ({ email, otp }) => {
+          await sendEmail({ to: email, email: otpCodeEmail(await brandContext(), { code: otp, minutes: OTP_MINUTES }) });
+        },
+      }),
+      nextCookies(),
+    ],
   });
 }
 
