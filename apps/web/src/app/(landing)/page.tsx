@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Bike, CreditCard, MapPin, ShoppingBag, Store } from "lucide-react";
 import { formatEuro } from "@dimsum/domain";
@@ -168,38 +167,9 @@ export default async function DiscoverPage() {
           </h1>
           {orbitDishes.length > 1 ? <DishOrbitCarousel dishes={orbitDishes} height="calc(100svh - var(--landing-header))" /> : null}
         </section>
-        <div className={styles.ribbon} aria-hidden>
-          <span>RAVIOLI</span>
-          <i>✳</i>
-          <span>BAO</span>
-          <i>✳</i>
-          <span>NOODLES</span>
-          <i>✳</i>
-          <span>DIMSUM</span>
-          <i>✳</i>
-          <span>PALERMO</span>
-        </div>
-
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 border-b border-black/10 px-6 py-7">
-          <div className="flex items-center gap-4">
-            <Image src="/brand/mascot.webp" alt="" width={54} height={60} className="h-15 w-auto" />
-            <p className="text-base">
-              <strong className="block">Piccola mascotte. Grande personalità.</strong>
-              <span className="text-fg-muted">Il nostro raviolo prende vita in tre dimensioni.</span>
-            </p>
-          </div>
-          <Link
-            href="/mascotte"
-            className="rounded-full border border-current px-6 py-3 text-base font-bold transition-colors hover:bg-black/5"
-          >
-            Esplora la mascotte in 3D
-          </Link>
-        </div>
-
         <section id="specialita" className={styles.section} aria-labelledby="specialita-title">
           <div className={styles.sectionHeading}>
             <div>
-              <p className={styles.eyebrow}>Trova il tuo prossimo preferito</p>
               <h2 id="specialita-title">
                 Tre buoni motivi
                 <br />

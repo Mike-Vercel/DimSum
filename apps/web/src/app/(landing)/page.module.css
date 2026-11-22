@@ -215,24 +215,6 @@
 .dishLabel strong {
   font-size: 23px;
 }
-.ribbon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  overflow: hidden;
-  padding: 20px 24px;
-  white-space: nowrap;
-  border-bottom: 1px solid #24242025;
-  font-size: clamp(20px, 2.3vw, 32px);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-}
-.ribbon i {
-  color: var(--landing-red);
-  font-size: 32px;
-  font-style: normal;
-}
 .section {
   max-width: 1280px;
   margin: auto;
@@ -637,15 +619,6 @@
     bottom: -8%;
     width: 31%;
   }
-  .ribbon {
-    justify-content: flex-start;
-    gap: 26px;
-    font-size: 22px;
-    padding: 13px 24px;
-  }
-  .ribbon i {
-    font-size: 26px;
-  }
   .section {
     padding: 62px 24px;
   }
@@ -658,9 +631,26 @@
   .eyebrow {
     margin-bottom: 16px;
   }
+  /* Phones: one row, swiped sideways, the next card peeking in from the right. */
   .foodGrid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 38px;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    gap: 16px;
+    margin: 0 -24px;
+    padding: 0 24px 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 24px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .foodGrid::-webkit-scrollbar {
+    display: none;
+  }
+  .foodGrid > * {
+    scroll-snap-align: start;
   }
   .cardPhoto {
     aspect-ratio: 1.2;
