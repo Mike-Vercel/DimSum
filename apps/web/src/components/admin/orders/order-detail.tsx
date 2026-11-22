@@ -345,12 +345,18 @@ export function OrderDetail({
           <Panel title="Cliente">
             <p className="font-semibold">{order.customerName}</p>
             <div className="mt-2 space-y-1.5 text-body-sm">
-              <a
-                href={`mailto:${order.customerEmail}`}
-                className="flex items-center gap-2 text-fg-muted hover:text-fg"
-              >
-                <Mail className="size-4" /> {order.customerEmail}
-              </a>
+              {order.customerEmail ? (
+                <a
+                  href={`mailto:${order.customerEmail}`}
+                  className="flex items-center gap-2 text-fg-muted hover:text-fg"
+                >
+                  <Mail className="size-4" /> {order.customerEmail}
+                </a>
+              ) : (
+                <p className="flex items-center gap-2 text-fg-subtle">
+                  <Mail className="size-4" /> Nessuna e-mail (ordine da ospite)
+                </p>
+              )}
               {order.customerPhone ? (
                 <a
                   href={`tel:${order.customerPhone}`}

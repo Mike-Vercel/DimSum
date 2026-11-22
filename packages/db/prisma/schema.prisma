@@ -628,7 +628,8 @@ model Order {
   source          String          @default("web")
 
   customerName  String
-  customerEmail String
+  /// Optional for guests (no e-mail: no e-mail updates, push and tracking page only).
+  customerEmail String?
   customerPhone String?
 
   addressStreet       String?

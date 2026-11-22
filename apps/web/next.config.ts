@@ -80,7 +80,11 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     // The landing moved from /scopri to the home page.
-    return [{ source: "/scopri", destination: "/", permanent: true }];
+    return [
+      { source: "/scopri", destination: "/", permanent: true },
+      // The storefront's own home page is gone: the landing is the home, the app starts at the menu.
+      { source: "/home", destination: "/", permanent: true },
+    ];
   },
   async headers() {
     return [

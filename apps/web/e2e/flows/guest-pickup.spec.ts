@@ -28,8 +28,8 @@ test("ordine da ospite con ritiro, gestito dalla cucina in tempo reale", async (
   // Step 2: "Come vuoi continuare?" only now, after the order details.
   await expect(page.getByText("Come vuoi continuare?")).toBeVisible();
   await page.getByRole("button", { name: /Continua come ospite/ }).click();
+  // The e-mail is optional for guests: this one leaves only name and phone.
   await page.getByLabel("Nome e cognome").fill("Giulia Ospite");
-  await page.getByLabel(/E-mail/).fill(`giulia.${Date.now()}@example.com`);
   await page.getByLabel(/Telefono/).fill("+39 333 765 4321");
   await page.getByRole("button", { name: "Continua", exact: true }).click();
 

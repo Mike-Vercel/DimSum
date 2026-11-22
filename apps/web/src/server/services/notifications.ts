@@ -90,7 +90,9 @@ async function emailData(
       totalCents: o.totalCents,
     },
     isGuest: !o.userId,
-    signupUrl: appUrl(`/registrati?email=${encodeURIComponent(o.customerEmail)}&ordine=${o.publicId}`),
+    signupUrl: appUrl(
+      `/registrati?${o.customerEmail ? `email=${encodeURIComponent(o.customerEmail)}&` : ""}ordine=${o.publicId}`,
+    ),
     riderName: o.delivery?.rider?.displayName ?? null,
     cancellationReason: extra.reason ?? o.cancellationReason,
     refundCents: extra.refundCents ?? 0,
@@ -230,7 +232,8 @@ export async function notifyCustomer(
       { title: msg.title, body: msg.body, url, tag: `order-${o.publicId}`, kind: "order" },
     );
 
-    if (msg.email) {
+    // Guests who left no e-mail follow the order with push notifications and the tracking page.
+    if (msg.email && o.customerEmail) {
       const [brand, data] = await Promise.all([brandContext(), emailData(o, extra)]);
       await sendEmail({ to: o.customerEmail, email: msg.email(brand, data), orderId: o.id });
     }

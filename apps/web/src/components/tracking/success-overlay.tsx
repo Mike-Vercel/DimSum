@@ -57,7 +57,7 @@ export function SuccessOverlay({
 }: {
   open: boolean;
   number: string;
-  emailMasked: string;
+  emailMasked: string | null;
   etaLabel: string | null;
   pendingPayment: boolean;
   isGuest: boolean;
@@ -136,7 +136,13 @@ export function SuccessOverlay({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
             >
-              Abbiamo inviato la conferma a <strong className="text-fg">{emailMasked}</strong>
+              {emailMasked ? (
+                <>
+                  Abbiamo inviato la conferma a <strong className="text-fg">{emailMasked}</strong>
+                </>
+              ) : (
+                "Segui qui il tuo ordine: attiva le notifiche per sapere quando arriva."
+              )}
             </motion.p>
           </div>
           <motion.div
@@ -149,7 +155,7 @@ export function SuccessOverlay({
               Segui il tuo ordine
             </Button>
             <Button asChild size="lg" variant="outline" block className="text-white ring-white/25">
-              <Link href="/home">Torna alla home</Link>
+              <Link href="/menu">Torna al menu</Link>
             </Button>
             {isGuest ? (
               <div className="mt-4 rounded-2xl bg-white/5 p-4 text-center ring-1 ring-white/10">

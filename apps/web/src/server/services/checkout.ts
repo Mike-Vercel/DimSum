@@ -107,7 +107,22 @@ export async function placeOrder(
   }
   assertPaymentMethod(input, config);
 
-  const customer = { userId: ctx.viewer?.userId ?? null, email: input.customer.email };
+  // Signed-in: the account's e-mail when none is given. Guests may leave it out, but then a phone is
+  // needed so the restaurant can reach them.
+  const customer = {
+    userId: ctx.viewer?.userId ?? null,
+    email: input.customer.email?.toLowerCase() ?? ctx.viewer?.email.toLowerCase() ?? null,
+  };
+  if (!customer.email && !input.customer.phone) {
+    throw new AppError("VALIDATION_FAILED", "Lasciaci almeno un recapito: telefono o e-mail.", {
+      fieldErrors: { "customer.phone": ["Inserisci il telefono (o un'e-mail)."] },
+    });
+  }
+  if (input.couponCode && !customer.email) {
+    throw new AppError("VALIDATION_FAILED", "Per usare un codice sconto inserisci la tua e-mail.", {
+      fieldErrors: { "customer.email": ["E-mail necessaria per il codice sconto."] },
+    });
+  }
   const quote = await quoteCart(
     {
       lines: input.lines,
@@ -215,7 +230,7 @@ export async function placeOrder(
               status: { not: "RELEASED" },
               OR: [
                 ...(customer.userId ? [{ userId: customer.userId }] : []),
-                { customerEmail: customer.email },
+                ...(customer.email ? [{ customerEmail: customer.email }] : []),
               ],
             },
           });
@@ -330,7 +345,7 @@ export async function placeOrder(
             couponId: coupon.rule.id,
             orderId: created.id,
             userId: customer.userId,
-            customerEmail: customer.email,
+            customerEmail: customer.email!,
             discountCents: t.discountCents,
           },
         });

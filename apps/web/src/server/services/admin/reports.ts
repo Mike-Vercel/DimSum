@@ -225,10 +225,12 @@ export async function getAnalytics(
     }),
     db.$queryRaw<{ customers: number; new_customers: number }[]>`
       WITH buyers AS (
-        SELECT DISTINCT lower(o."customerEmail") AS email FROM orders o WHERE ${window} AND ${sold}
+        SELECT DISTINCT lower(o."customerEmail") AS email FROM orders o
+        WHERE ${window} AND ${sold} AND o."customerEmail" IS NOT NULL
       ), firsts AS (
         SELECT lower(o."customerEmail") AS email, MIN(o."placedAt") AS first_at FROM orders o
-        WHERE o.status::text NOT IN ('PENDING_PAYMENT', 'CANCELLED', 'REFUNDED') GROUP BY 1
+        WHERE o.status::text NOT IN ('PENDING_PAYMENT', 'CANCELLED', 'REFUNDED') AND o."customerEmail" IS NOT NULL
+        GROUP BY 1
       )
       SELECT (SELECT COUNT(*) FROM buyers)::int AS customers,
              (SELECT COUNT(*) FROM buyers b JOIN firsts f ON f.email = b.email WHERE f.first_at >= ${from})::int AS new_customers`,

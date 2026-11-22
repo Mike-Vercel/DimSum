@@ -131,7 +131,7 @@ export interface AdminOrderListItemDTO {
   placedAt: ISODateString;
   scheduledFor: ISODateString | null;
   customerName: string;
-  customerEmail: string;
+  customerEmail: string | null;
   totalCents: Cents;
   itemCount: number;
   riderName: string | null;
@@ -172,7 +172,7 @@ export interface AdminOrderHistoryDTO {
 }
 
 export interface AdminOrderDetailDTO extends KitchenOrderDTO {
-  customerEmail: string;
+  customerEmail: string | null;
   customerUserId: string | null;
   address: {
     line: string;

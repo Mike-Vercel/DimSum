@@ -58,7 +58,8 @@ export const deliveryQuoteRequest = z.object({
 
 export const checkoutCustomer = z.object({
   name: personName,
-  email,
+  /** Optional for guests (they can follow the order with push and the tracking page). */
+  email: email.nullable().default(null),
   phone: phone.nullable().default(null),
 });
 

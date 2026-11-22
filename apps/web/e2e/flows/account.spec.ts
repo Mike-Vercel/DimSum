@@ -58,7 +58,9 @@ test("login dal checkout: carrello conservato, indirizzo salvato, storico ordini
   await page.goto("/checkout");
   await page.getByRole("button", { name: "Continua", exact: true }).click();
   await expect(page.getByRole("radio", { name: /Contanti alla consegna/ })).toBeVisible();
-  await expect(page.getByLabel("Nome e cognome")).toHaveCount(0);
+  // The review shows (and lets edit) name, phone and e-mail, filled in from the account.
+  await expect(page.getByLabel("Nome e cognome")).toHaveValue("Sara Cliente");
+  await expect(page.getByLabel("E-mail")).toHaveValue(email);
   const phone = page.getByLabel(/Telefono/);
   if (await phone.count()) await phone.fill("+39 333 222 3333");
   await page.getByRole("radio", { name: /Contanti alla consegna/ }).click();

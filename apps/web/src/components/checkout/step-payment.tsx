@@ -1,9 +1,9 @@
 "use client";
 
 import { formatEuro } from "@dimsum/domain";
-import { personName, phone as phoneSchema } from "@dimsum/validation";
+import { email as emailSchema, personName, phone as phoneSchema } from "@dimsum/validation";
 import type { CartQuoteDTO, CheckoutResultDTO } from "@dimsum/types";
-import { Banknote, CreditCard, ShieldCheck, Wine } from "lucide-react";
+import { Banknote, CalendarClock, CreditCard, MapPin, Pencil, ShieldCheck, Store, Wine } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { CartSummary } from "@/components/cart/cart-summary";
@@ -16,7 +16,7 @@ import { Field, Input, Textarea } from "@/components/ui/input";
 import { api, ApiError } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
 import { cartToInput, useCart } from "@/lib/stores/cart";
-import { useCheckoutDraft } from "@/lib/stores/checkout";
+import { useCheckoutDraft, type CheckoutStep } from "@/lib/stores/checkout";
 import { useOrderPrefs } from "@/lib/stores/order-prefs";
 import { useServiceStatus } from "@/lib/service-status";
 import { asapUnavailable, ClosedNotice } from "./closed-notice";
@@ -57,27 +57,39 @@ export function StepPayment({
   const [customTip, setCustomTip] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState<{ message: string; cartLink?: boolean } | null>(null);
-  const [contactErrors, setContactErrors] = useState<{ name?: string; phone?: string }>({});
+  const [contactErrors, setContactErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
 
-  // Signed-in customers skip the "your details" step: name, e-mail and phone come from the account.
-  // Only what the account lacks and the order needs (e.g. a phone for the rider) is asked here.
+  // Name, phone and e-mail are always shown here, filled in (from the account or the previous step)
+  // and editable: the customer reviews everything before confirming. What was typed for this order
+  // wins over the account — except an e-mail left over in this browser that is not valid, which
+  // would otherwise block the order with nothing on screen to fix it.
   const { data: session } = useSession();
   const account = session?.user as
     { name?: string | null; email?: string; phone?: string | null } | undefined;
+  const typedEmail = draft.customer.email.trim();
   const contact = {
     name: draft.customer.name.trim() || account?.name?.trim() || "",
-    email: draft.customer.email.trim() || account?.email || "",
+    email:
+      typedEmail && (emailSchema.safeParse(typedEmail).success || !account?.email)
+        ? typedEmail
+        : account?.email || typedEmail,
     phone: draft.customer.phone.trim() || account?.phone?.trim() || "",
   };
+  const editStep = (step: CheckoutStep) => {
+    draft.setStep(step);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const availability = fulfillment === "DELIVERY" ? status?.delivery : status?.pickup;
+  const whenLabel =
+    schedule.mode === "scheduled" && schedule.slotStart
+      ? (schedule.slotLabel ?? "Orario programmato")
+      : availability?.etaMinMinutes
+        ? `Il prima possibile · ${availability.etaMinMinutes}–${availability.etaMaxMinutes} min`
+        : "Il prima possibile";
   const phoneRequired =
     fulfillment === "DELIVERY"
       ? restaurant.checkout.phoneRequiredForDelivery
       : restaurant.checkout.phoneRequiredForPickup;
-  // Latched: once a field is shown it stays while the customer types into it.
-  const [askName, setAskName] = useState(false);
-  const [askPhone, setAskPhone] = useState(false);
-  if (account && !askName && !personName.safeParse(contact.name).success) setAskName(true);
-  if (account && !askPhone && phoneRequired && !contact.phone) setAskPhone(true);
 
   const methods = restaurant.checkout.paymentMethods;
   const cashAllowed = fulfillment === "DELIVERY" ? methods.cashOnDelivery : methods.cashOnPickup;
@@ -88,16 +100,22 @@ export function StepPayment({
 
   const place = async () => {
     if (!quote) return;
-    const missing: { name?: string; phone?: string } = {};
+    const missing: { name?: string; email?: string; phone?: string } = {};
     const nameCheck = personName.safeParse(contact.name);
     if (!nameCheck.success) missing.name = nameCheck.error.issues[0]?.message ?? "Inserisci nome e cognome.";
+    // Guests may leave the e-mail out (push and tracking page instead); if given it must be valid,
+    // and a discount code needs one.
+    if (contact.email && !emailSchema.safeParse(contact.email).success)
+      missing.email = "Inserisci un indirizzo e-mail valido.";
+    else if (!contact.email && couponCode) missing.email = "Per usare il codice sconto serve l'e-mail.";
+    else if (!contact.email && !contact.phone) missing.phone = "Lasciaci almeno un recapito: telefono o e-mail.";
     if (contact.phone) {
       const phoneCheck = phoneSchema.safeParse(contact.phone);
       if (!phoneCheck.success) missing.phone = phoneCheck.error.issues[0]?.message ?? "Numero non valido.";
     } else if (phoneRequired)
       missing.phone = "Il numero serve al rider o al ristorante in caso di necessità.";
     setContactErrors(missing);
-    if (missing.name || missing.phone) {
+    if (missing.name || missing.email || missing.phone) {
       document.getElementById("i-tuoi-dati")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
@@ -132,7 +150,7 @@ export function StepPayment({
             : null,
         customer: {
           name: contact.name,
-          email: contact.email,
+          email: contact.email || null,
           phone: contact.phone || null,
         },
         couponCode,
@@ -171,32 +189,33 @@ export function StepPayment({
 
   return (
     <div className="space-y-7">
-      {askName || askPhone || contactErrors.name || contactErrors.phone ? (
-        <section id="i-tuoi-dati" aria-labelledby="dati-titolo" className="space-y-3">
-          <div>
-            <h2 id="dati-titolo" className="text-title-sm font-bold">
-              Completa i tuoi dati
-            </h2>
-            <p className="text-body-sm text-fg-muted">Mancano nel tuo account e servono per questo ordine.</p>
-          </div>
-          {askName || contactErrors.name ? (
-            <Field label="Nome e cognome" error={contactErrors.name}>
-              {(p) => (
-                <Input
-                  {...p}
-                  value={contact.name}
-                  onChange={(e) => draft.setCustomer({ name: e.target.value })}
-                  autoComplete="name"
-                />
-              )}
-            </Field>
-          ) : null}
-          {askPhone || contactErrors.phone ? (
+      <section id="i-tuoi-dati" aria-labelledby="dati-titolo" className="space-y-4">
+        <div>
+          <h2 id="dati-titolo" className="text-title-sm font-bold">
+            Riepilogo
+          </h2>
+          <p className="text-body-sm text-fg-muted">Controlla e modifica tutto prima di confermare.</p>
+        </div>
+
+        <div className="space-y-3 rounded-2xl bg-surface p-4 ring-1 ring-line">
+          <p className="text-caption font-semibold tracking-widest text-fg-subtle uppercase">I tuoi dati</p>
+          <Field label="Nome e cognome" error={contactErrors.name}>
+            {(p) => (
+              <Input
+                {...p}
+                value={contact.name}
+                onChange={(e) => draft.setCustomer({ name: e.target.value })}
+                autoComplete="name"
+                placeholder="Mario Rossi"
+              />
+            )}
+          </Field>
+          <div className="grid gap-3 sm:grid-cols-2">
             <Field
               label="Telefono"
               optional={!phoneRequired}
               error={contactErrors.phone}
-              hint="Lo usiamo solo per comunicazioni sull'ordine."
+              hint={fulfillment === "DELIVERY" ? "Per il rider, se serve." : "Se dobbiamo avvisarti."}
             >
               {(p) => (
                 <Input
@@ -210,9 +229,75 @@ export function StepPayment({
                 />
               )}
             </Field>
-          ) : null}
-        </section>
-      ) : null}
+            <Field
+              label="E-mail"
+              optional={!account}
+              error={contactErrors.email}
+              hint={account ? "Ti inviamo conferma e aggiornamenti." : "Facoltativa: per conferma e aggiornamenti."}
+            >
+              {(p) => (
+                <Input
+                  {...p}
+                  type="email"
+                  inputMode="email"
+                  value={contact.email}
+                  onChange={(e) => draft.setCustomer({ email: e.target.value })}
+                  autoComplete="email"
+                  placeholder="nome@esempio.it"
+                />
+              )}
+            </Field>
+          </div>
+        </div>
+
+        <div className="divide-y divide-line overflow-hidden rounded-2xl bg-surface ring-1 ring-line">
+          <ReviewRow
+            icon={fulfillment === "DELIVERY" ? <MapPin className="size-4.5" /> : <Store className="size-4.5" />}
+            label={fulfillment === "DELIVERY" ? "Consegna a" : "Ritiro al locale"}
+            onEdit={() => editStep("fulfillment")}
+          >
+            {fulfillment === "DELIVERY" ? (
+              address ? (
+                <>
+                  <span className="block font-semibold">{address.formatted}</span>
+                  {[
+                    address.intercom ? `Citofono ${address.intercom}` : null,
+                    address.staircase ? `Scala ${address.staircase}` : null,
+                    address.floor ? `Piano ${address.floor}` : null,
+                    address.apartment ? `Interno ${address.apartment}` : null,
+                  ].filter(Boolean).length ? (
+                    <span className="block text-fg-muted">
+                      {[
+                        address.intercom ? `Citofono ${address.intercom}` : null,
+                        address.staircase ? `Scala ${address.staircase}` : null,
+                        address.floor ? `Piano ${address.floor}` : null,
+                        address.apartment ? `Interno ${address.apartment}` : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  ) : null}
+                  {address.riderNotes ? (
+                    <span className="block text-fg-muted">“{address.riderNotes}”</span>
+                  ) : null}
+                </>
+              ) : (
+                <span className="font-semibold text-danger">Manca l&apos;indirizzo</span>
+              )
+            ) : (
+              <span className="block font-semibold">{restaurant.address.formatted}</span>
+            )}
+          </ReviewRow>
+          <ReviewRow
+            icon={<CalendarClock className="size-4.5" />}
+            label="Quando"
+            onEdit={() => editStep("fulfillment")}
+          >
+            <span className="block font-semibold">{needsSlot ? "Scegli giorno e orario qui sotto" : whenLabel}</span>
+          </ReviewRow>
+        </div>
+      </section>
+
       {needsSlot && status ? (
         <section aria-labelledby="quando-pagamento" className="space-y-3">
           <h2 id="quando-pagamento" className="text-title-sm font-bold">
@@ -342,9 +427,14 @@ export function StepPayment({
         aria-labelledby="riepilogo"
         className="space-y-4 rounded-2xl bg-surface p-5 ring-1 ring-line lg:hidden"
       >
-        <h2 id="riepilogo" className="text-title-sm font-bold">
-          Il tuo ordine
-        </h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 id="riepilogo" className="text-title-sm font-bold">
+            Il tuo ordine
+          </h2>
+          <Link href="/cart" className="inline-flex items-center gap-1 text-body-sm font-semibold text-brand">
+            <Pencil className="size-3.5" /> Modifica
+          </Link>
+        </div>
         <OrderLines limit={3} />
         <div className="border-t border-line pt-4">
           <CartSummary quote={quote} loading={settling} />
@@ -388,6 +478,36 @@ export function StepPayment({
           .
         </p>
       </div>
+    </div>
+  );
+}
+
+/** One line of the review: what was chosen, with "Modifica" to change it. */
+function ReviewRow({
+  icon,
+  label,
+  onEdit,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onEdit: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-3 px-4 py-3.5">
+      <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-fg">{icon}</span>
+      <div className="min-w-0 flex-1 text-body-sm">
+        <span className="block text-caption font-semibold text-fg-subtle">{label}</span>
+        {children}
+      </div>
+      <button
+        type="button"
+        onClick={onEdit}
+        className="inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1.5 text-body-sm font-semibold text-brand hover:bg-brand/10"
+      >
+        <Pencil className="size-3.5" /> Modifica
+      </button>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { House, ReceiptText, UserRound, UtensilsCrossed } from "lucide-react";
+import { BadgePercent, ReceiptText, UserRound, UtensilsCrossed } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,13 +10,13 @@ import { spring } from "@/lib/motion";
 import { resetScrollDirection, useScrollDirection } from "@/lib/scroll-direction";
 
 const ITEMS = [
-  { href: "/home", label: "Home", icon: House, match: (p: string) => p === "/home" },
   {
     href: "/menu",
     label: "Menu",
     icon: UtensilsCrossed,
     match: (p: string) => p.startsWith("/menu") || p.startsWith("/product"),
   },
+  { href: "/offerte", label: "Offerte", icon: BadgePercent, match: (p: string) => p.startsWith("/offerte") },
   {
     href: "/account/ordini",
     label: "Ordini",
@@ -37,7 +37,7 @@ const ITEMS = [
 const HIDDEN_ON = ["/cart", "/checkout", "/order/"];
 
 /**
- * App-style tab bar for phones (reference: Home, Menu, Ordini, Profilo). It slides away while the
+ * App-style tab bar for phones: Menu, Offerte, Ordini, Profilo. It slides away while the
  * customer scrolls down through the content and comes back as soon as they scroll up.
  */
 export function BottomNav() {

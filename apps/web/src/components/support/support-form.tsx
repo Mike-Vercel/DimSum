@@ -26,7 +26,7 @@ export interface SupportOrderContext {
   publicId: string;
   number: string;
   isDelivery: boolean;
-  emailMasked: string;
+  emailMasked: string | null;
   items: Pick<OrderItemDTO, "id" | "name" | "quantity">[];
 }
 
@@ -57,7 +57,8 @@ export function SupportForm({ order, backHref }: { order?: SupportOrderContext; 
   const [failure, setFailure] = useState<string | null>(null);
   const [ticket, setTicket] = useState<SupportTicketDTO | null>(null);
 
-  const askContact = !order || otherEmail;
+  // No e-mail on the order (guest): ask where to reply.
+  const askContact = !order || otherEmail || !order.emailMasked;
   const contactName = name ?? session?.user.name ?? "";
   const contactEmail = email ?? session?.user.email ?? "";
 
@@ -184,7 +185,7 @@ export function SupportForm({ order, backHref }: { order?: SupportOrderContext; 
         )}
       </Field>
 
-      {order && !otherEmail ? (
+      {order?.emailMasked && !otherEmail ? (
         <p className="rounded-lg bg-surface-2 p-4 text-body-sm text-fg-muted">
           Ti risponderemo a <strong className="text-fg">{order.emailMasked}</strong>, l&apos;indirizzo usato
           per l&apos;ordine #{order.number}.{" "}

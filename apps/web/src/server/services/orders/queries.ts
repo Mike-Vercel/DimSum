@@ -175,7 +175,7 @@ export function toTrackingDTO(
       wallet: payment?.wallet ?? null,
       refundedCents: payment?.refundedCents ?? 0,
     },
-    customer: { firstName: firstNameOf(o.customerName), email: maskEmail(o.customerEmail) },
+    customer: { firstName: firstNameOf(o.customerName), email: o.customerEmail ? maskEmail(o.customerEmail) : null },
     delivery:
       o.fulfillmentType === "DELIVERY"
         ? {

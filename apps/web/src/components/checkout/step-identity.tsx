@@ -41,7 +41,7 @@ export function StepIdentity({ google, onContinue }: { google: ProviderButton; o
   const validateAndContinue = (data: { name: string; email: string; phone: string }) => {
     const parsed = checkoutCustomer.safeParse({
       name: data.name,
-      email: data.email,
+      email: data.email.trim() ? data.email.trim() : null,
       phone: data.phone.trim() ? data.phone : null,
     });
     const next: Record<string, string> = {};
@@ -50,6 +50,8 @@ export function StepIdentity({ google, onContinue }: { google: ProviderButton; o
     }
     if (phoneRequired && !data.phone.trim())
       next.phone = "Il numero serve al rider o al ristorante in caso di necessità.";
+    else if (!data.phone.trim() && !data.email.trim())
+      next.phone = "Lasciaci almeno un recapito: telefono o e-mail.";
     setErrors(next);
     if (Object.keys(next).length === 0) onContinue();
   };
@@ -196,9 +198,10 @@ export function StepIdentity({ google, onContinue }: { google: ProviderButton; o
         )}
       </Field>
       <Field
-        label="E-mail *"
+        label="E-mail"
+        optional
         error={errors.email}
-        hint="Ti invieremo qui la conferma di pagamento e gli aggiornamenti sul tuo ordine."
+        hint="Facoltativa: se la lasci ti mandiamo conferma e aggiornamenti dell'ordine."
       >
         {(p) => (
           <Input

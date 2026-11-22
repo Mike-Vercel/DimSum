@@ -461,7 +461,8 @@ export interface OrderTrackingDTO {
   items: OrderItemDTO[];
   totals: OrderTotalsDTO;
   payment: OrderPaymentDTO;
-  customer: { firstName: string; email: string };
+  /** Masked e-mail; null when a guest ordered without one. */
+  customer: { firstName: string; email: string | null };
   delivery: {
     addressLine: string;
     destination: GeoPoint;

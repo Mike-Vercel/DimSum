@@ -140,7 +140,7 @@ export function ShopHeader() {
               compact && "h-0 opacity-0",
             )}
           >
-            <Link href="/home" aria-label="DIMSUM, home" className="block h-full w-fit max-w-full">
+            <Link href="/menu" aria-label="DIMSUM, menu" className="block h-full w-fit max-w-full">
               <Logo className="h-11 text-fg" />
             </Link>
           </div>
@@ -161,7 +161,7 @@ export function ShopHeader() {
 
       {/* Tablet & desktop */}
       <div className="mx-auto hidden h-18 max-w-7xl items-center gap-3 px-6 lg:flex xl:gap-6 xl:px-8">
-        <Link href="/home" aria-label="DIMSUM, home" className="shrink-0">
+        <Link href="/" aria-label="DIMSUM, home" className="shrink-0">
           <Logo className="h-12 text-fg xl:h-14" />
         </Link>
         <nav aria-label="Principale" className="flex shrink-0 items-center gap-1">
