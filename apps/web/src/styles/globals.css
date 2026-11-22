@@ -397,7 +397,6 @@ html[data-intro="play"] .dimsum-intro {
 html[data-intro="play"] body {
   overflow: hidden;
 }
-.dimsum-intro:not([data-mode="2d"]) .dimsum-intro__flat,
-.dimsum-intro:not([data-mode="2d"]) .dimsum-intro__flat-bar {
+.dimsum-intro:not([data-mode="2d"]) .dimsum-intro__flat {
   display: none;
 }

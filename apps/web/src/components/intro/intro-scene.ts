@@ -3,15 +3,15 @@ import { addMascotLights, createMascotRig, createRenderer } from "@/components/m
 import type { IntroState } from "./timeline";
 
 export type IntroScene = {
-  /** Draws a frame and returns the screen y (CSS px) of the page hem, i.e. of the hands. */
-  render: (f: IntroState) => number;
+  /** Draws a frame and returns where the hands are on screen (CSS px): the hem is held there. */
+  render: (f: IntroState) => { x: number; y: number; span: number };
   resize: (width: number, height: number, mascotPx: number) => void;
   dispose: () => void;
 };
 
 /**
- * Full-screen transparent WebGL layer in CSS-pixel units: the mascot seen from behind (slightly
- * from above) and the red hem bar of the page, kept exactly in its hands.
+ * Full-screen transparent WebGL layer in CSS-pixel units with the mascot seen from behind (slightly
+ * from above). The page (a blanket, drawn in SVG by the overlay) is held where its hands are.
  */
 export function createIntroScene(canvas: HTMLCanvasElement): IntroScene | null {
   const renderer = createRenderer(window.innerWidth < 700 ? 1.75 : 2);
@@ -38,37 +38,33 @@ export function createIntroScene(canvas: HTMLCanvasElement): IntroScene | null {
   tilt.add(rig.object);
   scene.add(tilt);
 
-  const barMaterial = new THREE.MeshStandardMaterial({ color: 0xd82a1e, roughness: 0.36, metalness: 0.05 });
-  const rod = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 32), barMaterial);
-  rod.rotation.z = Math.PI / 2;
-  scene.add(rod);
-
   const hands = new THREE.Vector3();
-  let height = 1;
+  let width = 1,
+    height = 1,
+    scale = 1;
 
   function resize(w: number, h: number, mascotPx: number) {
+    width = w;
     height = h;
+    scale = mascotPx / rig.height;
     renderer!.setSize(w, h, false);
     camera.left = -w / 2;
     camera.right = w / 2;
     camera.top = h / 2;
     camera.bottom = -h / 2;
     camera.updateProjectionMatrix();
-    rig.object.scale.setScalar(mascotPx / rig.height);
-    const radius = Math.max(6, Math.min(12, mascotPx * 0.032));
-    rod.scale.set(radius, w + 240, radius);
+    rig.object.scale.setScalar(scale);
   }
 
-  function render(f: IntroState): number {
+  function render(f: IntroState) {
     rig.pose(f.pose);
     rig.object.rotation.y = f.turn;
     tilt.position.set(0, height / 2 - f.feet, 0);
     scene.updateMatrixWorld(true);
     rig.handsWorld(hands);
-    // The hem sits in the hands, in front of the back (towards the camera).
-    rod.position.set(0, hands.y, hands.z + 6);
     renderer!.render(scene, camera);
-    return height / 2 - hands.y;
+    // Hands are ~1 unit either side of the centre: the stretch of hem held between them.
+    return { x: width / 2 + hands.x, y: height / 2 - hands.y, span: 1.05 * scale };
   }
 
   return {
@@ -76,8 +72,6 @@ export function createIntroScene(canvas: HTMLCanvasElement): IntroScene | null {
     resize,
     dispose() {
       rig.dispose();
-      rod.geometry.dispose();
-      barMaterial.dispose();
       renderer!.dispose();
       renderer!.forceContextLoss();
     },

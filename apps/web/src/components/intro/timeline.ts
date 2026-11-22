@@ -35,6 +35,8 @@ export type IntroState = {
   turn: number;
   /** Logo/claim on the curtain. */
   brandOpacity: number;
+  /** How far the sides of the page (a blanket) lag above the hands, in CSS px. */
+  lag: number;
   pose: MascotPose;
 };
 
@@ -53,7 +55,10 @@ export function mascotSize(width: number, height: number): number {
 export function introAt(t: number, l: IntroLayout, blink: number): IntroState {
   const { height: h, mascot } = l;
   const start = mascot * 1.02 + h * 0.04;
-  const end = h + mascot + 48;
+  // The sides of the blanket trail behind the hands; the walk ends once they too are off-screen.
+  const maxLag = Math.min(h * 0.15, mascot * 0.42);
+  const lag = maxLag * easeOutCubic(span(t, 0.1, 0.9)) * (1 - 0.25 * span(t, 2.4, INTRO_DURATION));
+  const end = h + Math.max(mascot, maxLag) + 80;
 
   // Entry: from above the top edge to the first standing point.
   const enter = easeOutCubic(span(t, 0, 0.55));
@@ -62,15 +67,18 @@ export function introAt(t: number, l: IntroLayout, blink: number): IntroState {
   const travel = 0.55 * u + 0.45 * easeInOutSine(u);
   const walkAmount = easeOutCubic(span(t, 0.3, 0.75)) * (1 - 0.3 * span(t, 2.9, INTRO_DURATION));
   const phase = Math.PI * CADENCE * Math.max(0, t - 0.3);
-  const surge = 7 * Math.max(0, Math.sin(2 * phase)) * walkAmount;
+  // Smooth surge on every step (no kinks: the motion stays fluid).
+  const surge = 7 * (0.5 - 0.5 * Math.cos(2 * phase)) * walkAmount;
 
+  // Entry and walk add up continuously: no switch, no jump.
   const entryFeet = -mascot * 0.1 + (start + mascot * 0.1) * enter;
-  const feet = t < 0.45 ? entryFeet : start + (end - start) * travel + surge;
+  const feet = entryFeet + (end - start) * travel + surge;
 
   return {
     feet,
     turn: Math.PI + 0.1 * Math.sin(phase * 0.5) * walkAmount,
     brandOpacity: easeOutCubic(span(t, 0.05, 0.5)),
+    lag,
     pose: {
       grip: 0,
       wave: 0,
