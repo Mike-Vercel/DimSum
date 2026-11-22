@@ -105,7 +105,7 @@ const CSS =
   "font-family:var(--font-archivo),ui-sans-serif,system-ui,sans-serif;container-type:inline-size;-webkit-tap-highlight-color:transparent;outline:none}" +
   ".dsh-root *{box-sizing:border-box}" +
   ".dsh-root:focus-visible{box-shadow:inset 0 0 0 2px var(--primary)}" +
-  ".dsh-canvas{position:absolute;left:50%;top:50%;width:960px;height:520px;transform:translate(-50%,-50%) scale(var(--dsh-s,1));transform-origin:50% 50%}" +
+  ".dsh-canvas{position:absolute;left:50%;top:50%;width:960px;height:520px;transform:translate(calc(-50% + var(--dsh-dx,0px)),calc(-50% + var(--dsh-dy,0px))) scale(var(--dsh-s,1));transform-origin:50% 50%}" +
   ".dsh-arc{position:absolute;left:0;top:0;width:960px;height:520px;overflow:visible;pointer-events:none}" +
   ".dsh-btn{appearance:none;border:0;background:none;color:inherit;font:inherit;padding:0;margin:0;cursor:pointer}" +
   ".dsh-btn:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:10px}" +
@@ -221,12 +221,18 @@ export function DishOrbitCarousel({ dishes, height = "100svh" }: { dishes: Orbit
   const swipe = useRef<{ x: number; y: number } | null>(null);
   const wheelAt = useRef(0);
 
-  // Fit the 960 × 520 design canvas to the stage (desktop and tablet).
+  // Fit the 960 × 520 design canvas to the stage (desktop and tablet), centring what is actually
+  // drawn — side pager (x 76) to the card's right edge (x 945), label (y 40) to the thumbnails
+  // (y 481) — rather than the canvas, whose margins are uneven.
   useLayoutEffect(() => {
     const el = rootRef.current;
     if (!el) return;
-    const fit = () =>
-      el.style.setProperty("--dsh-s", String(Math.min(el.clientWidth / 960, el.clientHeight / 520, 1.6)));
+    const fit = () => {
+      const s = Math.min(el.clientWidth / 960, el.clientHeight / 520, 1.6);
+      el.style.setProperty("--dsh-s", String(s));
+      el.style.setProperty("--dsh-dx", `${((960 - (76 + 945)) / 2) * s}px`);
+      el.style.setProperty("--dsh-dy", `${((520 - (40 + 481)) / 2) * s}px`);
+    };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(el);

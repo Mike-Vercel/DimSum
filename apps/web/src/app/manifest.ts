@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "DIMSUM",
     description:
       "Ordina ravioli, bao e noodles da DIMSUM Palermo: consegna a domicilio o ritiro, con tracking in tempo reale.",
-    start_url: "/?source=pwa",
+    start_url: "/app?source=pwa",
     scope: "/",
     display: "standalone",
     orientation: "portrait",

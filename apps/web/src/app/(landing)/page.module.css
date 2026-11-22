@@ -1,5 +1,7 @@
 .page {
-  --landing-header: 88px;
+  /* The status bar / notch of an installed app (viewport-fit: cover) is added on top. */
+  --landing-safe-top: env(safe-area-inset-top, 0px);
+  --landing-header: calc(88px + var(--landing-safe-top));
   --landing-red: #c6262e;
   --landing-paper: #faf7ef;
   color: #20201e;
@@ -21,7 +23,7 @@
   top: 0;
   z-index: 40;
   min-height: var(--landing-header);
-  padding: 16px max(24px, calc((100vw - 1280px) / 2));
+  padding: calc(16px + var(--landing-safe-top)) max(24px, calc((100vw - 1280px) / 2)) 16px;
   display: flex;
   align-items: center;
   gap: 32px;
@@ -537,11 +539,11 @@
 }
 @media (max-width: 760px) {
   .page {
-    --landing-header: 76px;
+    --landing-header: calc(76px + var(--landing-safe-top));
   }
   .header {
     min-height: var(--landing-header);
-    padding: 14px 20px;
+    padding: calc(14px + var(--landing-safe-top)) 20px 14px;
     gap: 16px;
     justify-content: space-between;
   }
