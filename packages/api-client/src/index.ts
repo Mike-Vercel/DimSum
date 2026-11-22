@@ -6,6 +6,7 @@
  *  - native: `getToken` returns the Better Auth bearer token stored in SecureStore
  */
 import type {
+  AssistantReplyDTO,
   AddressSuggestionDTO,
   AdminCatalogDTO,
   AdminCouponDTO,
@@ -210,6 +211,11 @@ export function createApiClient(options: ApiClientOptions) {
       quote: (input: z.input<typeof deliveryQuoteRequest>) =>
         request<DeliveryQuoteDTO>("POST", "/delivery/quote", input),
       area: () => request<DeliveryAreaDTO>("GET", "/delivery/area"),
+    },
+    /** "Dim", the site assistant: the client keeps the conversation and sends it each time. */
+    assistant: {
+      ask: (messages: { role: "user" | "assistant"; content: string }[]) =>
+        request<AssistantReplyDTO>("POST", "/assistant", { messages }),
     },
     checkout: {
       placeOrder: (input: z.input<typeof checkoutRequest>) =>

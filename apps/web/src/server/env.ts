@@ -46,6 +46,9 @@ const schema = z.object({
   OSRM_URL: z.url().default("https://router.project-osrm.org"),
   GEO_CONTACT_EMAIL: optional,
 
+  /** Claude API key for "Dim", the chat assistant (off without it). */
+  ANTHROPIC_API_KEY: optional,
+
   EMAIL_PROVIDER: z.enum(["brevo", "resend", "smtp", "outbox"]).default("outbox"),
   EMAIL_FROM: z.string().default("DIMSUM <ordini@dimsum.it>"),
   EMAIL_REPLY_TO: optional,

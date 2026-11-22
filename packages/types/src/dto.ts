@@ -643,3 +643,21 @@ export type RealtimeEvent =
   | { type: "support.created"; ticketId: string; reference: string; subject: string };
 
 export type RealtimeEventType = RealtimeEvent["type"];
+
+/** One answer of "Dim", the site assistant. */
+export interface AssistantReplyDTO {
+  reply: string;
+  /** Recommended dishes (checked against the catalog, available only). */
+  dishes: {
+    slug: string;
+    name: string;
+    price: string;
+    /** Several sizes: the price is the lowest one. */
+    fromPrice: boolean;
+    image: { url: string; backdrop: ImageBackdrop } | null;
+  }[];
+  /** One page of the site to open. */
+  link: { href: string; label: string } | null;
+  /** Quick replies to tap. */
+  suggestions: string[];
+}

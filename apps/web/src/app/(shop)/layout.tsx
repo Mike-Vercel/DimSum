@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { AssistantWidget } from "@/components/assistant/assistant";
 import { MascotIntro } from "@/components/intro/mascot-intro";
 import { AccountCartSync } from "@/components/shop/account-cart-sync";
 import { DesktopOnlyOnAppRoutes } from "@/components/shop/app-route-gate";
@@ -32,6 +34,9 @@ export default async function ShopLayout({ children }: LayoutProps<"/">) {
         </DesktopOnlyOnAppRoutes>
         <CartBar />
         <BottomNav />
+        <Suspense fallback={null}>
+          <AssistantWidget />
+        </Suspense>
       </CatalogProvider>
     </RestaurantProvider>
   );

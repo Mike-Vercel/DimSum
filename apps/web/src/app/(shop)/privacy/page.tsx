@@ -79,6 +79,12 @@ export default async function PrivacyPage() {
             <strong>Assistenza</strong>: il contenuto delle richieste che ci invii.
           </li>
           <li>
+            <strong>Assistente virtuale Dim</strong> (facoltativo): i messaggi che scrivi nella chat, per
+            risponderti. Non servono dati personali: evita di scrivere recapiti o dati sulla salute oltre a
+            quanto ti serve chiedere (ad esempio un&apos;allergia). La conversazione resta solo nella scheda del
+            browser e non la conserviamo sui nostri server.
+          </li>
+          <li>
             <strong>Notifiche</strong>: l&apos;identificativo tecnico del dispositivo per le notifiche push,
             solo se le attivi.
           </li>
@@ -142,6 +148,10 @@ export default async function PrivacyPage() {
               </td>
             </tr>
             <tr>
+              <td>Rispondere alle domande che fai all&apos;assistente virtuale Dim</td>
+              <td>Esecuzione di misure richieste da te (art. 6.1.b); per le allergie che scegli di indicare, il tuo consenso esplicito (art. 9.2.a)</td>
+            </tr>
+            <tr>
               <td>Offerte e novità via e-mail o notifica</td>
               <td>Consenso, facoltativo e revocabile (art. 6.1.a)</td>
             </tr>
@@ -169,6 +179,12 @@ export default async function PrivacyPage() {
             <li>il fornitore del servizio di posta elettronica;</li>
           )}
           <li>{maps};</li>
+          {e.ANTHROPIC_API_KEY ? (
+            <li>
+              Anthropic PBC (Stati Uniti), per le risposte dell&apos;assistente virtuale Dim, solo con i messaggi
+              che scrivi nella chat;
+            </li>
+          ) : null}
           {f.googleAuth ? <li>Google Ireland Ltd., se scegli di accedere con Google;</li> : null}
           {f.appleAuth ? (
             <li>Apple Distribution International Ltd., se scegli di accedere con Apple;</li>

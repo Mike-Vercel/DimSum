@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
+import { Suspense } from "react";
 import Link from "next/link";
 import { Bike, CreditCard, MapPin, ShoppingBag, Store } from "lucide-react";
 import { formatEuro } from "@dimsum/domain";
 import { Logo } from "@/components/brand/logo";
+import { AssistantWidget } from "@/components/assistant/assistant";
+import { FooterMascot } from "@/components/assistant/footer-mascot";
 import { MascotIntro } from "@/components/intro/mascot-intro";
 import { CookieNotice } from "@/components/shop/cookie-notice";
 import { FoodImage } from "@/components/shop/food-image";
@@ -393,9 +396,7 @@ export default async function DiscoverPage() {
       <footer className={styles.footer} data-reveal="up">
         <div className={styles.footerGrid}>
           <div className={styles.footerBrand}>
-            <Link href="/" aria-label="DIMSUM, home">
-              <Logo className="h-12 text-white" />
-            </Link>
+            <FooterMascot />
             <p>
               Ravioli, bao e noodles a {config.address.city}. A casa tua o da ritirare al locale: paghi quando
               arriva, in contanti o con il POS.
@@ -472,6 +473,9 @@ export default async function DiscoverPage() {
           </nav>
         </div>
       </footer>
+      <Suspense fallback={null}>
+        <AssistantWidget low />
+      </Suspense>
     </div>
   );
 }

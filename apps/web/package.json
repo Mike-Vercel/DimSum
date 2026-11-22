@@ -15,6 +15,7 @@
     "postbuild": "node ../../scripts/check-private-files.mjs --artifacts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0",
     "@date-fns/tz": "^1.5.0",
     "@dimsum/api-client": "*",
     "@dimsum/db": "*",
