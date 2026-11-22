@@ -2,6 +2,7 @@ import { Bike, CircleCheck, Clock, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
+import { InteractiveMascot } from "@/components/mascot/interactive-mascot";
 import { CategoryCircles } from "@/components/shop/category-circles";
 import { FulfillmentSwitch } from "@/components/shop/fulfillment-switch";
 import { Highlights } from "@/components/shop/highlights";
@@ -83,18 +84,39 @@ export default async function HomePage() {
           <CategoryCircles />
         </section>
 
-        <Link
-          href="/scopri"
-          className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-ink-950 px-6 py-7 text-white lg:px-9"
+        <section
+          aria-labelledby="mascotte"
+          data-theme="dark"
+          className="relative grid overflow-hidden rounded-3xl bg-ink-950 text-white md:grid-cols-[1fr_minmax(0,420px)] md:items-center"
         >
-          <div>
-            <p className="text-title font-extrabold">Piccoli morsi, grandi sorrisi.</p>
-            <p className="mt-1 text-body text-white/75">Ravioli, bao e noodles: entra nel mondo DIMSUM.</p>
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_70%_at_78%_60%,rgba(216,42,30,0.32),transparent_70%)]" />
+          <div className="relative order-2 px-6 pb-7 md:order-1 md:py-10 md:pl-10 lg:pl-12">
+            <p className="text-caption font-bold tracking-[0.18em] text-red-400 uppercase">
+              Piacere, Dimsum!
+            </p>
+            <h2 id="mascotte" className="mt-2 text-title font-extrabold lg:text-headline">
+              Piccoli morsi, grandi sorrisi.
+            </h2>
+            <p className="mt-2 max-w-md text-body text-white/75">
+              Toccalo e lo fai saltare, trascinalo di lato per farlo girare. Poi entra nel mondo DIMSUM.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href="/menu"
+                className="inline-flex h-12 tap items-center rounded-full bg-brand px-6 font-bold shadow-cta hover:bg-red-600"
+              >
+                Ordina ora
+              </Link>
+              <Link
+                href="/scopri"
+                className="inline-flex h-12 tap items-center rounded-full bg-white px-6 font-bold text-ink-950"
+              >
+                Scopri DIMSUM
+              </Link>
+            </div>
           </div>
-          <span className="rounded-full bg-white px-5 py-3 text-body font-bold text-ink-950">
-            Scopri DIMSUM
-          </span>
-        </Link>
+          <InteractiveMascot className="relative order-1 h-72 w-full md:order-2 md:h-[400px]" />
+        </section>
 
         <Highlights />
 

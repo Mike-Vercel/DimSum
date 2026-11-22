@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo } from "next/font/google";
+import { INTRO_GATE_SCRIPT } from "@/components/intro/gate";
 import { Providers } from "@/components/providers";
 import { resolveAppUrl } from "@/lib/app-url";
 import "@/styles/globals.css";
@@ -78,6 +79,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="it" className={archivo.variable} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body>
+        {/* Decides before the first paint whether the opening animation plays (see MascotIntro). */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_GATE_SCRIPT }} />
         <a
           href="#contenuto"
           className="sr-only z-[100] rounded-full bg-ink-900 px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"

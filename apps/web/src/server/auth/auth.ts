@@ -109,8 +109,10 @@ function createAuth() {
     },
 
     session: {
-      // Stay signed in for 60 days of inactivity; the expiry slides forward once a day.
-      expiresIn: 60 * 60 * 24 * 60,
+      // Sign in once: the session lasts a year of inactivity and slides forward once a day, so a
+      // regular customer (or the kitchen tablet) never sees the login again. Disabled accounts are
+      // still blocked at once (staff routes skip the cookie cache), and sign-out ends it.
+      expiresIn: 60 * 60 * 24 * 365,
       updateAge: 60 * 60 * 24,
       freshAge: 60 * 60 * 24,
       cookieCache: { enabled: true, maxAge: 5 * 60 },

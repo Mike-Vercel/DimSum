@@ -1,3 +1,4 @@
+import { MascotIntro } from "@/components/intro/mascot-intro";
 import { AccountCartSync } from "@/components/shop/account-cart-sync";
 import { DesktopOnlyOnAppRoutes } from "@/components/shop/app-route-gate";
 import { BottomNav } from "@/components/shop/bottom-nav";
@@ -30,6 +31,7 @@ export default async function ShopLayout({ children }: LayoutProps<"/">) {
         </DesktopOnlyOnAppRoutes>
         <CartBar />
         <BottomNav />
+        <MascotIntro />
       </CatalogProvider>
     </RestaurantProvider>
   );

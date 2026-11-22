@@ -386,3 +386,18 @@
   font-family: var(--font-sans);
   font-size: 10px;
 }
+
+/* Opening animation (components/intro): visible only when the gate script decided to play it. */
+.dimsum-intro {
+  display: none;
+}
+html[data-intro="play"] .dimsum-intro {
+  display: block;
+}
+html[data-intro="play"] body {
+  overflow: hidden;
+}
+.dimsum-intro:not([data-mode="2d"]) .dimsum-intro__flat,
+.dimsum-intro:not([data-mode="2d"]) .dimsum-intro__flat-bar {
+  display: none;
+}

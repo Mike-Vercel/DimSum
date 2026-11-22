@@ -7,7 +7,6 @@ import { Volume2 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/choice";
-import { InlineAlert } from "@/components/ui/feedback";
 import { Field, Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toaster";
 import { ApiError, api } from "@/lib/api";
@@ -126,13 +125,7 @@ function toInput(d: Draft): SettingsInput {
   };
 }
 
-export function SettingsEditor({
-  initial,
-  paymentsLive,
-}: {
-  initial: AdminSettingsResponse;
-  paymentsLive: boolean;
-}) {
+export function SettingsEditor({ initial }: { initial: AdminSettingsResponse }) {
   const qc = useQueryClient();
   const [draft, setDraft] = useState<Draft>(() => toDraft(initial));
   const [saved, setSaved] = useState(() => JSON.stringify(toDraft(initial)));
@@ -317,11 +310,6 @@ export function SettingsEditor({
 
         <Panel title="Pagamenti e mance">
           <div className="space-y-3">
-            {!paymentsLive ? (
-              <InlineAlert tone="warning" title="Pagamenti online in modalità di prova">
-                Configura le chiavi Stripe per incassare con carta, Apple Pay e Google Pay.
-              </InlineAlert>
-            ) : null}
             <p className="text-body-sm text-fg-muted">
               Il cliente paga di persona in contanti o con carta tramite POS. Nessun pagamento online.
             </p>
