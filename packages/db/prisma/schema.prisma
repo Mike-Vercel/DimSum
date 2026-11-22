@@ -685,6 +685,8 @@ model Order {
   cancelledBy         String?
   /// Set when nobody accepted the order within the configured threshold.
   escalatedAt         DateTime?
+  /// When the "thank you, leave a review" e-mail was sent (5 minutes after delivery).
+  reviewRequestedAt   DateTime?
 
   etaFrom      DateTime?
   etaTo        DateTime?

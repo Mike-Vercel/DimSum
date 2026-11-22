@@ -5,7 +5,7 @@ import { purgeGeoCache } from "../maps";
 import { logger } from "../logger";
 import { publish } from "../realtime/bus";
 import { acceptableFrom } from "@dimsum/domain";
-import { notifyStaff } from "./notifications";
+import { notifyStaff, sendReviewRequest } from "./notifications";
 import { SETTINGS_TAG, loadRestaurantConfig } from "./restaurant";
 
 /** Orders nobody accepted in time: flagged once and pushed to every staff device. */
@@ -98,6 +98,35 @@ export async function openScheduledOrders(now = new Date()): Promise<number> {
     }
   }
   return opened;
+}
+
+export const REVIEW_REQUEST_DELAY_MINUTES = 5;
+
+/**
+ * "Grazie per averci scelto, lascia una recensione": e-mailed 5 minutes after the order was
+ * delivered or picked up, once. Orders delivered more than a day ago are left alone (e.g. right
+ * after this feature went live, or after downtime), so nobody gets a late, odd request.
+ */
+export async function sendReviewRequests(now = new Date()): Promise<number> {
+  const due = new Date(now.getTime() - REVIEW_REQUEST_DELAY_MINUTES * 60_000);
+  const oldest = new Date(now.getTime() - 24 * 3_600_000);
+  const orders = await db.order.findMany({
+    where: { status: "DELIVERED", reviewRequestedAt: null, deliveredAt: { lte: due, gte: oldest } },
+    select: { id: true },
+    orderBy: { deliveredAt: "asc" },
+    take: 20,
+  });
+  let sent = 0;
+  for (const o of orders) {
+    const claimed = await db.order.updateMany({
+      where: { id: o.id, reviewRequestedAt: null },
+      data: { reviewRequestedAt: now },
+    });
+    if (claimed.count === 0) continue;
+    await sendReviewRequest(o.id);
+    sent++;
+  }
+  return sent;
 }
 
 /** "Blocca ordini per 30 minuti": reopen automatically when the time is up. */

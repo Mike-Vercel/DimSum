@@ -14,6 +14,10 @@ import { cacheLife, cacheTag } from "next/cache";
 import { db } from "../db";
 import { features } from "../env";
 
+/** DIMSUM Palermo on Google: "write a review" page (used when the back office has none set). */
+export const DEFAULT_GOOGLE_REVIEW_URL =
+  "https://search.google.com/local/writereview?placeid=ChIJJejOTerlGRMRyMt0WMYutT0";
+
 export const SETTINGS_TAG = "settings";
 
 export interface RestaurantConfig {
@@ -127,7 +131,7 @@ export async function loadRestaurantConfig(): Promise<RestaurantConfig> {
     },
     location: { lat: s.lat, lng: s.lng },
     googlePlaceId: s.googlePlaceId,
-    googleReviewUrl: s.googleReviewUrl,
+    googleReviewUrl: s.googleReviewUrl ?? DEFAULT_GOOGLE_REVIEW_URL,
     instagramUrl: s.instagramUrl,
     facebookUrl: s.facebookUrl,
     priceRange: s.priceRange,

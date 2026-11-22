@@ -4,7 +4,6 @@ import type { NotificationType } from "@dimsum/types";
 import { db } from "../db";
 import {
   brandContext,
-  deliveredEmail,
   orderCancelledEmail,
   orderConfirmedEmail,
   orderReceivedEmail,
@@ -12,6 +11,7 @@ import {
   paymentConfirmedEmail,
   readyForPickupEmail,
   refundEmail,
+  reviewRequestEmail,
   sendEmail,
   type OrderEmailData,
   type RenderedEmail,
@@ -162,8 +162,8 @@ function customerMessage(
       return {
         title:
           o.fulfillmentType === "DELIVERY" ? "Consegnato. Buon appetito!" : "Ordine ritirato. Buon appetito!",
+        // No e-mail now: "grazie + recensione" follows 5 minutes later (sendReviewRequest).
         body: `Grazie per aver ordinato da DIMSUM.`,
-        email: deliveredEmail,
       };
     case "ORDER_CANCELLED":
       return {
@@ -236,6 +236,21 @@ export async function notifyCustomer(
     }
   } catch (error) {
     logger.error("customer notification failed", { error, orderId, type });
+  }
+}
+
+/**
+ * The "thank you, leave a review" e-mail, sent a few minutes after delivery by the operations job
+ * (see sendReviewRequests). Never throws.
+ */
+export async function sendReviewRequest(orderId: string): Promise<void> {
+  try {
+    const o = await loadOrder(orderId);
+    if (!o?.customerEmail) return;
+    const [brand, data] = await Promise.all([brandContext(), emailData(o, {})]);
+    await sendEmail({ to: o.customerEmail, email: reviewRequestEmail(brand, data), orderId: o.id });
+  } catch (error) {
+    logger.error("review request failed", { error, orderId });
   }
 }
 

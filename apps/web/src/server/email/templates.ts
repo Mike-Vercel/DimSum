@@ -126,18 +126,22 @@ export function outForDeliveryEmail(brand: BrandContext, o: OrderEmailData): Ren
   );
 }
 
-export function deliveredEmail(brand: BrandContext, o: OrderEmailData): RenderedEmail {
+/**
+ * A few minutes after delivery (or pickup): thank you, and a link to leave a Google review. This is
+ * the only e-mail of the delivered order, so it also carries the "buon appetito".
+ */
+export function reviewRequestEmail(brand: BrandContext, o: OrderEmailData): RenderedEmail {
   const delivered = o.fulfillmentType === "DELIVERY";
-  const body = html`${h1("Buon appetito!")}
-  ${p(delivered ? `L'ordine #${o.number} è stato consegnato.` : `Hai ritirato l'ordine #${o.number}.`)}
-  ${p("Grazie per aver ordinato direttamente da noi: per il ristorante fa una grande differenza.", { muted: true })}
-  ${o.reviewUrl ? button("Lasciaci una recensione", o.reviewUrl) : ""}
+  const body = html`${h1(`Grazie per averci scelto, ${o.customerFirstName}!`)}
+  ${p(delivered ? `Speriamo che l'ordine #${o.number} ti sia piaciuto. Buon appetito!` : `Speriamo che l'ordine #${o.number} ti sia piaciuto.`)}
+  ${p("Siamo un piccolo locale e ogni recensione ci aiuta tantissimo: ci vuole un minuto e ci fa conoscere a chi ama ravioli, bao e noodles come te.")}
+  ${o.reviewUrl ? button("Lascia una recensione su Google", o.reviewUrl) : ""}
+  ${p("Qualcosa non è andato come doveva? Rispondi a questa e-mail: ti leggiamo noi, non un robot.", { muted: true, size: 14 })}
   ${o.isGuest ? p(html`Crea un account per ritrovare questo ordine e riordinarlo in un tap: <a href="${o.signupUrl}">registrati</a>.`, { muted: true, size: 14 }) : ""}`;
-  const outcome = delivered ? "consegnato" : "ritirato";
   return finalize(
-    "order_delivered",
-    `Ordine #${o.number} ${outcome}`,
-    layout(brand, { preheader: "Grazie per averci scelto", title: `Ordine ${outcome}`, body }),
+    "review_request",
+    "Grazie per averci scelto! Ci lasci una recensione?",
+    layout(brand, { preheader: "Ti è piaciuto? Raccontalo con una recensione", title: "Grazie da DIMSUM", body }),
   );
 }
 
