@@ -146,6 +146,34 @@ export function MascotIntro() {
           suppressHydrationWarning
         />
 
+        {/* Effort: sweat drops and strain marks beside the head while it pulls (moved by the script). */}
+        <div
+          data-k="effort"
+          className="pointer-events-none absolute top-0 left-0 opacity-0 will-change-transform"
+          suppressHydrationWarning
+        >
+          <svg
+            viewBox="0 0 100 50"
+            preserveAspectRatio="none"
+            className="size-full overflow-visible"
+            aria-hidden
+          >
+            <g fill="#7cc6f2" stroke="#3b8fc4" strokeWidth="0.6">
+              <path d="M91 14c2.2 3.2 3.3 5.4 3.3 6.9a3.3 3.3 0 0 1-6.6 0c0-1.5 1.1-3.7 3.3-6.9Z" />
+              <path d="M96 30c1.6 2.3 2.4 3.9 2.4 5a2.4 2.4 0 0 1-4.8 0c0-1.1.8-2.7 2.4-5Z" />
+              <path d="M6 24c1.8 2.6 2.7 4.4 2.7 5.6a2.7 2.7 0 0 1-5.4 0c0-1.2.9-3 2.7-5.6Z" />
+            </g>
+            <g fill="#fff" opacity="0.8">
+              <circle cx="90" cy="20" r="0.9" />
+              <circle cx="5.2" cy="29" r="0.7" />
+            </g>
+            <g stroke="#2b1d14" strokeWidth="1.1" strokeLinecap="round" opacity="0.75">
+              <path d="M84 6l4-4M88 10l6-2M80 4l1-4" />
+              <path d="M16 6l-4-4M12 10l-6-2M20 4l-1-4" />
+            </g>
+          </svg>
+        </div>
+
         <button
           data-k="skip"
           type="button"

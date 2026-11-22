@@ -49,6 +49,7 @@ function run(c: RunnerConfig) {
   var print = q("print");
   var mascot = q("mascot");
   var contact = q("contact");
+  var effort = q("effort");
   var skip = q("skip");
   var clip = q("clip");
   var shade = q("shade");
@@ -60,7 +61,8 @@ function run(c: RunnerConfig) {
   var stitch = q("stitch");
   var svg = root.querySelector("svg");
 
-  var END = 5.6;
+  var END = 6.7;
+  var PULL = 5.35; // the blanket gives way: from here it is pulled all the way down
   var MAX_DT = 1 / 30; // a slow frame slows the animation down, it never skips ahead
   var SAMPLES = 56;
 
@@ -154,9 +156,8 @@ function run(c: RunnerConfig) {
     var S = Math.round(Math.min(340, Math.max(170, Math.min(H * 0.3, W * 0.5))));
     var k = S / c.mascot;
     var ground = H * 0.7;
-    var topY = Math.max(64, H * 0.11); // where the blanket's edge is grabbed
+    var topY = Math.max(96, H * 0.19); // where the blanket's edge is grabbed
     var stride = S * 0.62; // screen distance of one full walk cycle (two steps)
-    var back0 = c.seq.back![0]!;
     var backN = c.seq.back![1]!;
     // Hands height above the feet in a back frame, for a given scale.
     var handRise = function (fi: number, scale: number) {
@@ -173,8 +174,17 @@ function run(c: RunnerConfig) {
     var held = false;
     var lag = 0;
     var phase = 0;
-    var upSc = 0.84;
-    var topFeet = topY + handRise(back0, upSc);
+    var upSc = 0.94;
+    var reach0 = c.seq.reach![0]!;
+    var reachN = c.seq.reach![1]!;
+    var strain0 = c.seq.strain![0]!;
+    var strainN = c.seq.strain![1]!;
+    var upN = c.seq.backUp![1]!;
+    var raisedFrame = reach0 + reachN - 1;
+    // Standing just under the top: raised hands at the grab height.
+    var topFeet = topY + handRise(raisedFrame, upSc);
+    var raised = false; // arms up (wider hold on the blanket's edge)
+    var straining = 0; // 0..1: shaking, sweat and effort marks
 
     if (t < 1.3) {
       // 1. Walks in from the right, side view, slowing down to stop in the middle.
@@ -202,49 +212,68 @@ function run(c: RunnerConfig) {
     } else if (t < 2.85) {
       // 4. Turns around.
       fi = seqStep("turnBack", span(t, 2.55, 2.85));
-    } else if (t < 3.55) {
+    } else if (t < 3.45) {
       // 5. Walks up towards the top edge (away from us: a little smaller).
-      var w = easeInOut(span(t, 2.85, 3.55));
-      feet = lerp(ground, topFeet + S * 0.08, w);
+      var w = easeInOut(span(t, 2.85, 3.45));
+      feet = lerp(ground, topFeet + S * 0.1, w);
       sc = lerp(1, upSc, w);
       fi = seqFrame("back", ((ground - feet) / (stride * 0.9)) * backN);
-    } else if (t < 3.82) {
-      // 6. Jumps, grabs the edge and yanks it down to its hands.
+    } else if (t < 3.7) {
+      // 6. Raises its arms towards the edge.
       sc = upSc;
-      fi = back0;
-      var j = span(t, 3.55, 3.82);
-      feet = topFeet + S * 0.08 - Math.sin(j * Math.PI) * S * 0.22;
-      squash = j < 0.15 ? 0.92 : 1.05;
+      feet = topFeet + S * 0.1;
+      fi = seqStep("reach", span(t, 3.45, 3.7));
+      raised = t > 3.6;
+    } else if (t < 3.92) {
+      // 7. Jumps, grabs the edge and yanks it down to its hands.
+      sc = upSc;
+      raised = true;
+      fi = raisedFrame;
+      var j = span(t, 3.7, 3.92);
+      feet = topFeet + S * 0.1 - Math.sin(j * Math.PI) * S * 0.2;
+      squash = j < 0.15 ? 0.9 : 1.06;
       if (j > 0.45) {
         held = true;
         edge = (feet - handRise(fi, sc)) * easeOut(span(j, 0.45, 1));
       }
-    } else if (t < 4.42) {
-      // 7. Two hard tugs, leaning back with all its strength.
+    } else if (t < PULL) {
+      // 8. It won't come! Pulls with all its strength: shaking, leaning back, three hard tugs that
+      // bring the edge down a little at a time, sweat drops flying.
       sc = upSc;
-      fi = back0;
+      raised = true;
       held = true;
-      var tug = (t - 3.82) / 0.3; // 0..2
-      var n = Math.floor(tug);
-      var tp = tug - n;
-      var pull = tp < 0.35 ? easeOut(tp / 0.35) : 1 - 0.35 * easeInOut((tp - 0.35) / 0.65);
-      feet = topFeet + S * 0.08 + S * 0.11 * (n + pull);
-      squash = tp < 0.35 ? lerp(1, 0.9, tp / 0.35) : lerp(0.9, 1, (tp - 0.35) / 0.65);
-      tilt = (n % 2 ? -1 : 1) * 0.04 * Math.sin(tp * Math.PI);
-      lag = S * 0.07 * (n + pull);
+      straining = clamp01((t - 3.92) / 0.2) * clamp01((PULL - t) / 0.12 + 0.3);
+      fi = strain0 + (Math.floor((t - 3.92) / 0.055) % strainN);
+      var tugT = (t - 3.92) / ((PULL - 3.92) / 3); // 0..3
+      var tn = Math.min(2, Math.floor(tugT));
+      var tp = Math.min(1, tugT - tn);
+      var give = tp < 0.3 ? easeOut(tp / 0.3) : 1 - 0.45 * easeInOut((tp - 0.3) / 0.7);
+      feet = topFeet + S * 0.1 + S * 0.075 * (tn + give);
+      squash = tp < 0.3 ? lerp(1, 0.88, tp / 0.3) : lerp(0.88, 0.97, (tp - 0.3) / 0.7);
+      // Trembling with effort.
+      cx += Math.sin(t * 57) * 1.8 + Math.sin(t * 31) * 0.9;
+      tilt = Math.sin(t * 43) * 0.014 + (tn % 2 ? -1 : 1) * 0.03 * Math.sin(tp * Math.PI);
+      lag = S * 0.05 * (tn + give);
     } else {
-      // 8. Pulls it all the way down, stepping backwards towards us.
+      // 9. It gives way: stumbles back, arms still up, and drags the blanket all the way down.
       held = true;
-      var v = span(t, 4.42, END - 0.1);
-      var startFeet = topFeet + S * 0.08 + S * 0.11 * 1.65;
-      feet = lerp(startFeet, H + S * 1.25 + 60, 0.35 * v + 0.65 * easeIn(v));
+      raised = true;
+      var v = span(t, PULL, END - 0.1);
+      var startFeet = topFeet + S * 0.1 + S * 0.075 * 2.55;
+      // A quick stumble first (the release), then steady steps back.
+      var travel = 0.22 * easeOut(span(v, 0, 0.18)) + 0.78 * (0.3 * v + 0.7 * easeIn(v));
+      feet = lerp(startFeet, H + S * 1.3 + 60, travel);
       sc = lerp(upSc, 1.06, v);
       phase = (feet - startFeet) / (stride * 0.75);
-      fi = seqFrame("back", -phase * backN);
-      squash = 1 - 0.03 * Math.abs(Math.sin(phase * Math.PI));
+      fi = seqFrame("backUp", -phase * upN);
+      squash =
+        1 -
+        0.035 * Math.abs(Math.sin(phase * Math.PI)) +
+        (v < 0.12 ? 0.05 * Math.sin((v / 0.12) * Math.PI) : 0);
+      tilt = v < 0.15 ? -0.06 * Math.sin((v / 0.15) * Math.PI) : 0;
       lag = Math.min(H * 0.16, S * 0.45) * (0.5 + 0.5 * easeOut(span(v, 0, 0.35))) * (1 - 0.3 * v);
     }
-    if (held && t >= 3.82) edge = feet - handRise(fi, sc);
+    if (held && t >= 3.92) edge = feet - handRise(fi, sc);
 
     // Mascot: one sprite frame, feet on `feet`, centred on `cx`.
     var kk = k * sc;
@@ -287,7 +316,7 @@ function run(c: RunnerConfig) {
 
     // The blanket's top edge: at the top until grabbed, then held in the hands. While tugging the
     // sides stay pinned higher (it sags only where it is held); in the full pull they trail behind.
-    var hold = c.span * kk;
+    var hold = c.span * kk * (raised ? 1.12 : 1);
     var pts: number[][] = [];
     var reach = Math.max(1, Math.max(cx, W - cx) - hold);
     for (var s = 0; s <= SAMPLES; s++) {
@@ -296,7 +325,7 @@ function run(c: RunnerConfig) {
       var drape = dd * dd * (3 - 2 * dd);
       var y = 0;
       if (edge > 0) {
-        if (t < 4.42) y = edge * (1 - 0.9 * drape) + Math.sin(dd * 7) * 2 * dd;
+        if (t < PULL) y = edge * (1 - 0.9 * drape) + Math.sin(dd * 7) * 2 * dd;
         else y = edge - lag * drape + Math.sin(dd * 9 - phase * 4.4) * 5 * dd;
       }
       pts.push([x, y]);
@@ -367,7 +396,21 @@ function run(c: RunnerConfig) {
       light.setAttribute("d", li);
       light.setAttribute("opacity", String(0.7 * tension));
     }
-    if (skip) skip.style.opacity = String(t < 4.42 ? 1 : clamp01((H * 0.82 - edge) / 120));
+    if (skip) skip.style.opacity = String(t < PULL ? 1 : clamp01((H * 0.82 - edge) / 120));
+    // Sweat drops and effort marks beside the head while it strains.
+    if (effort) {
+      effort.style.opacity = String(straining);
+      effort.style.width = f1(fw) + "px";
+      effort.style.height = f1(fh * 0.45) + "px";
+      effort.style.transform =
+        "translate3d(" +
+        f1(left) +
+        "px," +
+        f1(top + Math.sin(t * 9) * 2) +
+        "px,0) scale(" +
+        (1 + 0.04 * Math.sin(t * 18)).toFixed(3) +
+        ")";
+    }
 
     if (t >= END) {
       finish();

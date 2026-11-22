@@ -29,6 +29,10 @@ export type MascotPose = {
   walkAmount: number;
   /** Lean of the whole body (radians, x axis): negative = leaning back, e.g. pulling hard. */
   lean: number;
+  /** 0 = arms as set above, 1 = both arms raised high (a "Y"), e.g. pulling something down. */
+  reach: number;
+  /** With arms raised: 0 = up, 1 = pulled down a little (the effort of a tug). */
+  pull: number;
   /** Seconds, for procedural secondary motion. */
   time: number;
 };
@@ -46,6 +50,8 @@ export const REST_POSE: MascotPose = {
   walk: 0,
   walkAmount: 0,
   lean: 0,
+  reach: 0,
+  pull: 0,
   time: 0,
 };
 
@@ -124,11 +130,17 @@ export function createMascotRig(): MascotRig {
       const drag = p.drag * (1 - grip);
       // Free arms swing opposite to the legs while walking.
       const armSwing = -0.5 * sign * step * (1 - grip) * (1 - drag) * (1 - waving);
-      s.rotation.set(
-        -0.95 * grip - 2.3 * waving + drag * (0.62 + 0.05 * sign * step) + armSwing,
-        -sign * 1.05 * grip,
+      const x = -0.95 * grip - 2.3 * waving + drag * (0.62 + 0.05 * sign * step) + armSwing;
+      const y = -sign * 1.05 * grip;
+      const z =
         sign * (0.08 * Math.sin(t * 2.1 + sign) * (1 - grip) * (1 - drag) + 0.25 * grip + 0.1 * drag) +
-          (waving ? -sign * (0.6 + 0.35 * Math.sin(t * 14)) * waving : 0),
+        (waving ? -sign * (0.6 + 0.35 * Math.sin(t * 14)) * waving : 0);
+      // Arms raised high, slightly behind the body, lowering a little on each tug.
+      const r = p.reach;
+      s.rotation.set(
+        x * (1 - r) + (-0.3 + 0.12 * p.pull) * r,
+        y * (1 - r),
+        z * (1 - r) + sign * (1.3 - 0.32 * p.pull) * r,
       );
     }
 
