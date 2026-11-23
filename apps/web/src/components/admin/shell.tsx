@@ -216,8 +216,9 @@ function AccountFooter({ viewer }: { viewer: AdminViewer }) {
           <p className="truncate text-caption text-white/50">{viewer.email}</p>
         </div>
       </div>
+      {/* The shop as customers see it (the menu); "Apri il gestionale" in the profile brings you back. */}
       <Link
-        href="/"
+        href="/menu"
         className="flex items-center gap-3 rounded-xl px-3 py-2 text-body-sm text-white/70 hover:bg-white/8 hover:text-white"
       >
         <ExternalLink className="size-4" /> Vai al sito
