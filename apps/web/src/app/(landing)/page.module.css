@@ -951,3 +951,11 @@
     transition: none !important;
   }
 }
+
+/* In the installed app the landing is never shown (it redirects to the sign-in or the menu):
+   nothing flashes while that happens. */
+@media (display-mode: standalone) {
+  .page {
+    visibility: hidden;
+  }
+}

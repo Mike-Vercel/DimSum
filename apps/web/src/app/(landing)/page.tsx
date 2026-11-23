@@ -17,6 +17,7 @@ import { getRestaurantConfig, toRestaurantInfo } from "@/server/services/restaur
 import { DishOrbitCarousel, type OrbitDish } from "./dish-orbit";
 import { FaqList } from "./faq";
 import { LandingMotion } from "./landing-motion";
+import { StandaloneRedirect } from "./standalone-redirect";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -154,6 +155,7 @@ export default async function DiscoverPage() {
 
   return (
     <div id="landing" className={`${styles.page} ${display.variable}`}>
+      <StandaloneRedirect />
       <LandingMotion rootId="landing" headerId="landing-header" fromId="specialita" />
       {/* The opening: the mascot pulls the page down like a blanket (once per visit). */}
       <MascotIntro />

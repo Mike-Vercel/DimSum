@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { TIP_MASCOT_SPRITE } from "@/components/checkout/tip-mascot";
 import { api, ApiError } from "@/lib/api";
 import { useScrollDirection } from "@/lib/scroll-direction";
+import { selectItemCount, useCart } from "@/lib/stores/cart";
 import { cn } from "@/lib/cn";
 
 /**
@@ -55,6 +56,8 @@ export function AssistantWidget({ launcher = true, low = false }: { launcher?: b
   const pending = useRef<string | null>(null);
   // Like the tab bar: out of the way while reading (scrolling down), back on the way up.
   const reading = useScrollDirection() === "down";
+  // The "Vai al carrello" bar (phones) sits above the tab bar: Dim moves up over it.
+  const cartBar = useCart(selectItemCount) > 0 && !pathname.startsWith("/account");
 
   // Conversation of this tab, restored once on the client.
   useEffect(() => {
@@ -171,7 +174,11 @@ export function AssistantWidget({ launcher = true, low = false }: { launcher?: b
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className={cn("dim-launcher", low && "dim-launcher-low", reading && "dim-launcher-away")}
+          className={cn(
+            "dim-launcher",
+            low ? "dim-launcher-low" : cartBar && "dim-launcher-cart",
+            reading && "dim-launcher-away",
+          )}
           aria-label="Chiedi a Dim, l'assistente di DIMSUM"
         >
           <span className="dim-launcher-bubble" aria-hidden>
@@ -344,6 +351,8 @@ const CSS = `
 .dim-launcher{position:fixed;z-index:45;right:max(12px,env(safe-area-inset-right));bottom:calc(env(safe-area-inset-bottom) + 84px);display:flex;align-items:flex-end;gap:6px;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .35s cubic-bezier(.3,.7,.2,1),opacity .25s}
 .dim-launcher-away{transform:translateX(calc(100% + 24px));opacity:0;pointer-events:none}
 .dim-launcher-low{bottom:calc(env(safe-area-inset-bottom) + 16px)}
+.dim-launcher-cart{bottom:calc(env(safe-area-inset-bottom) + 140px)}
+@media (min-width:1024px){.dim-launcher-cart{bottom:24px}}
 @media (min-width:1024px){.dim-launcher{right:24px;bottom:24px}.dim-launcher-away{transform:none;opacity:1;pointer-events:auto}}
 @media (max-width:1023px){.dim-launcher-face{width:58px;height:64px;border-radius:20px}}
 .dim-launcher-face{position:relative;display:block;width:66px;height:72px;border-radius:24px;background:var(--color-surface,#fff);box-shadow:0 12px 30px -12px rgba(60,30,10,.45),0 0 0 1px rgba(0,0,0,.05);overflow:hidden;transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
