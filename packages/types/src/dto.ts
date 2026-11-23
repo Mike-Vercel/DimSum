@@ -109,6 +109,12 @@ export interface ProductDTO {
   variants: VariantDTO[];
   modifierGroups: ModifierGroupDTO[];
   excludedFromDiscounts: boolean;
+  /** A combo (several dishes at a special price): what it contains and what they cost on their own. */
+  combo: {
+    items: { productId: string; name: string; quantity: number }[];
+    /** Sum of the dishes at their own price: the combo price is lower ("Risparmi …"). */
+    valueCents: Cents;
+  } | null;
 }
 
 export interface CategoryDTO {

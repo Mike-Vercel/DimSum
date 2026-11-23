@@ -443,6 +443,8 @@ model Product {
   allergensDeclared     Boolean                @default(false)
   maxQuantityPerLine    Int                    @default(30)
   position              Int                    @default(0)
+  /// A combo: several dishes at a special price (contents in ComboItem, shown in "Offerte").
+  isCombo               Boolean                @default(false)
   sourceProvider        String?
   sourceId              String?
   /// Untouched source values (names, description) kept for audits and re-imports.
@@ -457,10 +459,27 @@ model Product {
   modifierGroups ProductModifierGroup[]
   orderItems     OrderItem[]
   favorites      Favorite[]
+  comboItems     ComboItem[]            @relation("ComboContents")
+  inCombos       ComboItem[]            @relation("ComboDish")
 
   @@unique([sourceProvider, sourceId])
   @@index([categoryId, position])
   @@map("products")
+}
+
+/// What a combo contains: dish and quantity, in display order.
+model ComboItem {
+  id        String  @id @default(uuid(7)) @db.Uuid
+  comboId   String  @db.Uuid
+  combo     Product @relation("ComboContents", fields: [comboId], references: [id], onDelete: Cascade)
+  productId String  @db.Uuid
+  product   Product @relation("ComboDish", fields: [productId], references: [id], onDelete: Restrict)
+  quantity  Int     @default(1)
+  position  Int     @default(0)
+
+  @@unique([comboId, productId])
+  @@index([productId])
+  @@map("combo_items")
 }
 
 model ProductImage {

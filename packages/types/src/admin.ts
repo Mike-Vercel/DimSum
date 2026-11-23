@@ -506,3 +506,26 @@ export interface AuditEntryDTO {
   after: unknown;
   createdAt: ISODateString;
 }
+
+/** A combo as the back office edits it. */
+export interface AdminComboDTO {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  priceCents: Cents;
+  /** The dishes at their own price: the saving shown to customers is value − price. */
+  valueCents: Cents;
+  isVisible: boolean;
+  /** False while one of its dishes is sold out. */
+  isAvailable: boolean;
+  image: ImageDTO | null;
+  items: {
+    productId: string;
+    name: string;
+    quantity: number;
+    priceCents: Cents;
+    image: ImageDTO | null;
+    isAvailable: boolean;
+  }[];
+}

@@ -6,6 +6,7 @@
  *  - native: `getToken` returns the Better Auth bearer token stored in SecureStore
  */
 import type {
+  AdminComboDTO,
   AssistantReplyDTO,
   AddressSuggestionDTO,
   AdminCatalogDTO,
@@ -87,6 +88,15 @@ import type {
   updateConsents,
   updateProfile,
 } from "@dimsum/validation";
+
+/** Combo editor payload (validated on the server). */
+export interface AdminComboInput {
+  name: string;
+  description: string | null;
+  priceCents: number;
+  isVisible: boolean;
+  items: { productId: string; quantity: number }[];
+}
 
 export class ApiError extends Error {
   readonly code: string;
@@ -334,6 +344,13 @@ export function createApiClient(options: ApiClientOptions) {
           request<AdminOrderDetailDTO>("POST", `/admin/orders/${id}/commands`, input),
         refund: (id: string, input: z.input<typeof refundRequest>) =>
           request<AdminOrderDetailDTO>("POST", `/admin/orders/${id}/refunds`, input),
+      },
+      /** Combos: several dishes at a special price. */
+      combos: {
+        list: () => request<{ combos: AdminComboDTO[] }>("GET", "/admin/combos"),
+        create: (input: AdminComboInput) => request<AdminComboDTO>("POST", "/admin/combos", input),
+        update: (id: string, input: AdminComboInput) => request<AdminComboDTO>("PUT", `/admin/combos/${id}`, input),
+        remove: (id: string) => request<{ ok: true }>("DELETE", `/admin/combos/${id}`),
       },
       catalog: {
         get: () => request<AdminCatalogDTO>("GET", "/admin/catalog"),

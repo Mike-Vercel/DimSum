@@ -130,7 +130,7 @@ function toAdminGroup(
 }
 
 /** Menu changed: expire the cached catalog and tell open menus to reload. */
-async function catalogChanged(): Promise<void> {
+export async function catalogChanged(): Promise<void> {
   expireTags(CATALOG_TAG);
   await publish(["catalog"], { type: "catalog.changed", version: Date.now().toString(36) });
 }
@@ -203,7 +203,7 @@ export async function setAvailability(
   return patches;
 }
 
-async function uniqueSlug(tx: Prisma.TransactionClient, name: string, exceptId?: string): Promise<string> {
+export async function uniqueSlug(tx: Prisma.TransactionClient, name: string, exceptId?: string): Promise<string> {
   const base = slugify(name) || "piatto";
   let slug = base;
   for (

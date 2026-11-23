@@ -13,7 +13,32 @@ const productInclude = {
     orderBy: { position: "asc" },
     include: { group: { include: { modifiers: { orderBy: { position: "asc" } } } } },
   },
+  comboItems: {
+    orderBy: { position: "asc" },
+    include: {
+      product: {
+        select: {
+          name: true,
+          priceCents: true,
+          isAvailable: true,
+          unavailableUntil: true,
+          deletedAt: true,
+          variants: { select: { priceCents: true } },
+        },
+      },
+    },
+  },
 } satisfies Prisma.ProductInclude;
+
+/** A dish at its own price: the cheapest size when it has several. */
+export function ownPriceCents(p: { priceCents: number; variants: { priceCents: number }[] }): number {
+  return p.variants.length ? Math.min(...p.variants.map((v) => v.priceCents)) : p.priceCents;
+}
+
+/** "2× Ravioli al vapore · 1× Noodles in brodo": the combo's contents on tickets and receipts. */
+export function comboContents(items: { quantity: number; product: { name: string } }[]): string {
+  return items.map((i) => `${i.quantity}× ${i.product.name}`).join(" · ");
+}
 
 type ProductRow = Prisma.ProductGetPayload<{ include: typeof productInclude }>;
 type ImageRow = ProductRow["images"][number];
@@ -32,6 +57,7 @@ export function toImageDTO(image: ImageRow | null | undefined): ImageDTO | null 
 }
 
 export function toProductDTO(p: ProductRow): ProductDTO {
+  const comboDishesAvailable = p.comboItems.every((i) => i.product.isAvailable && !i.product.deletedAt);
   return {
     id: p.id,
     slug: p.slug,
@@ -48,7 +74,7 @@ export function toProductDTO(p: ProductRow): ProductDTO {
     allergensDeclared: p.allergensDeclared,
     tags: p.tags,
     spicyLevel: Math.min(3, Math.max(0, p.spicyLevel)) as 0 | 1 | 2 | 3,
-    isAvailable: p.isAvailable,
+    isAvailable: p.isAvailable && comboDishesAvailable,
     availableAgainAt: p.isAvailable ? null : (p.unavailableUntil?.toISOString() ?? null),
     isFeatured: p.isFeatured,
     variants: p.variants.map((v) => ({
@@ -75,6 +101,12 @@ export function toProductDTO(p: ProductRow): ProductDTO {
         })),
       })),
     excludedFromDiscounts: p.excludedFromDiscounts,
+    combo: p.isCombo
+      ? {
+          items: p.comboItems.map((i) => ({ productId: i.productId, name: i.product.name, quantity: i.quantity })),
+          valueCents: p.comboItems.reduce((sum, i) => sum + ownPriceCents(i.product) * i.quantity, 0),
+        }
+      : null,
   };
 }
 
@@ -164,6 +196,21 @@ export async function loadProductsForPricing(ids: string[]) {
       variants: true,
       images: { orderBy: { position: "asc" }, take: 1 },
       modifierGroups: { include: { group: { include: { modifiers: true } } } },
+      comboItems: {
+        orderBy: { position: "asc" },
+        include: {
+          product: {
+            select: {
+              name: true,
+              priceCents: true,
+              isAvailable: true,
+              unavailableUntil: true,
+              deletedAt: true,
+              variants: { select: { priceCents: true } },
+            },
+          },
+        },
+      },
     },
   });
 }

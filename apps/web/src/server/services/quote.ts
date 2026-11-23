@@ -24,7 +24,7 @@ import type {
   ImageDTO,
 } from "@dimsum/types";
 import type { CartLine } from "@dimsum/validation";
-import { loadProductsForPricing, toImageDTO, type PricingProductRow } from "./catalog";
+import { loadProductsForPricing, toImageDTO, type PricingProductRow, comboContents } from "./catalog";
 import { decideCoupon, type CouponCustomer } from "./coupons";
 import { resolveDelivery } from "./delivery";
 import { toScheduleConfig, type RestaurantConfig } from "./restaurant";
@@ -152,10 +152,14 @@ export async function quoteCart(
         message: `Puoi ordinare al massimo ${quantity} × ${row.name}.`,
       });
     }
-    const available = isAvailableNow(
-      { isAvailable: row.isAvailable, unavailableUntil: row.unavailableUntil },
-      now,
-    );
+    // A combo can be ordered only while every dish in it can.
+    const available =
+      isAvailableNow({ isAvailable: row.isAvailable, unavailableUntil: row.unavailableUntil }, now) &&
+      row.comboItems.every(
+        (i) =>
+          !i.product.deletedAt &&
+          isAvailableNow({ isAvailable: i.product.isAvailable, unavailableUntil: i.product.unavailableUntil }, now),
+      );
     const variant = resolveVariant(product, line.variantId);
     const mods = validateModifierSelection(product, line.modifiers);
     const unit = unitPrice(product, mods.resolved, variant.ok ? variant.variant : null);
@@ -205,7 +209,13 @@ export async function quoteCart(
     }
 
     const image = toImageDTO(row.images[0]);
-    const variantName = variant.ok && variant.variant ? variant.variant.name : null;
+    // Combos have no sizes: their contents travel in the same slot, so the kitchen ticket, the
+    // e-mails and the order history show what is inside.
+    const variantName = row.isCombo
+      ? comboContents(row.comboItems)
+      : variant.ok && variant.variant
+        ? variant.variant.name
+        : null;
     display.push({
       lineId: line.lineId,
       productId: row.id,

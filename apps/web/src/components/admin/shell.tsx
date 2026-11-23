@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Headset,
   LayoutDashboard,
+  Layers,
   LogOut,
   MapPinned,
   Menu,
@@ -80,6 +81,7 @@ const NAV: { title: string; items: NavItem[] }[] = [
     title: "Menu e locale",
     items: [
       { href: "/admin/menu", label: "Menu", icon: UtensilsCrossed, permission: "catalog:availability" },
+      { href: "/admin/combo", label: "Combo", icon: Layers, permission: "catalog:availability" },
       { href: "/admin/orari", label: "Orari e chiusure", icon: Clock, permission: "hours:edit" },
       { href: "/admin/zone", label: "Zone di consegna", icon: MapPinned, permission: "zones:edit" },
       { href: "/admin/impostazioni", label: "Impostazioni", icon: Settings, permission: "settings:edit" },
