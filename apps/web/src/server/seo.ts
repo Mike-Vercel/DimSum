@@ -16,7 +16,7 @@ export function restaurantJsonLd(c: RestaurantConfig, catalog: CatalogDTO) {
     url: appUrl("/"),
     telephone: c.phone ?? undefined,
     image: image ? appUrl(image) : undefined,
-    logo: appUrl("/icons/icon-512.png"),
+    logo: appUrl("/icons/app-512.png"),
     servesCuisine: ["Cinese", "Dim sum", "Street food asiatico"],
     priceRange: c.priceRange ?? "€€",
     acceptsReservations: false,

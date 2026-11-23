@@ -53,7 +53,7 @@ export function BottomNav() {
       inert={reading}
       className={cn(
         // Installed app: the tab bar on every screen size (it is how the app is navigated).
-        "fixed inset-x-0 bottom-0 z-40 border-t border-line/80 bg-canvas pb-safe transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden [@media(display-mode:standalone)]:block",
+        "fixed inset-x-0 bottom-0 z-40 border-t border-line/80 bg-canvas pb-safe transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden pwa-block",
         reading && "translate-y-full",
       )}
     >

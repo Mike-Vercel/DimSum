@@ -43,7 +43,7 @@ export async function pushTo(
       try {
         await webpush.sendNotification(
           { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
-          JSON.stringify({ ...payload, icon: "/icons/icon-192.png", badge: "/icons/badge-96.png" }),
+          JSON.stringify({ ...payload, icon: "/icons/app-192.png", badge: "/icons/badge-96.png" }),
           { TTL: 60 * 30, urgency: payload.kind === "staff-new-order" ? "high" : "normal" },
         );
         sent++;

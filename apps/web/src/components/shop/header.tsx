@@ -167,7 +167,7 @@ export function ShopHeader() {
         <div className="ml-auto flex shrink-0 items-center gap-3">
           <SearchOverlayTrigger variant="icon" className="xl:hidden" />
           <SearchOverlayTrigger variant="field" className="hidden xl:flex" />
-          <AccountButton className="[@media(display-mode:standalone)]:hidden" />
+          <AccountButton className="pwa-hidden" />
           <CartButton />
         </div>
       </div>

@@ -13,7 +13,7 @@ export function DesktopOnlyOnAppRoutes({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const app = APP_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
   return (
-    <div className={app ? "max-lg:hidden [@media(display-mode:standalone)]:hidden" : "[@media(display-mode:standalone)]:hidden"}>
+    <div className={app ? "pwa-hidden max-lg:hidden" : "pwa-hidden"}>
       {children}
     </div>
   );

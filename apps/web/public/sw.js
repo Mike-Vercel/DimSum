@@ -13,7 +13,7 @@ const MAX_ASSETS = 300;
 const OFFLINE_URL = "/offline";
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(SHELL).then((cache) => cache.addAll([OFFLINE_URL, "/icons/icon-192.png", "/icons/badge-96.png"])));
+  event.waitUntil(caches.open(SHELL).then((cache) => cache.addAll([OFFLINE_URL, "/icons/app-192.png", "/icons/badge-96.png"])));
 });
 
 self.addEventListener("activate", (event) => {
@@ -89,7 +89,7 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title || "DIMSUM", {
       body: data.body || "",
-      icon: data.icon || "/icons/icon-192.png",
+      icon: data.icon || "/icons/app-192.png",
       badge: data.badge || "/icons/badge-96.png",
       tag: data.tag,
       renotify: Boolean(data.tag),

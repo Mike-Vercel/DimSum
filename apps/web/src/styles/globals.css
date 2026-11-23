@@ -424,3 +424,12 @@ html[data-intro="play"] body {
     repeating-linear-gradient(0deg, rgba(120, 100, 80, 0.025) 0 1px, transparent 1px 4px),
     repeating-linear-gradient(90deg, rgba(120, 100, 80, 0.02) 0 1px, transparent 1px 4px);
 }
+
+/* Installed app (PWA), marked on <html data-app="pwa"> by the gate script before the first paint
+   (iOS does not support the display-mode media query for home-screen apps). */
+html[data-app="pwa"] .pwa-hidden {
+  display: none !important;
+}
+html[data-app="pwa"] .pwa-block {
+  display: block !important;
+}
