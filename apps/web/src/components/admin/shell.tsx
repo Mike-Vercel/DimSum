@@ -35,6 +35,7 @@ import { api } from "@/lib/api";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
 import { enablePush, pushState } from "@/lib/push";
+import { isActionable } from "@/lib/admin/orders";
 import { useRealtime } from "@/lib/realtime";
 
 export interface AdminViewer {
@@ -104,6 +105,12 @@ const NAV: { title: string; items: NavItem[] }[] = [
 
 function useBadges(role: Role) {
   const qc = useQueryClient();
+  // Ticking clock: a scheduled order counts once its acceptance window opens.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(t);
+  }, []);
   const kitchen = useQuery({
     queryKey: ["admin", "kitchen"],
     queryFn: ({ signal }) => api.admin.kitchen(signal),
@@ -123,7 +130,7 @@ function useBadges(role: Role) {
     if (event.type === "support.created") void qc.invalidateQueries({ queryKey: ["admin", "support"] });
   });
   return {
-    kitchen: kitchen.data?.orders.filter((o) => o.status === "RECEIVED").length ?? 0,
+    kitchen: kitchen.data?.orders.filter((o) => isActionable(o, now)).length ?? 0,
     support: support.data ?? 0,
   };
 }

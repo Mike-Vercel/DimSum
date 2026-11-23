@@ -105,10 +105,9 @@ export function useNewOrderAlerts(
   },
 ) {
   const waiting = orders.filter((o) => isActionable(o, options.now));
-  const upcomingOrders = orders.filter((o) => o.status === "RECEIVED" && !isActionable(o, options.now));
-  const upcoming = upcomingOrders.length;
-  const upcomingIds = upcomingOrders.map((o) => o.id).join(",");
-  const knownUpcoming = useRef<Set<string> | null>(null);
+  // Scheduled orders not acceptable yet make no sound: for the kitchen they arrive when their
+  // acceptance window opens (30 minutes before), and only then does the ringtone start.
+  const upcoming = orders.filter((o) => o.status === "RECEIVED" && !isActionable(o, options.now)).length;
   const escalated = waiting.some((o) => o.escalated);
   const ids = waiting.map((o) => o.id).join(",");
   const known = useRef<Set<string> | null>(null);
@@ -129,16 +128,6 @@ export function useNewOrderAlerts(
     }
     known.current = current;
   }, [ids]);
-
-  // A new scheduled order (not acceptable yet): a single short "ding", so the kitchen knows it came
-  // in; the ringtone starts by itself when its acceptance window opens.
-  useEffect(() => {
-    const current = new Set(upcomingIds ? upcomingIds.split(",") : []);
-    if (knownUpcoming.current && options.enabled && !options.muted) {
-      if ([...current].some((id) => !knownUpcoming.current!.has(id))) playAlert("chime", 0.5);
-    }
-    knownUpcoming.current = current;
-  }, [upcomingIds, options.enabled, options.muted]);
 
   // The ringtone loop: rings now, then again and again until nothing is waiting.
   useEffect(() => {

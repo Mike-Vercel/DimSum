@@ -1,5 +1,6 @@
 import "server-only";
 import type { AnalyticsDTO, DashboardDTO } from "@dimsum/types";
+import { isAcceptableNow } from "@dimsum/domain";
 import { db, Prisma } from "../../db";
 import { computeServiceStatus, loadLiveLoad, loadRestaurantConfig } from "../restaurant";
 import { adminOrderInclude, REAL_ORDER, toAdminListItem } from "./orders";
@@ -74,12 +75,8 @@ export async function getDashboard(now = new Date()): Promise<DashboardDTO> {
         },
         _count: { _all: true },
       }),
-      db.order.count({
-        where: {
-          status: "RECEIVED",
-          receivedAt: { lt: new Date(now.getTime() - config.acceptanceEscalationMinutes * 60_000) },
-        },
-      }),
+      // Flagged by the escalation job, which counts a scheduled order only once it can be accepted.
+      db.order.count({ where: { status: "RECEIVED", escalatedAt: { not: null } } }),
       db.rider.groupBy({ by: ["availability"], where: { isActive: true }, _count: { _all: true } }),
       db.order.findMany({
         where: REAL_ORDER,
@@ -100,6 +97,12 @@ export async function getDashboard(now = new Date()): Promise<DashboardDTO> {
       timings(start, now),
     ]);
 
+  // Scheduled orders whose acceptance window has not opened yet are not "to accept" yet.
+  const received = await db.order.findMany({
+    where: { status: "RECEIVED" },
+    select: { isScheduled: true, scheduledFor: true, fulfillmentType: true, routeDurationSeconds: true },
+  });
+  const acceptableNow = received.filter((o) => isAcceptableNow(o, now)).length;
   const count = (statuses: string[]) =>
     byStatus.filter((s) => statuses.includes(s.status)).reduce((n, s) => n + s._count._all, 0);
   const revenue = (today._sum.totalCents ?? 0) - (today._sum.tipCents ?? 0);
@@ -135,7 +138,7 @@ export async function getDashboard(now = new Date()): Promise<DashboardDTO> {
       revenueCents: (lastWeek._sum.totalCents ?? 0) - (lastWeek._sum.tipCents ?? 0),
     },
     live: {
-      awaitingAcceptance: count(["RECEIVED"]),
+      awaitingAcceptance: acceptableNow,
       preparing: count(["CONFIRMED", "PREPARING"]),
       ready: count(["READY_FOR_PICKUP", "RIDER_ASSIGNED", "RIDER_TO_RESTAURANT"]),
       outForDelivery: count(["PICKED_UP", "ON_THE_WAY"]),
