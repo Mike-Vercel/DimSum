@@ -171,23 +171,26 @@ export function AssistantWidget({ launcher = true, low = false }: { launcher?: b
     <>
       <style>{CSS}</style>
       {showLauncher && !open ? (
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
+        // Only the mascot opens the chat: the hint bubble and the space around it are not tappable.
+        <div
           className={cn(
             "dim-launcher",
             low ? "dim-launcher-low" : cartBar && "dim-launcher-cart",
             reading && "dim-launcher-away",
           )}
-          aria-label="Chiedi a Dim, l'assistente di DIMSUM"
         >
           <span className="dim-launcher-bubble" aria-hidden>
             Ciao! Serve una mano?
           </span>
-          <span className="dim-launcher-face" aria-hidden>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="dim-launcher-face"
+            aria-label="Chiedi a Dim, l'assistente di DIMSUM"
+          >
             <span className="dim-sprite dim-sprite-wave" style={{ backgroundImage: `url(${TIP_MASCOT_SPRITE})` }} />
-          </span>
-        </button>
+          </button>
+        </div>
       ) : null}
 
       {open ? (
@@ -348,17 +351,18 @@ const CSS = `
 .dim-sprite-wave{animation:dim-wave-loop 6s steps(1) infinite}
 @keyframes dim-blink{0%{background-position:0 0}92%{background-position:14.2857% 0}96%{background-position:0 0}}
 @keyframes dim-wave-loop{0%,62%{background-position:0 0}64%{background-position:42.857% 0}67%{background-position:57.143% 0}70%{background-position:71.429% 0}73%{background-position:85.714% 0}76%{background-position:42.857% 0}79%{background-position:57.143% 0}82%{background-position:71.429% 0}85%{background-position:85.714% 0}88%,100%{background-position:0 0}}
-.dim-launcher{position:fixed;z-index:45;right:max(12px,env(safe-area-inset-right));bottom:calc(env(safe-area-inset-bottom) + 84px);display:flex;align-items:flex-end;gap:6px;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .35s cubic-bezier(.3,.7,.2,1),opacity .25s}
-.dim-launcher-away{transform:translateX(calc(100% + 24px));opacity:0;pointer-events:none}
+.dim-launcher{position:fixed;z-index:45;right:max(12px,env(safe-area-inset-right));bottom:calc(env(safe-area-inset-bottom) + 84px);display:flex;align-items:flex-end;gap:6px;pointer-events:none;transition:transform .35s cubic-bezier(.3,.7,.2,1),opacity .25s}
+.dim-launcher-away{transform:translateX(calc(100% + 24px));opacity:0}
+.dim-launcher-away .dim-launcher-face{pointer-events:none}
 .dim-launcher-low{bottom:calc(env(safe-area-inset-bottom) + 16px)}
 .dim-launcher-cart{bottom:calc(env(safe-area-inset-bottom) + 140px)}
 @media (min-width:1024px){.dim-launcher-cart{bottom:24px}}
-@media (min-width:1024px){.dim-launcher{right:24px;bottom:24px}.dim-launcher-away{transform:none;opacity:1;pointer-events:auto}}
+@media (min-width:1024px){.dim-launcher{right:24px;bottom:24px}.dim-launcher-away{transform:none;opacity:1}.dim-launcher-away .dim-launcher-face{pointer-events:auto}}
 @media (max-width:1023px){.dim-launcher-face{width:58px;height:64px;border-radius:20px}}
-.dim-launcher-face{position:relative;display:block;width:66px;height:72px;border-radius:24px;background:var(--color-surface,#fff);box-shadow:0 12px 30px -12px rgba(60,30,10,.45),0 0 0 1px rgba(0,0,0,.05);overflow:hidden;transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
+.dim-launcher-face{pointer-events:auto;position:relative;display:block;flex:none;width:66px;height:72px;padding:0;border:0;border-radius:24px;background:var(--color-surface,#fff);box-shadow:0 12px 30px -12px rgba(60,30,10,.45),0 0 0 1px rgba(0,0,0,.05);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
 .dim-launcher-face .dim-sprite{inset:4px 3px 0}
-.dim-launcher:hover .dim-launcher-face{transform:translateY(-3px) rotate(-3deg)}
-.dim-launcher-bubble{margin-bottom:38px;padding:7px 11px;border-radius:14px 14px 4px 14px;background:var(--color-ink-950,#111);color:#fff;font-size:13px;font-weight:700;white-space:nowrap;box-shadow:0 10px 24px -14px rgba(0,0,0,.5);animation:dim-hint 9s ease-in-out infinite both}
+.dim-launcher-face:hover{transform:translateY(-3px) rotate(-3deg)}
+.dim-launcher-bubble{pointer-events:none;margin-bottom:38px;padding:7px 11px;border-radius:14px 14px 4px 14px;background:var(--color-ink-950,#111);color:#fff;font-size:13px;font-weight:700;white-space:nowrap;box-shadow:0 10px 24px -14px rgba(0,0,0,.5);animation:dim-hint 9s ease-in-out infinite both}
 @keyframes dim-hint{0%,8%{opacity:0;transform:translateY(6px) scale(.9)}14%,40%{opacity:1;transform:none}48%,100%{opacity:0;transform:translateY(4px) scale(.95)}}
 .dim-root{position:fixed;inset:0;z-index:70;pointer-events:none}
 .dim-panel{pointer-events:auto;position:absolute;inset:0;display:flex;flex-direction:column;background:var(--color-canvas,#f6f1ea);
