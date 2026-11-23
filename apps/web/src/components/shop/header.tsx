@@ -11,7 +11,6 @@ import { Avatar } from "@/components/ui/misc";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
 import { selectEstimatedSubtotal, selectItemCount, useCart } from "@/lib/stores/cart";
-import { useScrollDirection } from "@/lib/scroll-direction";
 import { useHydrated } from "@/lib/stores/hydration";
 import { LocationButton } from "./location-button";
 import { SearchOverlayTrigger } from "./search/search-trigger";
@@ -101,7 +100,6 @@ export function ShopHeader() {
   const ref = useRef<HTMLElement>(null);
   // Phones: while the customer scrolls down, the brand row (logo, search, profile) folds away and
   // "Consegna a" takes its place; scrolling up brings it back, like the tab bar at the bottom.
-  const compact = useScrollDirection() === "down";
 
   // Bars that stick below the header (menu categories) attach to its real height, whatever the
   // device, safe area or font: no gap where the content shows through.
@@ -124,22 +122,14 @@ export function ShopHeader() {
       ref={ref}
       className={cn(
         // Phones: a solid bar (no see-through blur under the status bar); desktop keeps the glass.
-        "sticky top-0 z-40 border-b border-transparent bg-canvas pt-safe lg:bg-canvas/85 lg:backdrop-blur-xl lg:supports-[backdrop-filter]:bg-canvas/75",
-        // The folded row becomes margin below the header: the page underneath never moves.
-        "transition-[margin-bottom] duration-300 ease-out motion-reduce:transition-none",
-        compact && "mb-[48px] lg:mb-0",
+        "sticky top-0 z-40 border-b border-line/60 bg-canvas pt-safe",
       )}
     >
       {/* Mobile */}
       <div className="flex items-center gap-3 px-4 py-2.5 lg:hidden">
         <div className="min-w-0 flex-1">
-          <div
-            inert={compact}
-            className={cn(
-              "h-[48px] overflow-hidden transition-[height,opacity] duration-300 ease-out motion-reduce:transition-none",
-              compact && "h-0 opacity-0",
-            )}
-          >
+          {/* The logo stays put while scrolling (no folding, no fading). */}
+          <div className="h-[48px]">
             <Link href="/menu" aria-label="DIMSUM, menu" className="block h-full w-fit max-w-full">
               <Logo className="h-11 text-fg" />
             </Link>
@@ -147,13 +137,7 @@ export function ShopHeader() {
           <LocationButton />
         </div>
         {/* Room for focus rings inside the clipping box (-m-1 p-1). */}
-        <div
-          inert={compact}
-          className={cn(
-            "-m-1 flex max-w-[60px] items-center gap-3 overflow-hidden p-1 transition-[max-width,opacity] duration-300 ease-out motion-reduce:transition-none",
-            compact && "max-w-0 opacity-0",
-          )}
-        >
+        <div className="-m-1 flex items-center gap-3 p-1">
           {/* The profile is in the bottom tab bar on phones: only search here, at the right edge. */}
           <SearchOverlayTrigger variant="icon" />
         </div>
@@ -183,7 +167,7 @@ export function ShopHeader() {
         <div className="ml-auto flex shrink-0 items-center gap-3">
           <SearchOverlayTrigger variant="icon" className="xl:hidden" />
           <SearchOverlayTrigger variant="field" className="hidden xl:flex" />
-          <AccountButton />
+          <AccountButton className="[@media(display-mode:standalone)]:hidden" />
           <CartButton />
         </div>
       </div>

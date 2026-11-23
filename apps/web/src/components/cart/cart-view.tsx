@@ -2,7 +2,7 @@
 
 import { formatEuro } from "@dimsum/domain";
 import type { CartQuoteDTO, CheckoutBlocker } from "@dimsum/types";
-import { ArrowLeft, ArrowRight, ShoppingBag } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShoppingBag, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useBack } from "@/lib/nav-history";
@@ -11,6 +11,7 @@ import { FulfillmentSwitch } from "@/components/shop/fulfillment-switch";
 import { useRestaurant } from "@/components/shop/restaurant-context";
 import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui/feedback";
+import { toast } from "@/components/ui/toaster";
 import { useCartQuote } from "@/lib/cart-quote";
 import { useServiceStatus } from "@/lib/service-status";
 import { useOrderPrefs } from "@/lib/stores/order-prefs";
@@ -144,7 +145,21 @@ export function CartView() {
         >
           <ArrowLeft className="size-5" />
         </button>
-        <h1 className="text-headline font-extrabold">Il tuo carrello</h1>
+        <h1 className="flex-1 text-headline font-extrabold">Il tuo carrello</h1>
+        <button
+          type="button"
+          onClick={() => {
+            // "Svuota carrello", with a way back: the toast restores everything as it was.
+            const { lines, couponCode, clear, replaceLines } = useCart.getState();
+            clear();
+            toast("Carrello svuotato", {
+              action: { label: "Annulla", onClick: () => replaceLines(lines, couponCode) },
+            });
+          }}
+          className="inline-flex h-10 tap items-center gap-1.5 rounded-full px-3 text-body-sm font-semibold text-fg-muted hover:bg-surface hover:text-danger"
+        >
+          <Trash2 className="size-4" /> Svuota carrello
+        </button>
       </div>
 
       <div className="mt-3 grid grid-cols-1 gap-8 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">

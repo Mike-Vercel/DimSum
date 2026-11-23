@@ -75,5 +75,9 @@ test("ordine da ospite con ritiro, gestito dalla cucina in tempo reale", async (
 
   await ticket.getByRole("button", { name: "Ritirato dal cliente" }).click();
   await expect(page.getByText(/Ritirato|Buon appetito/).first()).toBeVisible();
+
+  // The order emptied the cart.
+  await page.goto("/cart");
+  await expect(page.getByText("Il carrello è vuoto")).toBeVisible();
   await kitchen.context().close();
 });

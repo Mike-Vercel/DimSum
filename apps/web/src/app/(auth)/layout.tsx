@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
+import { MascotIntro } from "@/components/intro/mascot-intro";
 import { RestaurantProvider } from "@/components/shop/restaurant-context";
 import { getRestaurantConfig, toRestaurantInfo } from "@/server/services/restaurant";
 
@@ -64,6 +65,8 @@ export default async function AuthLayout({ children }: LayoutProps<"/">) {
   return (
     <RestaurantProvider value={restaurant}>
       <style>{CSS}</style>
+      {/* The installed app opens on the sign-in: the opening (blanket) plays here too. */}
+      <MascotIntro />
       <div className="min-h-dvh lg:grid lg:grid-cols-2">
         <aside
           data-theme="dark"
